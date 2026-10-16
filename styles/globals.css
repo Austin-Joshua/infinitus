@@ -50,40 +50,40 @@ body {
 @layer components {
   /* Full-bleed layout: fluid gutters, capped only on ultra-wide screens. Long text sets its own measure. */
   .container-x {
-    @apply mx-auto w-full max-w-[2000px] px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-24;
+    @apply mx-auto w-full max-w-[2000px] px-4 sm:px-6 lg:px-10 xl:px-14 2xl:px-20;
   }
 
   .section {
-    @apply relative py-24 sm:py-32;
+    @apply relative py-14 sm:py-20 lg:py-24;
   }
 
   .eyebrow {
-    @apply font-mono text-sm text-accent;
+    @apply font-mono text-xs uppercase tracking-widest text-accent font-medium;
   }
 
   .h-display {
-    @apply font-heading text-4xl font-medium leading-[1.1] tracking-[-0.01em] text-fg sm:text-5xl lg:text-6xl;
+    @apply font-heading text-2xl font-bold leading-[1.2] tracking-tight text-fg sm:text-3xl lg:text-4xl;
   }
 
   .lede {
-    @apply text-base leading-relaxed text-muted sm:text-lg;
+    @apply text-sm leading-relaxed text-muted sm:text-base;
   }
 
   .card {
-    @apply relative overflow-hidden rounded-md border border-fg/15 bg-card transition-colors duration-200;
+    @apply relative overflow-hidden rounded-xl border border-fg/15 bg-card transition-colors duration-200;
   }
 
   .card-hover {
-    @apply hover:border-fg/40;
+    @apply hover:border-fg/35;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-medium transition-colors duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
   }
 
   .btn-primary {
-    @apply btn bg-btn-bg text-btn-fg hover:bg-btn-bg/85;
+    @apply btn bg-btn-bg text-btn-fg hover:bg-btn-bg/90 shadow-sm active:scale-95;
   }
 
   /* Arrow inside a button/link nudges toward its direction on hover */
@@ -100,11 +100,11 @@ body {
   }
 
   .btn-ghost {
-    @apply btn border border-fg/20 text-fg hover:border-fg/50 hover:bg-fg/[0.04];
+    @apply btn border border-fg/20 text-fg hover:border-fg/40 hover:bg-fg/[0.04] active:scale-95;
   }
 
   .chip {
-    @apply inline-flex items-center rounded-sm border border-fg/15 px-2 py-0.5 font-mono text-xs text-muted;
+    @apply inline-flex items-center rounded-full border border-fg/15 px-2.5 py-0.5 font-mono text-[11px] text-muted;
   }
 }
 

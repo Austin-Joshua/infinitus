@@ -20,21 +20,21 @@ export function FeaturedEvent({ event }) {
           className="h-full w-full transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
         />
       </Link>
-      <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
+      <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap gap-2">
           <span className="chip border-gold/40 text-gold">{COPY.events.featuredLabel}</span>
           {event.eventType && <span className="chip">{event.eventType}</span>}
         </div>
-        <h3 className="mt-6 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-fg sm:text-5xl xl:text-6xl">
+        <h3 className="mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
           <Link href={eventHref(event)} className="transition-colors hover:text-accent">
             {event.title}
           </Link>
         </h3>
-        <p className="mt-4 font-mono text-sm text-accent">
+        <p className="mt-3 font-mono text-xs sm:text-sm text-accent">
           {formatEventDate(event.eventDate, event.endDate)}
           {event.venue ? ` · ${event.venue}` : ''}
         </p>
-        {event.description && <p className="lede mt-5 max-w-2xl">{event.description}</p>}
+        {event.description && <p className="lede mt-3 max-w-2xl text-xs sm:text-sm">{event.description}</p>}
         {event.highlights?.length > 0 && (
           <ul className="mt-6 flex flex-wrap gap-2">
             {event.highlights.map((h) => (

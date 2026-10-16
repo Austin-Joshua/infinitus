@@ -15,7 +15,7 @@ export default async function TeamPage() {
   const page = pageById('team');
   return (
     <>
-      <PageHeader index={page.index} label={page.navLabel} title={COPY.members.heading} intro={COPY.members.subheading} />
+      <PageHeader label={page.navLabel} title={COPY.members.heading} intro={COPY.members.subheading} />
       <MembersGrid members={members} />
     </>
   );

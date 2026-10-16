@@ -15,7 +15,7 @@ export default async function GalleryPage() {
   const page = pageById('gallery');
   return (
     <>
-      <PageHeader index={page.index} label={page.navLabel} title={COPY.gallery.heading} intro={COPY.gallery.intro}>
+      <PageHeader label={page.navLabel} title={COPY.gallery.heading} intro={COPY.gallery.intro}>
         <a
           href={SOCIAL.instagram}
           target="_blank"

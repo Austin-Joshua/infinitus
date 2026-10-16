@@ -12,9 +12,10 @@ import {
   useSpring,
 } from 'framer-motion';
 import InfinitusLogo from '@/components/brand/InfinitusLogo';
+import RitLogo from '@/components/brand/RitLogo';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { EASE } from '@/lib/motion';
-import { CLUB_SHORT, COPY, NAV_LINKS } from '@/lib/site';
+import { CLUB_SHORT, COPY, NAV_LINKS, SOCIAL, SITE } from '@/lib/site';
 
 const MAIN_NAV = NAV_LINKS.filter((link) => link.navVariant !== 'button' && link.id !== 'home');
 const CONTACT_LINK = NAV_LINKS.find((link) => link.id === 'contact');
@@ -96,19 +97,27 @@ export default function Nav() {
 
       <motion.header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
-          solid ? 'border-fg/15 bg-bg/85 backdrop-blur-md' : 'border-transparent'
+          solid ? 'border-fg/15 bg-bg/90 backdrop-blur-md shadow-sm' : 'border-transparent'
         }`}
         animate={{ y: hidden && !menuOpen ? '-100%' : '0%' }}
         transition={{ duration: 0.35, ease: EASE.out }}
       >
-        <div className="container-x flex h-16 items-center justify-between gap-4">
-          <Link href="/" className="group flex items-center gap-3" aria-label={COPY.brand.homeAriaLabel}>
-            <span className="transition-transform duration-700 ease-out group-hover:rotate-[360deg]">
+        <div className="container-x flex h-16 items-center justify-between gap-3 sm:gap-4">
+          {/* Dual Branding: Infinitus Logo + College Logo + Wordmark */}
+          <Link href="/" className="group flex items-center gap-2.5 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
+            <span className="transition-transform duration-700 ease-out group-hover:rotate-[360deg] shrink-0">
               <InfinitusLogo size="nav" priority />
             </span>
-            <span className="font-heading text-lg font-semibold tracking-[0.12em] text-fg">{CLUB_SHORT}</span>
+            <span className="h-5 w-px bg-fg/20 shrink-0" aria-hidden="true" />
+            <span className="shrink-0">
+              <RitLogo size="xs" className="opacity-95 transition-opacity group-hover:opacity-100" />
+            </span>
+            <span className="hidden font-heading text-sm font-bold tracking-[0.12em] text-fg xl:inline-block">
+              {CLUB_SHORT}
+            </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
             {MAIN_NAV.map((item) => {
               const active = isActive(pathname, item.href);
@@ -117,14 +126,14 @@ export default function Nav() {
                   key={item.id}
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`relative rounded-md px-4 py-2 text-sm transition-colors ${
-                    active ? 'text-fg' : 'text-muted hover:text-fg'
+                  className={`relative rounded-md px-3.5 py-2 text-sm font-medium transition-colors ${
+                    active ? 'text-accent' : 'text-muted hover:text-fg'
                   }`}
                 >
                   {active && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-md bg-fg/[0.07]"
+                      className="absolute inset-0 -z-10 rounded-md bg-accent/10"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
@@ -134,6 +143,7 @@ export default function Nav() {
             })}
           </nav>
 
+          {/* Header Action Buttons */}
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -159,7 +169,7 @@ export default function Nav() {
               <Link
                 href={CONTACT_LINK.href}
                 aria-current={isActive(pathname, CONTACT_LINK.href) ? 'page' : undefined}
-                className="btn-primary hidden !px-5 !py-2 sm:inline-flex"
+                className="btn-primary hidden !px-4 !py-2 text-xs font-semibold sm:inline-flex"
               >
                 {CONTACT_LINK.navLabel} <span aria-hidden="true" className="nudge">→</span>
               </Link>
@@ -194,43 +204,76 @@ export default function Nav() {
         </div>
       </motion.header>
 
-      {/* Sibling of <header> so the overlay stacks independently of the header */}
+      {/* Native App-Style Mobile Drawer Navigation */}
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
             id="mobile-nav-menu"
             aria-label="Primary mobile"
-            initial={{ clipPath: 'inset(0 0 100% 0)' }}
-            animate={{ clipPath: 'inset(0 0 0% 0)' }}
-            exit={{ clipPath: 'inset(0 0 100% 0)' }}
-            transition={{ duration: reduce ? 0 : 0.5, ease: EASE.inOut }}
-            className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto bg-bg md:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: reduce ? 0 : 0.25, ease: EASE.out }}
+            className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col justify-between overflow-y-auto bg-bg/95 backdrop-blur-xl p-6 md:hidden"
           >
-            <ul className="container-x flex flex-col gap-1 pt-8">
-              {NAV_LINKS.map((item, i) => {
-                const active = isActive(pathname, item.href);
-                return (
-                  <motion.li
-                    key={item.id}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15 + 0.05 * i, duration: 0.5, ease: EASE.out }}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      aria-current={active ? 'page' : undefined}
-                      className={`flex items-baseline gap-4 border-b border-fg/10 py-4 font-heading text-3xl ${
-                        active ? 'text-accent' : 'text-fg'
-                      }`}
+            <div className="flex flex-col gap-2">
+              <p className="font-mono text-xs uppercase tracking-wider text-muted px-3">Navigation</p>
+              <ul className="flex flex-col gap-1.5 mt-1">
+                {NAV_LINKS.map((item, i) => {
+                  const active = isActive(pathname, item.href);
+                  return (
+                    <motion.li
+                      key={item.id}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 * i, duration: 0.3, ease: EASE.out }}
                     >
-                      <span className="font-mono text-xs text-muted">§{item.index}</span>
-                      {item.navLabel}
-                    </Link>
-                  </motion.li>
-                );
-              })}
-            </ul>
+                      <Link
+                        href={item.href}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={active ? 'page' : undefined}
+                        className={`flex items-center justify-between rounded-xl px-4 py-3.5 font-heading text-lg font-semibold transition-all ${
+                          active
+                            ? 'bg-accent text-white shadow-md'
+                            : 'text-fg hover:bg-fg/5'
+                        }`}
+                      >
+                        <span>{item.navLabel}</span>
+                        <span aria-hidden="true" className="text-sm opacity-60">→</span>
+                      </Link>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Mobile Footer Quick Actions */}
+            <div className="mt-8 border-t border-fg/10 pt-6 flex flex-col gap-3">
+              <a
+                href={SOCIAL.queriesForm}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="btn-primary w-full text-center text-sm font-semibold !py-3 justify-center"
+              >
+                Queries & Feedback Form <span aria-hidden="true">↗</span>
+              </a>
+              <div className="flex items-center justify-between text-xs text-muted pt-2 px-1">
+                <a
+                  href={SOCIAL.instagram}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="hover:text-accent transition-colors"
+                >
+                  Instagram {SOCIAL.instagramHandle} ↗
+                </a>
+                <a
+                  href={`mailto:${SITE.contactEmail}`}
+                  className="hover:text-accent transition-colors"
+                >
+                  Email Us
+                </a>
+              </div>
+            </div>
           </motion.nav>
         )}
       </AnimatePresence>
