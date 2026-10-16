@@ -47,7 +47,6 @@ INFINITUS provides students with opportunities to strengthen logical reasoning, 
 - **Josewa Aghai** — Event Operation Head — CSE, III Year
 - **Jagannathan M** — Event Planning Lead — CSE, III Year
 - **Sridharshan S** — Event Planning Lead — AIML, II Year
-- **C. Samsundar** — Event Coordinator — MECH, II Year
 - **Sree Vishishta** — Event Coordinator — AIDS, II Year
 - **Yokeshwaran A** — Event Committee Member — CSE, II Year
 

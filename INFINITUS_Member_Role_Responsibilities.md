@@ -33,9 +33,6 @@ Develops and structures club events by preparing concepts, event formats, rounds
 ### Sridharshan S — Event Planning Lead
 Supports the planning and development of club events by designing event structures, activities, rules, schedules, participant flow, and operational requirements. Works with the event team to convert ideas into executable event plans.
 
-### C. Samsundar — Event Coordinator
-Coordinates the execution of events and assists with participant management, registration, setup, materials, venue coordination, event flow, and on-ground activities.
-
 ### Sree Vishishta — Event Coordinator
 Supports event execution by coordinating participants, event materials, venue arrangements, schedules, and on-ground activities while ensuring that the planned event flow is maintained.
 
