@@ -15,7 +15,7 @@ export default async function EventsPage() {
   const page = pageById('events');
   return (
     <>
-      <PageHeader index={page.index} label={page.navLabel} title={COPY.events.heading} intro={COPY.events.intro} />
+      <PageHeader label={page.navLabel} title={COPY.events.heading} intro={COPY.events.intro} />
       <EventsSection events={events} />
     </>
   );

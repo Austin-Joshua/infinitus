@@ -11,7 +11,7 @@ export default function ContactPage() {
   const page = pageById('contact');
   return (
     <>
-      <PageHeader index={page.index} label={page.navLabel} title={COPY.contact.heading} intro={COPY.contact.intro} />
+      <PageHeader label={page.navLabel} title={COPY.contact.heading} intro={COPY.contact.intro} />
       <ContactSection />
     </>
   );

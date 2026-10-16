@@ -86,7 +86,7 @@ export default async function EventPage({ params }) {
                 as="h1"
                 text={event.title}
                 delay={0.1}
-                className="mt-6 block font-heading text-[clamp(2.5rem,5.5vw,6rem)] font-medium leading-[1.02] tracking-[-0.02em] text-fg"
+                className="mt-4 block font-heading text-3xl font-bold leading-tight tracking-tight text-fg sm:text-4xl lg:text-5xl"
               />
 
               <Reveal delay={0.3}>

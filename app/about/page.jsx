@@ -11,7 +11,7 @@ export default function AboutPage() {
   const page = pageById('about');
   return (
     <>
-      <PageHeader index={page.index} label={page.navLabel} title={COPY.about.focusQuote} intro={COPY.about.body} />
+      <PageHeader label={page.navLabel} title={COPY.about.focusQuote} intro={COPY.about.body} />
       <AboutUs />
     </>
   );

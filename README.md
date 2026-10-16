@@ -13,42 +13,31 @@
 
 <p align="center"><b>Live:</b> <a href="https://infinitus-seven.vercel.app">infinitus-seven.vercel.app</a></p>
 
-Most club websites are a poster and a contact form. **INFINITUS reads like a maths textbook.**
+Most club websites are a poster and a contact form. **INFINITUS is a fast, beautifully designed club portal.**
 
 It's the official site of INFINITUS, the Mathematics Club of Rajalakshmi
-Institute of Technology, Chennai. Every page is a numbered section, from **§0
-Home** to **§5 Contact**. The ∞ in the hero is a real lemniscate of Bernoulli,
+Institute of Technology, Chennai. The ∞ in the hero is a real lemniscate of Bernoulli,
 plotted point by point and traced by a moving dot, captioned *Fig. 1.* like a
-figure in a book. The 404 page "tends to infinity". It comes in paper (light)
+figure in a textbook. The 404 page "tends to infinity". It comes in paper (light)
 and ink (dark).
 
-All the content lives in one plain JS file, so the site runs without a
+All the content lives in one clean JS file, so the site runs without a
 database. Supabase can be switched on later without touching a page.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
-## Six pages, numbered like chapters
+## Connected, Responsive Pages
 
-<p align="center">
-  <img src=".github/readme/pages.svg" width="100%" alt="A contents list from §0 Home to §5 Contact; each page opens in turn behind a curtain that wipes up">
-</p>
+The homepage provides an interactive tour that seamlessly connects to every section:
 
-The homepage has a **Contents** section that links to every page. Moving between
-pages, an accent curtain wipes up off the new one (`app/template.jsx`). Visitors
-who ask for reduced motion get a plain fade instead.
-
-<img src=".github/readme/divider.svg" width="100%" alt="">
-
-## What's on it
-
-|  |  |
+| Page | Description |
 |---|---|
-| **§0 Home** | the wordmark and Fig. 1, the club in numbers, a marquee of what the club stands for, the latest events, the committee and the gallery |
-| **§1 About** | who the club is, six pillars of what it does, and the journey from 2023 to 2026 |
-| **§2 Events** | every event with its poster and its own page, linked newer ↔ older; upcoming ones get a **Register now** button to their Google Form |
-| **§3 Team** | the Core Committee 2026–27; open a card to read what that role looks after |
-| **§4 Gallery** | photos from events, celebrations and milestones |
-| **§5 Contact** | the queries Google Form, email, Instagram and address |
+| **Home** | The wordmark and Fig. 1, the club in numbers, keyword marquee, latest events, committee cards, and the photo gallery |
+| **About** | Who the club is, six core pillars, and our journey from 2023 to 2026 |
+| **Events** | Every event with its poster, venue, date, and detail page; upcoming events feature a **Register now** button linking directly to their Google Form |
+| **Team** | The Core Committee 2026–27 with interactive member cards, avatars, and role details |
+| **Gallery** | Spacious photo gallery with an accessible full-screen lightbox |
+| **Contact** | Official Google Form queries link, direct email, Instagram, and college campus address |
 
 It also ships a link-preview image, a sitemap, `robots.txt`, and read-only
 JSON at `/api/members` and `/api/events`.

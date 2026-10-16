@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 
-/** Masonry photo grid with a keyboard-friendly lightbox. */
-export default function GalleryGrid({ photos }) {
+/**
+ * Balanced, spacious gallery grid with keyboard-friendly lightbox modal.
+ */
+export default function GalleryGrid({ photos = [] }) {
   const [index, setIndex] = useState(null);
   const open = index !== null;
 
@@ -35,55 +37,65 @@ export default function GalleryGrid({ photos }) {
 
   return (
     <>
-      <div className="columns-2 gap-3 sm:gap-4 md:columns-3 xl:columns-4 [&>*]:mb-3 sm:[&>*]:mb-4">
+      {/* Spacious, unclustered responsive photo grid */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 lg:gap-7">
         {photos.map((photo, i) => (
           <motion.button
             key={photo.src}
             type="button"
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '0px 0px -5% 0px' }}
-            transition={{ duration: 0.8, delay: (i % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => setIndex(i)}
-            className="group relative block w-full break-inside-avoid overflow-hidden rounded-md border border-fg/15 bg-bg-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            aria-label={`Open photo: ${photo.caption}`}
+            className="card card-hover group relative flex aspect-[4/3] w-full cursor-pointer flex-col overflow-hidden rounded-xl border border-fg/15 bg-card shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            aria-label={`View photo: ${photo.caption}`}
           >
             <Image
               src={photo.src}
               alt={photo.caption}
-              width={photo.width}
-              height={photo.height}
-              sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
+              fill
+              sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
               unoptimized={photo.src.startsWith('http')}
-              className="h-auto w-full transition-transform duration-1000 ease-out group-hover:scale-[1.06]"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-2 items-end justify-between gap-2 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-3 pt-12 text-left opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-              <span className="text-sm font-medium text-white">{photo.caption}</span>
-              {photo.date && <span className="shrink-0 font-mono text-[11px] text-white/70">{photo.date}</span>}
+
+            {/* Subtle frosted glass caption overlay */}
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3.5 pt-10 text-left text-white">
+              <span className="text-xs font-semibold leading-tight drop-shadow-sm sm:text-sm">
+                {photo.caption}
+              </span>
+              {photo.date && (
+                <span className="shrink-0 rounded-full bg-white/20 px-2 py-0.5 font-mono text-[10px] font-medium backdrop-blur-md">
+                  {photo.date}
+                </span>
+              )}
             </span>
           </motion.button>
         ))}
       </div>
 
+      {/* Lightbox Modal */}
       <AnimatePresence>
         {current && (
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label={current.caption}
-            className="fixed inset-0 z-[70] flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={close}
           >
+            {/* Main Photo Container */}
             <motion.div
               key={current.src}
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.25 }}
-              className="relative max-h-[80vh] w-full max-w-4xl"
-              onClick={(event) => event.stopPropagation()}
+              className="relative max-h-[75vh] w-full max-w-4xl flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
             >
               <Image
                 src={current.src}
@@ -92,25 +104,48 @@ export default function GalleryGrid({ photos }) {
                 height={current.height}
                 sizes="(min-width: 1024px) 900px, 100vw"
                 unoptimized={current.src.startsWith('http')}
-                className="mx-auto max-h-[80vh] w-auto rounded-md object-contain"
+                className="max-h-[75vh] w-auto rounded-lg object-contain shadow-2xl"
               />
             </motion.div>
-            <div className="mt-4 flex w-full max-w-4xl items-center justify-between gap-4 text-white" onClick={(e) => e.stopPropagation()}>
-              <button type="button" onClick={() => step(-1)} className="rounded-full border border-white/20 px-4 py-2 text-sm hover:bg-white/10" aria-label="Previous photo">
+
+            {/* Lightbox Controls & Caption */}
+            <div
+              className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 text-white px-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => step(-1)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm transition-colors hover:bg-white/20"
+                aria-label="Previous photo"
+              >
                 ←
               </button>
-              <p className="text-center text-sm">
-                {current.caption}
-                {current.date && <span className="ml-2 font-mono text-xs text-white/60">{current.date}</span>}
-                <span className="ml-3 font-mono text-xs text-white/40">
-                  {index + 1}/{photos.length}
-                </span>
-              </p>
-              <div className="flex gap-2">
-                <button type="button" onClick={() => step(1)} className="rounded-full border border-white/20 px-4 py-2 text-sm hover:bg-white/10" aria-label="Next photo">
+
+              <div className="text-center px-2">
+                <p className="text-xs font-semibold sm:text-sm">{current.caption}</p>
+                <p className="mt-0.5 font-mono text-[11px] text-white/60">
+                  {current.date ? `${current.date} · ` : ''}
+                  {index + 1} of {photos.length}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => step(1)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm transition-colors hover:bg-white/20"
+                  aria-label="Next photo"
+                >
                   →
                 </button>
-                <button type="button" autoFocus onClick={close} className="rounded-full border border-white/20 px-4 py-2 text-sm hover:bg-white/10" aria-label="Close">
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={close}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm transition-colors hover:bg-white/20"
+                  aria-label="Close"
+                >
                   ✕
                 </button>
               </div>
