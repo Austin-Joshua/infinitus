@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { CLUB_SHORT, COPY } from '@/lib/site';
+import { COPY } from '@/lib/site';
 import { EASE, introDelay } from '@/lib/motion';
 import Lemniscate from '@/components/ui/Lemniscate';
 import SplitText from '@/components/ui/SplitText';
@@ -13,7 +13,6 @@ export default function Hero({ stats = [] }) {
   const ref = useRef(null);
   const [start] = useState(introDelay);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const titleY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const figureY = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
   const figureRotate = useTransform(scrollYProgress, [0, 1], [0, -4]);
 
@@ -28,33 +27,18 @@ export default function Hero({ stats = [] }) {
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <div className="container-x relative">
-        <motion.div style={{ y: titleY }}>
-          <SplitText
-            as="h1"
-            text={CLUB_SHORT}
-            by="char"
-            stagger={0.04}
-            delay={0.1}
-            className="block font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-fg leading-none"
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 1, delay: start + 0.4, ease: EASE.inOut }}
-          className="mt-6 h-px origin-left bg-fg/20"
-        />
-
-        <div className="grid gap-10 pt-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
+        <div className="grid gap-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16">
           <div>
-            <motion.p {...rise(0.5)} className="font-heading text-xl italic text-fg sm:text-3xl">
-              {COPY.hero.tagline}.
-            </motion.p>
-            <motion.p {...rise(0.6)} className="lede mt-4 max-w-lg text-sm sm:text-base">
+            <motion.h1
+              {...rise(0.3)}
+              className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-fg leading-[1.15]"
+            >
+              <SplitText text={COPY.hero.tagline} by="word" stagger={0.04} />
+            </motion.h1>
+            <motion.p {...rise(0.5)} className="lede mt-5 max-w-lg text-sm sm:text-base leading-relaxed">
               {COPY.hero.support}
             </motion.p>
-            <motion.div {...rise(0.7)} className="mt-6 flex flex-wrap gap-3">
+            <motion.div {...rise(0.65)} className="mt-8 flex flex-wrap gap-3.5">
               <Link href="/events" className="btn-primary text-xs sm:text-sm">
                 {COPY.hero.primaryCta} <span aria-hidden="true" className="nudge">→</span>
               </Link>
