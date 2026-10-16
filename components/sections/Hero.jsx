@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { CLUB_SHORT, COPY } from '@/lib/site';
 import { EASE, introDelay } from '@/lib/motion';
-import InfinitusLogo from '@/components/brand/InfinitusLogo';
-import RitLogo from '@/components/brand/RitLogo';
 import Lemniscate from '@/components/ui/Lemniscate';
 import SplitText from '@/components/ui/SplitText';
 import Counter from '@/components/ui/Counter';
@@ -30,14 +28,6 @@ export default function Hero({ stats = [] }) {
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <div className="container-x relative">
-        <motion.div {...rise(0)} className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm text-muted">
-          <InfinitusLogo size="nav" className="h-6 w-6" />
-          <span aria-hidden="true" className="h-4 w-px bg-fg/20" />
-          <RitLogo size="xs" />
-          <span aria-hidden="true" className="h-4 w-px bg-fg/20" />
-          <span className="font-mono text-accent font-medium">{COPY.hero.badge}</span>
-        </motion.div>
-
         <motion.div style={{ y: titleY }}>
           <SplitText
             as="h1"
@@ -45,7 +35,7 @@ export default function Hero({ stats = [] }) {
             by="char"
             stagger={0.04}
             delay={0.1}
-            className="mt-4 block font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-fg leading-none"
+            className="block font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-fg leading-none"
           />
         </motion.div>
 

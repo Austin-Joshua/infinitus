@@ -29,15 +29,13 @@ const mono = IBM_Plex_Mono({
   display: 'swap',
 });
 
-// Before paint: theme (saved choice, else the system's) and whether the intro already played this session.
+// Before paint: apply saved theme or system preference so colors render instantly.
 const initScript = `
 (function () {
   var root = document.documentElement;
   try {
     var stored = localStorage.getItem('infinitus-theme');
     root.classList.toggle('dark', stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
-    if (sessionStorage.getItem('infinitus-intro-seen')) root.classList.add('intro-seen');
-    else sessionStorage.setItem('infinitus-intro-seen', '1');
   } catch (e) {}
 })();
 `;
