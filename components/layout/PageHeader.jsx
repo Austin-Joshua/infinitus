@@ -1,7 +1,5 @@
 'use client';
-
 import { useRef, useState } from 'react';
-import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import SplitText from '@/components/ui/SplitText';
 import { EASE, introDelay } from '@/lib/motion';
@@ -16,27 +14,11 @@ export default function PageHeader({ label, title, intro, children }) {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   return (
-    <header ref={ref} className="relative overflow-hidden border-b border-fg/15 pb-12 pt-28 sm:pb-16 sm:pt-36">
+    <header ref={ref} className="relative overflow-hidden pb-6 pt-24 sm:pb-10 sm:pt-32">
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <motion.div style={{ opacity: contentOpacity }} className="container-x relative">
-        <motion.nav
-          aria-label="Breadcrumb"
-          initial={{ opacity: 0, x: -12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: start, ease: EASE.out }}
-          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted"
-        >
-          <Link href="/" className="transition-colors hover:text-fg">
-            Home
-          </Link>
-          <span aria-hidden="true" className="opacity-40">/</span>
-          <span className="text-accent font-medium">
-            {label}
-          </span>
-        </motion.nav>
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
           <SplitText
             as="h1"
             text={title}

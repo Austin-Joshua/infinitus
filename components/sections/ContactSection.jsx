@@ -6,19 +6,17 @@ function ContactRow({ href, label, value, external = false }) {
     <a
       href={href}
       {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-      className="group relative flex items-center justify-between gap-4 overflow-hidden border-t border-fg/15 py-5 sm:py-6"
+      className="card card-hover group relative flex items-center justify-between gap-4 overflow-hidden rounded-2xl p-5 sm:p-6 mb-3.5 transition-all duration-300 hover:shadow-md"
     >
-      {/* Fill sweeps up from below on hover */}
-      <span aria-hidden="true" className="absolute inset-0 origin-bottom scale-y-0 bg-fg/[0.04] transition-transform duration-500 ease-out group-hover:scale-y-100" />
-      <span className="relative transition-transform duration-500 ease-out group-hover:translate-x-2">
+      <div>
         <span className="block font-mono text-xs uppercase tracking-widest text-muted">{label}</span>
-        <span className="mt-1.5 block break-all font-heading text-lg font-bold text-fg transition-colors group-hover:text-accent sm:text-2xl lg:text-3xl">
+        <span className="mt-1 block break-all font-heading text-lg font-bold text-fg transition-colors group-hover:text-accent sm:text-2xl">
           {value}
         </span>
-      </span>
+      </div>
       <span
         aria-hidden="true"
-        className="relative mr-2 text-xl text-muted transition-all duration-500 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent sm:text-2xl"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-fg/5 text-muted transition-all duration-300 group-hover:bg-accent group-hover:text-white"
       >
         ↗
       </span>
@@ -31,9 +29,9 @@ export default function ContactSection() {
   const { contact } = COPY;
 
   return (
-    <section className="section !pt-16">
-      <div className="container-x grid gap-16 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-20">
-        <Reveal className="border-b border-fg/15">
+    <section className="section !pt-4 sm:!pt-6">
+      <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
+        <Reveal>
           <ContactRow href={`mailto:${SITE.contactEmail}`} label="Email" value={SITE.contactEmail} />
           <ContactRow href={SOCIAL.instagram} label="Instagram" value={SOCIAL.instagramHandle} external />
           <ContactRow href={SOCIAL.queriesForm} label="Google Form" value={contact.formTitle} external />

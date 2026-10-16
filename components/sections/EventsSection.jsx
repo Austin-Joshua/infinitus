@@ -81,7 +81,7 @@ export default function EventsSection({ events }) {
   const rest = past.filter((e) => e !== featured);
 
   return (
-    <section className="section !pt-16">
+    <section className="section !pt-4 sm:!pt-6 pb-20">
       <div className="container-x">
         {upcoming.length > 0 && (
           <div className="mb-14">

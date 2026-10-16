@@ -111,7 +111,7 @@ const EXPLORE_METADATA = {
 export function HomeExplore() {
   const pages = PAGES.filter((p) => COPY.home.explore[p.id]);
   return (
-    <section className="section border-t border-fg/15 !py-16 sm:!py-20 bg-bg-2/30">
+    <section className="section !py-16 sm:!py-20 bg-bg-2/30">
       <div className="container-x">
         <Reveal className="flex items-baseline justify-between gap-6">
           <div>
@@ -272,7 +272,7 @@ export function HomeGallery({ photos }) {
 
 export function CtaBand() {
   return (
-    <section className="section relative overflow-hidden border-t border-fg/15 !py-16 sm:!py-24">
+    <section className="section relative overflow-hidden bg-bg-2/30 !py-16 sm:!py-24">
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
       <div className="container-x relative">
         <p className="font-mono text-xs uppercase tracking-widest text-accent font-medium">{COPY.home.ctaEyebrow}</p>

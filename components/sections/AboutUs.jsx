@@ -9,20 +9,21 @@ export default function AboutUs() {
 
   return (
     <>
-      <section className="section !py-16 sm:!py-24">
-        <div className="container-x grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-20">
-          <h2 className="font-heading text-2xl font-medium leading-[1.25] text-fg sm:text-4xl lg:text-5xl">
+      <section className="relative overflow-hidden pb-12 pt-24 sm:pb-16 sm:pt-32">
+        <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
+        <div className="container-x relative grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
+          <h1 className="font-heading text-3xl font-bold leading-[1.15] text-fg sm:text-4xl lg:text-5xl tracking-tight">
             <SplitText text={about.statement} onView stagger={0.03} />{' '}
             <SplitText text={about.statementAccent} onView delay={0.3} className="italic text-accent" />
-          </h2>
+          </h1>
           <Reveal delay={0.2} className="space-y-4 self-end text-sm sm:text-base leading-relaxed text-muted">
+            <p className="text-fg/90 font-medium">{about.body}</p>
             <p>{about.bodySecondary}</p>
-            <p>{about.focus}</p>
           </Reveal>
         </div>
       </section>
 
-      <section className="section border-t border-fg/15 bg-bg-2/50 !py-16 sm:!py-24">
+      <section className="section bg-bg-2/30 !py-14 sm:!py-20">
         <div className="container-x">
           <Reveal className="flex items-baseline justify-between gap-6">
             <div>
@@ -32,9 +33,9 @@ export default function AboutUs() {
             <span className="font-mono text-xs text-muted">{about.pillars.length} programmes</span>
           </Reveal>
 
-          <Stagger as="ol" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger as="ol" className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {about.pillars.map((pillar) => (
-              <StaggerItem as="li" key={pillar.title} className="card card-hover group relative p-6 sm:p-8 transition-all duration-300 hover:shadow-lg hover:shadow-accent/5">
+              <StaggerItem as="li" key={pillar.title} className="card card-hover group relative p-6 sm:p-7 transition-all duration-300 hover:shadow-lg hover:shadow-accent/5">
                 <span
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"
@@ -43,7 +44,7 @@ export default function AboutUs() {
                 <h3 className="mt-4 font-heading text-xl font-bold text-fg transition-colors group-hover:text-accent">
                   {pillar.title}
                 </h3>
-                <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-muted">{pillar.body}</p>
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted">{pillar.body}</p>
                 {pillar.title.includes('Podcast') && (
                   <a
                     href={SOCIAL.instagram}

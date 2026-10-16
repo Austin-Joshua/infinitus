@@ -14,7 +14,7 @@ export default function Journey({ heading, steps }) {
   const at = (i) => 0.2 + (DRAW * i) / steps.length;
 
   return (
-    <section className="section border-t border-fg/15 bg-bg-2/50 !py-16 sm:!py-24">
+    <section className="section bg-bg-2/50 !py-16 sm:!py-24">
       <div className="container-x">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
