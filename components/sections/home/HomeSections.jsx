@@ -220,7 +220,7 @@ export function HomeTeam({ members }) {
 
         <div className="mt-10 flex justify-center">
           <Link href="/team" className="btn-primary text-xs sm:text-sm">
-            Meet the Full Committee (30 Members) <span aria-hidden="true" className="nudge">→</span>
+            Meet the Full Committee ({members.length} Members) <span aria-hidden="true" className="nudge">→</span>
           </Link>
         </div>
       </div>
