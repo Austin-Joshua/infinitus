@@ -251,7 +251,7 @@ export function HomeGallery({ photos }) {
                 key={photo.src}
                 href="/gallery"
                 className="group relative mr-3 sm:mr-4 block h-36 sm:h-44 md:h-48 shrink-0 overflow-hidden rounded-xl border border-fg/15 bg-card shadow-sm hover:shadow-md transition-all"
-                style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
+                style={{ aspectRatio: `${photo.width || 4} / ${photo.height || 3}` }}
               >
                 <Image
                   src={photo.src}

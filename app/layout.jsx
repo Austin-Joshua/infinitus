@@ -1,7 +1,6 @@
 import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
 import { CLUB_NAME, COLLEGE_NAME, SITE } from '@/lib/site';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
-import Loader from '@/components/layout/Loader';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import '@/styles/globals.css';
@@ -90,7 +89,6 @@ export default function RootLayout({ children }) {
       </head>
       <body className="font-body antialiased" suppressHydrationWarning>
         <ThemeProvider>
-          <Loader />
           <Nav />
           {children}
           <Footer />
