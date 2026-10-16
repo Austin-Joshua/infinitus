@@ -1,6 +1,5 @@
-import PageHeader from '@/components/layout/PageHeader';
 import AboutUs from '@/components/sections/AboutUs';
-import { COPY, pageById } from '@/lib/site';
+import { COPY } from '@/lib/site';
 
 export const metadata = {
   title: COPY.pages.about.title,
@@ -8,11 +7,5 @@ export const metadata = {
 };
 
 export default function AboutPage() {
-  const page = pageById('about');
-  return (
-    <>
-      <PageHeader label={page.navLabel} title={COPY.about.focusQuote} intro={COPY.about.body} />
-      <AboutUs />
-    </>
-  );
+  return <AboutUs />;
 }

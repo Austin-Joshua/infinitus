@@ -20,7 +20,7 @@ export default function GallerySection({ events }) {
   const photos = galleryPhotos(events);
 
   return (
-    <section className="section !pt-16">
+    <section className="section !pt-4 sm:!pt-6 pb-20">
       <div className="container-x">
         <GalleryGrid photos={photos} />
       </div>

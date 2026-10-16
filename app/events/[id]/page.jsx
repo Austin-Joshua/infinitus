@@ -58,26 +58,21 @@ export default async function EventPage({ params }) {
     <>
       <article className="pb-24 pt-28 sm:pt-36">
         <div className="container-x">
-          <Reveal y={0} className="flex flex-wrap items-center gap-2 font-mono text-sm text-muted">
-            <Link href="/" className="transition-colors hover:text-fg">
-              Home
-            </Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/events" className="transition-colors hover:text-fg">
-              Events
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span className="text-accent">{event.title}</span>
-          </Reveal>
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-accent hover:underline"
+          >
+            ← Back to events
+          </Link>
 
-          <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
+          <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
             <div className="lg:sticky lg:top-24 lg:self-start">
-              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-md border border-fg/15 bg-bg-2">
+              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 bg-bg-2">
                 <EventPoster event={event} priority sizes="(min-width: 1280px) 35vw, (min-width: 1024px) 45vw, 100vw" className="h-full w-full" />
               </ClipReveal>
             </div>
 
-            <div className="lg:pt-6">
+            <div className="lg:pt-4">
               <Reveal className="flex flex-wrap gap-2">
                 {isUpcoming && <span className="chip border-gold/40 text-gold">Upcoming</span>}
                 {event.eventType && <span className="chip">{event.eventType}</span>}
@@ -90,15 +85,15 @@ export default async function EventPage({ params }) {
               />
 
               <Reveal delay={0.3}>
-                <dl className="mt-10 grid grid-cols-2 border-y border-fg/15">
-                  <div className="py-5 pr-4">
+                <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-fg/10 bg-card p-4 sm:p-5">
+                  <div>
                     <dt className="font-mono text-xs uppercase tracking-widest text-muted">Date</dt>
-                    <dd className="mt-2 font-heading text-xl text-fg sm:text-2xl">{formatEventDate(event.eventDate, event.endDate)}</dd>
+                    <dd className="mt-1 font-heading text-lg font-bold text-fg sm:text-xl">{formatEventDate(event.eventDate, event.endDate)}</dd>
                   </div>
                   {event.venue && (
-                    <div className="border-l border-fg/15 py-5 pl-6">
+                    <div className="border-t border-fg/10 pt-3 sm:border-t-0 sm:border-l sm:pl-4 sm:pt-0">
                       <dt className="font-mono text-xs uppercase tracking-widest text-muted">Venue</dt>
-                      <dd className="mt-2 font-heading text-xl text-fg sm:text-2xl">{event.venue}</dd>
+                      <dd className="mt-1 font-heading text-lg font-bold text-fg sm:text-xl">{event.venue}</dd>
                     </div>
                   )}
                 </dl>
