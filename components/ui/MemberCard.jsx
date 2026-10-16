@@ -65,7 +65,7 @@ export function Avatar({ name, photoUrl, className = '' }) {
 }
 
 export function MemberDetailModal({ member, open, onClose, titleId }) {
-  const meta = metaOf(member);
+  const meta = member ? metaOf(member) : '';
 
   useEffect(() => {
     if (!open) return undefined;
