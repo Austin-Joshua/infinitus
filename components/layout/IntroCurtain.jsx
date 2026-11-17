@@ -37,11 +37,11 @@ export default function IntroCurtain() {
     // Sequence timers
     const openTimer = setTimeout(() => {
       setPhase('opening');
-    }, 900);
+    }, 800);
 
     const doneTimer = setTimeout(() => {
       setPhase('done');
-    }, 1500);
+    }, 1400);
 
     return () => {
       clearTimeout(openTimer);
@@ -66,38 +66,49 @@ export default function IntroCurtain() {
       aria-hidden="true"
       className="fixed inset-0 z-[100] cursor-pointer overflow-hidden select-none"
     >
-      {/* Top Panel: Prussian Blue in light mode (#1B3350), Midnight Black in dark mode (#090A10) */}
+      {/* Top Scroll Panel: Prussian Blue in light mode (#1B3350), Midnight Black in dark mode (#090A10) */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '-100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+2px)] bg-[#1B3350] dark:bg-[#090A10] will-change-transform"
+        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] dark:bg-[#090A10] border-b border-sunset-orange/30 shadow-2xl will-change-transform"
       />
 
-      {/* Bottom Panel: Prussian Blue in light mode (#1B3350), Midnight Black in dark mode (#090A10) */}
+      {/* Bottom Scroll Panel: Prussian Blue in light mode (#1B3350), Midnight Black in dark mode (#090A10) */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+2px)] bg-[#1B3350] dark:bg-[#090A10] will-change-transform"
+        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] dark:bg-[#090A10] border-t border-sunset-orange/30 shadow-2xl will-change-transform"
       />
 
-      {/* Center Logo: scales & dives into page as curtains open */}
+      {/* Center Seal Logo: spins 360° clockwise briskly like an unsealing scroll, then dives as letter opens */}
       <motion.div
-        initial={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, scale: 0.85, rotate: 0 }}
         animate={
           isOpening
-            ? { opacity: 0, scale: 0.35 }
-            : { opacity: 1, scale: 1 }
+            ? { opacity: 0, scale: 0.35, rotate: 360 }
+            : { opacity: 1, scale: 1, rotate: 360 }
         }
         transition={
           isOpening
-            ? { duration: 0.25, ease: 'easeInOut' }
-            : { duration: 0.2, ease: 'easeOut' }
+            ? {
+                opacity: { duration: 0.22, ease: 'easeInOut' },
+                scale: { duration: 0.25, ease: 'easeInOut' },
+              }
+            : {
+                rotate: { duration: 0.62, ease: [0.16, 1, 0.3, 1] },
+                scale: { duration: 0.45, ease: 'easeOut' },
+                opacity: { duration: 0.2, ease: 'easeOut' },
+              }
         }
         className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center will-change-transform"
       >
-        <InfinitusLogo size="loader" priority />
+        <div className="relative flex items-center justify-center">
+          {/* Glowing ambient backlight behind the central scroll seal */}
+          <div className="absolute h-36 w-36 rounded-full bg-sunset-orange/20 blur-2xl" />
+          <InfinitusLogo size="loader" priority />
+        </div>
       </motion.div>
     </div>
   );

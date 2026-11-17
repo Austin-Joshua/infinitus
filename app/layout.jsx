@@ -58,7 +58,7 @@ const initScript = `
       seen = sessionStorage.getItem('infinitus-intro') === '1';
     } catch (e) {}
 
-    var play = !reduced && (!seen || (location.pathname === '/' && reloaded));
+    var play = !reduced && (!seen || reloaded);
 
     try {
       sessionStorage.setItem('infinitus-intro', '1');
