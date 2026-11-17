@@ -42,10 +42,10 @@ The website provides permanent short paths configured via `next.config.mjs` that
 
 | Short URL | Destination | Purpose |
 | :--- | :--- | :--- |
-| `https://infinitus-seven.vercel.app/join` | Active Google Form (`forms.gle/wMbC1SEdAXYYbFvn9`) | Club recruitment & queries |
+| `https://infinitus-seven.vercel.app/join` | Active recruitment/contact page (`/contact` pending owner form confirmation) | Club recruitment & queries |
 | `https://infinitus-seven.vercel.app/instagram` | `@infinitus_club.rit` | Direct Instagram link |
 | `https://infinitus-seven.vercel.app/ig` | `@infinitus_club.rit` | Ultra-short Instagram link |
-| `https://infinitus-seven.vercel.app/feedback` | Active Google Form | Feedback & inquiries |
+| `https://infinitus-seven.vercel.app/feedback` | Active Google Form (`forms.gle/wMbC1SEdAXYYbFvn9`) | Feedback & inquiries |
 | `https://infinitus-seven.vercel.app/events/<id>` | Event detail page (e.g. `/events/shinka-2026`) | Deep link for event announcements |
 
 ---
