@@ -47,16 +47,19 @@ function SectionHead({ eyebrow, heading, href, cta }) {
 
 export function KeywordMarquee() {
   return (
-    <div className="py-4 sm:py-5 overflow-hidden border-y border-fg/10 bg-bg/50">
-      <Marquee duration={45}>
-        {COPY.home.marquee.map((word) => (
-          <span key={word} className="flex items-center whitespace-nowrap font-heading text-2xl italic text-fg/85 sm:text-4xl">
-            <span className="px-6 sm:px-8">{word}</span>
-            <span aria-hidden="true" className="font-serif not-italic text-sunset-orange text-xl sm:text-2xl">∞</span>
-          </span>
-        ))}
-      </Marquee>
-    </div>
+    <aside aria-label="Key club domains" className="py-4 sm:py-5 overflow-hidden border-y border-fg/10 bg-bg/50">
+      <span className="sr-only">Key domains: {COPY.home.marquee.join(', ')}</span>
+      <div aria-hidden="true">
+        <Marquee duration={45}>
+          {COPY.home.marquee.map((word) => (
+            <span key={word} className="flex items-center whitespace-nowrap font-heading text-2xl italic text-fg/85 sm:text-4xl">
+              <span className="px-6 sm:px-8">{word}</span>
+              <span aria-hidden="true" className="font-serif not-italic text-sunset-orange text-xl sm:text-2xl">∞</span>
+            </span>
+          ))}
+        </Marquee>
+      </div>
+    </aside>
   );
 }
 
