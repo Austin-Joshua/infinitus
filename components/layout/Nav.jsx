@@ -50,6 +50,16 @@ function MoonIcon(props) {
   );
 }
 
+function InstagramNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" {...props}>
+      <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" />
+      <circle cx="12" cy="12" r="3.3" stroke="currentColor" />
+      <path d="M16.2 7.8h.01" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -145,6 +155,17 @@ export default function Nav() {
 
           {/* Header Action Buttons */}
           <div className="flex items-center gap-2">
+            <a
+              href={SOCIAL.instagram}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={`Follow INFINITUS on Instagram (${SOCIAL.instagramHandle})`}
+              title="Instagram @infinitus_club.rit"
+              className="relative hidden sm:flex h-10 w-10 items-center justify-center overflow-hidden rounded-md text-fg transition-colors hover:bg-fg/10 hover:text-accent"
+            >
+              <InstagramNavIcon className="h-5 w-5" />
+            </a>
+
             <button
               type="button"
               onClick={toggleTheme}

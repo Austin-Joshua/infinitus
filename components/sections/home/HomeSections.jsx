@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { COPY, PAGES, SOCIAL } from '@/lib/site';
+import { INSTAGRAM_POSTS } from '@/lib/instagram';
 import { formatEventDate } from '@/lib/format';
 import Marquee from '@/components/ui/Marquee';
 import Reveal, { Stagger, StaggerItem } from '@/components/ui/Reveal';
@@ -341,6 +342,68 @@ export function HomeGallery({ photos }) {
             ))}
           </Marquee>
         ))}
+      </div>
+    </section>
+  );
+}
+
+export function HomeInstagram() {
+  return (
+    <section className="section overflow-hidden bg-bg/90 !py-16 sm:!py-24 border-t border-fg/10">
+      <div className="container-x">
+        <SectionHead
+          eyebrow="Social Sync · @infinitus_club.rit"
+          heading="From our Instagram feed"
+          href={SOCIAL.instagram}
+          cta="Follow on Instagram"
+        />
+
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
+          {INSTAGRAM_POSTS.map((post, idx) => (
+            <Reveal key={post.id} delay={idx * 0.06}>
+              <a
+                href={post.permalink}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-fg/15 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-fg/30 hover:shadow-[0_20px_40px_-20px_rgb(var(--fg)/0.25)]"
+                aria-label={`View Instagram post: ${post.caption}`}
+              >
+                <div className="relative aspect-square w-full overflow-hidden bg-bg-2 border-b border-fg/10">
+                  <Image
+                    src={post.image}
+                    alt={post.caption}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  {post.tag && (
+                    <span className="chip absolute left-3 top-3 border-accent/30 bg-bg/90 backdrop-blur-sm text-accent text-xs">
+                      {post.tag}
+                    </span>
+                  )}
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-bg/90 backdrop-blur-sm text-fg shadow-sm transition-transform duration-300 group-hover:scale-110"
+                  >
+                    ↗
+                  </span>
+                </div>
+
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <p className="line-clamp-3 text-xs sm:text-sm leading-relaxed text-fg/90 font-sans">
+                    {post.caption}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-3 text-xs">
+                    <span className="font-mono text-muted">{post.date}</span>
+                    <span className="font-mono font-medium text-accent flex items-center gap-1 group-hover:underline">
+                      View post <span aria-hidden="true">→</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

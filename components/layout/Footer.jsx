@@ -41,7 +41,7 @@ export default function Footer() {
             <p className="font-mono text-xs uppercase tracking-widest text-muted">Connect & Support</p>
             <ul className="mt-4 space-y-2.5">
               <li>
-                <a href={SOCIAL.instagram} target="_blank" rel="noreferrer noopener" className={linkClass}>
+                <a href={SOCIAL.instagram} target="_blank" rel="noreferrer noopener me" className={linkClass}>
                   Instagram ({SOCIAL.instagramHandle}) <span aria-hidden="true" className="nudge nudge-ne">↗</span>
                 </a>
               </li>
