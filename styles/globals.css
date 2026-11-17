@@ -35,6 +35,8 @@ html {
   /* Non-static so Framer Motion measures scroll-linked sections against the page correctly */
   position: relative;
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 /* Pre-paint cover for initial visit curtain (matches #1D2566 light, #000F2E dark) */
@@ -83,6 +85,8 @@ body {
   background-color: rgb(var(--bg));
   color: rgb(var(--fg));
   transition: background-color 0.3s ease, color 0.3s ease;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 ::selection {

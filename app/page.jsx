@@ -5,6 +5,7 @@ import {
   HomeEvents,
   HomeExplore,
   HomeGallery,
+  HomeInstagram,
   HomeTeam,
   KeywordMarquee,
 } from '@/components/sections/home/HomeSections';
@@ -41,6 +42,7 @@ export default async function Home() {
       <HomeEvents events={events} />
       <HomeTeam members={members} />
       <HomeGallery photos={galleryPhotos(events)} />
+      <HomeInstagram />
       <CtaBand />
     </>
   );
