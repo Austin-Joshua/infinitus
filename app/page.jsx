@@ -17,8 +17,7 @@ import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata = pageMetadata({
   title: `${CLUB_NAME} — Mathematics Club | ${COLLEGE_NAME}`,
-  description:
-    'Official website of INFINITUS, the Mathematics Club of Rajalakshmi Institute of Technology (RIT Chennai). Campus olympiads, SHINKA 2026, PiDoku, algorithm challenges, applied workshops, and competitive mathematics problem solving.',
+  description: SITE.description,
   path: '/',
 });
 

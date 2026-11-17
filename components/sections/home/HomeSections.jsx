@@ -283,7 +283,7 @@ export function HomeEvents({ events }) {
                 </div>
 
                 <span className="chip mt-4 border-sunset/40 text-sunset font-semibold text-xs py-0.5 px-3">
-                  {past.length}+ Events Hosted
+                  {past.length} Events Hosted
                 </span>
 
                 <h3 className="mt-3 font-heading text-xl sm:text-2xl font-bold text-fg">

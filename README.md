@@ -30,8 +30,8 @@ The landing page tours the club and links directly to each dedicated page:
 |---|---|
 | **Home** | Hero lemniscate curve, key stats, ticker marquee, latest events, committee cards, curated Instagram feed, and photo gallery |
 | **About** | Club mission, six operational pillars, and timeline from 2023 to 2026 |
-| **Events** | 15 hosted events with posters, dates, venues, Instagram links, and Google Form registration hooks |
-| **Team** | Core Committee 2026–27 with member cards, roles, and departmental representation |
+| **Events** | 31 hosted events with posters, dates, venues, Instagram links, and Google Form registration hooks |
+| **Team** | Core Committee 2026–27 (28 members) with member cards, roles, and departmental representation |
 | **Gallery** | Photo highlights with unique captions and accessible keyboard-navigable modal |
 | **Contact** | Official Google Form queries, direct club email, Instagram, and college campus address |
 
@@ -46,7 +46,7 @@ JSON at `/api/members` and `/api/events`.
   <img src=".github/readme/events.svg" width="100%" alt="Event posters sliding past, newest first">
 </p>
 
-Fifteen events since 2024, from a guest lecture on mathematics in modern
+Thirty-one events since 2023, from a guest lecture on mathematics in modern
 technology to **SHINKA 2026**, a mathematics and innovation championship for
 school students. Each poster is a WebP in `public/events/`, and the strip above
 is built from the same files.
@@ -201,7 +201,7 @@ Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with
 <td width="96"><a href="https://github.com/Austin-Joshua"><img src="https://github.com/Austin-Joshua.png?size=160" width="80" alt="Austin-Joshua"></a></td>
 <td><b>Austin Joshua M</b> · <a href="https://github.com/Austin-Joshua">@Austin-Joshua</a><br>President, INFINITUS 2026–27.<br>Leads the club and repository maintainer.</td>
 <td width="96"><a href="https://github.com/Aakashxnoir"><img src="https://github.com/Aakashxnoir.png?size=160" width="80" alt="Aakashxnoir"></a></td>
-<td><b>Aakash B K</b> (Aakash Buddha Kannan) · <a href="https://github.com/Aakashxnoir">@Aakashxnoir</a><br>Technical Head / Technical Coordinator, INFINITUS 2026–27.<br>Built the website architecture and design foundation.</td>
+<td><b>Aakash B K</b> (Aakash Buddha Kannan) · <a href="https://github.com/Aakashxnoir">@Aakashxnoir</a><br>Technical Coordinator / Technical Head, INFINITUS 2026–27.<br>Built the website architecture and design foundation.</td>
 </tr>
 </table>
 
