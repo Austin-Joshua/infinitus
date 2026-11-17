@@ -45,6 +45,7 @@ export default function GalleryGrid({ photos = [] }) {
             onClick={() => openLightbox(i)}
             className="card card-hover group relative flex aspect-[4/3] w-full cursor-pointer flex-col overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label={`View photo: ${photo.caption}`}
+            aria-haspopup="dialog"
           >
             <Image
               src={photo.src}

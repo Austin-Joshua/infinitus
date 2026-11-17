@@ -8,7 +8,7 @@ on:
 
 jobs:
   verify:
-    name: Lint, Test & Build
+    name: Lint, Test, Asset Check, Build & E2E
     runs-on: ubuntu-latest
 
     steps:
@@ -24,13 +24,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Lint codebase
         run: npm run lint
 
       - name: Run unit test suite
         run: npm test
 
+      - name: Check asset integrity
+        run: npm run check:assets
+
       - name: Build Next.js application
         run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://infinitus-seven.vercel.app
+
+      - name: Check site links and routes
+        run: npm run check:links
+
+      - name: Run Playwright E2E test suite
+        run: npm run test:e2e
         env:
           NEXT_PUBLIC_SITE_URL: https://infinitus-seven.vercel.app

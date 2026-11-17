@@ -9,6 +9,9 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "node --test",
+    "test:e2e": "playwright test",
+    "check:assets": "node scripts/check-assets.mjs",
+    "check:links": "node scripts/check-links.mjs",
     "db:seed": "node scripts/db/seed.mjs",
     "branding:optimize": "node scripts/optimize-branding.mjs"
   },
@@ -22,6 +25,7 @@
     "react-dom": "^19"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "autoprefixer": "^10",
     "eslint": "^9",
     "eslint-config-next": "^15",

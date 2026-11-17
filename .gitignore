@@ -13,3 +13,9 @@ out/
 assets/ig-raw/
 data/
 Posters/
+
+# Test and tooling output
+test-results/
+playwright-report/
+blob-report/
+
