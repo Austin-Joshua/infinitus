@@ -48,6 +48,7 @@ export default function TeamBrowser({ members }) {
             <button
               key={team}
               type="button"
+              aria-pressed={active}
               onClick={() => setSelectedTeam(team)}
               className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
                 active

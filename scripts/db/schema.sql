@@ -26,7 +26,7 @@ create table if not exists events (
   description     text,
   event_date      date not null,
   event_type      text,
-  status          text not null default 'upcoming', -- 'upcoming' | 'conducted'
+  status          text not null default 'upcoming' check (status in ('upcoming', 'conducted')),
   cover_image_url text,
   venue           text,
   external_link   text,
@@ -44,6 +44,9 @@ create table if not exists event_images (
   sort_order int not null default 0
 );
 
+-- Indexes & Unique Constraints
+create unique index if not exists idx_members_name on members (name);
+create unique index if not exists idx_events_title_date on events (title, event_date);
 create index if not exists idx_events_status_date on events (status, event_date desc);
 create index if not exists idx_members_role_rank on members (role_rank asc);
 

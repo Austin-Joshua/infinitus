@@ -23,15 +23,14 @@ export default function EventsBrowser({ events }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Filter events by year" className="flex flex-wrap gap-x-6 gap-y-2 border-b border-fg/15">
+      <div role="group" aria-label="Filter events by year" className="flex flex-wrap gap-x-6 gap-y-2 border-b border-fg/15">
         {years.map((y) => {
           const active = y === year;
           return (
             <button
               key={y}
               type="button"
-              role="tab"
-              aria-selected={active}
+              aria-pressed={active}
               onClick={() => setYear(y)}
               className={`relative py-2 font-mono text-sm transition-colors ${
                 active ? 'text-fg' : 'text-muted hover:text-fg'
