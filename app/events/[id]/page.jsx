@@ -4,10 +4,12 @@ import { EventPoster, ExternalArrow, eventHref } from '@/components/ui/EventCard
 import GalleryGrid from '@/components/ui/GalleryGrid';
 import Reveal, { ClipReveal } from '@/components/ui/Reveal';
 import SplitText from '@/components/ui/SplitText';
+import JsonLd from '@/components/seo/JsonLd';
 import { EVENTS } from '@/lib/data';
 import { getEvent } from '@/lib/events';
 import { formatEventDate } from '@/lib/format';
-import { COPY } from '@/lib/site';
+import { COPY, CLUB_NAME, SITE } from '@/lib/site';
+import { pageMetadata, absoluteUrl } from '@/lib/seo';
 
 export const revalidate = 60;
 
@@ -20,11 +22,18 @@ export async function generateMetadata({ params }) {
   const found = await getEvent(decodeURIComponent(id));
   if (!found) return {};
   const { event } = found;
-  return {
-    title: event.title,
-    description: event.description,
-    openGraph: event.coverImageUrl ? { images: [event.coverImageUrl] } : undefined,
-  };
+  const description =
+    event.description && event.description.length > 155
+      ? `${event.description.slice(0, 152)}...`
+      : event.description || `${event.title} organized by INFINITUS at Rajalakshmi Institute of Technology.`;
+
+  return pageMetadata({
+    title: `${event.title} | INFINITUS RIT`,
+    description,
+    path: `/events/${encodeURIComponent(event.id)}`,
+    image: event.coverImageUrl || '/opengraph-image',
+    imageAlt: `${event.title} poster`,
+  });
 }
 
 function NeighbourLink({ event, label, align }) {
@@ -54,9 +63,47 @@ export default async function EventPage({ params }) {
   const isUpcoming = event.status === 'upcoming';
   const photos = event.images.map((src, i) => ({ src, width: 1080, height: 1350, caption: `${event.title} — photo ${i + 1}` }));
 
+  const isOnline = Boolean(event.venue && event.venue.toLowerCase().includes('online'));
+  const eventJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: event.description,
+    startDate: event.eventDate,
+    endDate: event.endDate || event.eventDate,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: isOnline
+      ? 'https://schema.org/OnlineEventAttendanceMode'
+      : 'https://schema.org/OfflineEventAttendanceMode',
+    location: isOnline
+      ? {
+          '@type': 'VirtualLocation',
+          url: event.externalLink || SITE.url,
+        }
+      : {
+          '@type': 'Place',
+          name: event.venue || 'Rajalakshmi Institute of Technology',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Chennai',
+            addressRegion: 'Tamil Nadu',
+            addressCountry: 'IN',
+            // TODO(owner): confirm from RIT website full campus street address and PIN code
+          },
+        },
+    image: event.coverImageUrl ? absoluteUrl(event.coverImageUrl) : absoluteUrl('/opengraph-image'),
+    url: absoluteUrl(`/events/${encodeURIComponent(event.id)}`),
+    organizer: {
+      '@type': 'Organization',
+      name: CLUB_NAME,
+      url: SITE.url,
+    },
+  };
+
   return (
     <>
       <article className="pb-24 pt-28 sm:pt-36">
+        <JsonLd data={eventJsonLd} />
         <div className="container-x">
           <Link
             href="/events"

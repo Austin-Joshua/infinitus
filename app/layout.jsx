@@ -1,6 +1,8 @@
 import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
-import { CLUB_NAME, COLLEGE_NAME, SITE } from '@/lib/site';
+import { CLUB_NAME, COLLEGE_NAME, SITE, SOCIAL } from '@/lib/site';
+import { absoluteUrl } from '@/lib/seo';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
+import JsonLd from '@/components/seo/JsonLd';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import '@/styles/globals.css';
@@ -81,7 +83,6 @@ export const metadata = {
     template: SITE.titleTemplate,
   },
   description: SITE.description,
-  keywords: SITE.keywords,
   authors: [{ name: CLUB_NAME }],
   creator: CLUB_NAME,
   publisher: COLLEGE_NAME,
@@ -110,6 +111,39 @@ export const viewport = {
   ],
 };
 
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: CLUB_NAME,
+  alternateName: 'INFINITUS RIT',
+  url: SITE.url,
+  description: SITE.description,
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: CLUB_NAME,
+  alternateName: 'INFINITUS Mathematics Club',
+  url: SITE.url,
+  logo: absoluteUrl('/icon.svg'),
+  email: SITE.contactEmail,
+  description: SITE.description,
+  parentOrganization: {
+    '@type': 'CollegeOrUniversity',
+    name: COLLEGE_NAME,
+    url: 'https://ritchennai.org',
+  },
+  sameAs: [SOCIAL.instagram],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Chennai',
+    addressRegion: 'Tamil Nadu',
+    addressCountry: 'IN',
+    // TODO(owner): confirm from the RIT website the exact campus street address and PIN code
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -121,6 +155,8 @@ export default function RootLayout({ children }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: initScript }} />
+        <JsonLd data={websiteJsonLd} />
+        <JsonLd data={organizationJsonLd} />
         <noscript>
           <style>{`
             .page-in { opacity: 1 !important; transform: none !important; animation: none !important; }

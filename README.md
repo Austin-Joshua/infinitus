@@ -77,8 +77,8 @@ role responsibilities are always read from the repo.
 You need **Node 18.18+**.
 
 ```bash
-git clone https://github.com/Aakashxnoir/Infinitus.git
-cd Infinitus
+git clone https://github.com/Austin-Joshua/infinitus.git
+cd infinitus
 npm install
 npm run dev        # http://localhost:3000
 ```
@@ -195,12 +195,16 @@ CSS keyframes or SMIL, so GitHub plays it as a plain image.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
+## Credits & Contributors
+
+Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with **Austin Joshua M** (President, INFINITUS).
+
 <table>
 <tr>
 <td width="96"><a href="https://github.com/Austin-Joshua"><img src="https://github.com/Austin-Joshua.png?size=160" width="80" alt="Austin-Joshua"></a></td>
-<td><b>Austin Joshua M</b> · <a href="https://github.com/Austin-Joshua">@Austin-Joshua</a><br>President, INFINITUS 2026–27.<br>Leads the club and its Core Committee.</td>
+<td><b>Austin Joshua M</b> · <a href="https://github.com/Austin-Joshua">@Austin-Joshua</a><br>President, INFINITUS 2026–27 (13 commits).<br>Leads the club and its Core Committee.</td>
 <td width="96"><a href="https://github.com/Aakashxnoir"><img src="https://github.com/Aakashxnoir.png?size=160" width="80" alt="Aakashxnoir"></a></td>
-<td><b>Aakash Buddha Kannan</b> · <a href="https://github.com/Aakashxnoir">@Aakashxnoir</a><br>Technical Head, INFINITUS 2026–27.<br>Built the website.</td>
+<td><b>Aakash B K</b> (Aakash Buddha Kannan) · <a href="https://github.com/Aakashxnoir">@Aakashxnoir</a><br>Technical Head / Technical Coordinator, INFINITUS 2026–27 (6 commits).<br>Built the website architecture and design foundation.</td>
 </tr>
 </table>
 
