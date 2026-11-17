@@ -13,31 +13,26 @@
 
 <p align="center"><b>Live:</b> <a href="https://infinitus-seven.vercel.app">infinitus-seven.vercel.app</a></p>
 
-Most club websites are a poster and a contact form. **INFINITUS is a fast, beautifully designed club portal.**
+**INFINITUS is the official web portal of the Mathematics Club at Rajalakshmi Institute of Technology, Chennai.**
 
-It's the official site of INFINITUS, the Mathematics Club of Rajalakshmi
-Institute of Technology, Chennai. The ∞ in the hero is a real lemniscate of Bernoulli,
-plotted point by point and traced by a moving dot, captioned *Fig. 1.* like a
-figure in a textbook. The 404 page "tends to infinity". It comes in paper (light)
-and ink (dark).
+The hero features a mathematical lemniscate of Bernoulli, plotted point by point and traced by a moving coordinate dot. The site is themed in paper (light) and ink (dark), and the 404 page tends to infinity.
 
-All the content lives in one clean JS file, so the site runs without a
-database. Supabase can be switched on later without touching a page.
+All data lives in bundled JS files (`lib/data.js`), allowing the site to run statically with zero required backend dependencies. Supabase can be connected optionally without changing component logic.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
-## Connected, Responsive Pages
+## Pages & Structure
 
-The homepage provides an interactive tour that seamlessly connects to every section:
+The landing page tours the club and links directly to each dedicated page:
 
 | Page | Description |
 |---|---|
-| **Home** | The wordmark and Fig. 1, the club in numbers, keyword marquee, latest events, committee cards, and the photo gallery |
-| **About** | Who the club is, six core pillars, and our journey from 2023 to 2026 |
-| **Events** | Every event with its poster, venue, date, and detail page; upcoming events feature a **Register now** button linking directly to their Google Form |
-| **Team** | The Core Committee 2026–27 with interactive member cards, avatars, and role details |
-| **Gallery** | Spacious photo gallery with an accessible full-screen lightbox |
-| **Contact** | Official Google Form queries link, direct email, Instagram, and college campus address |
+| **Home** | Hero lemniscate curve, key stats, ticker marquee, latest events, committee cards, curated Instagram feed, and photo gallery |
+| **About** | Club mission, six operational pillars, and timeline from 2023 to 2026 |
+| **Events** | 15 hosted events with posters, dates, venues, Instagram links, and Google Form registration hooks |
+| **Team** | Core Committee 2026–27 with member cards, roles, and departmental representation |
+| **Gallery** | Photo highlights with unique captions and accessible keyboard-navigable modal |
+| **Contact** | Official Google Form queries, direct club email, Instagram, and college campus address |
 
 It also ships a link-preview image, a sitemap, `robots.txt`, and read-only
 JSON at `/api/members` and `/api/events`.
