@@ -22,7 +22,11 @@ module.exports = {
         sunset: token('sunset'),
         'btn-bg': token('btn-bg'),
         'btn-fg': token('btn-fg'),
-        // Explicit dark-mode brand palette tokens
+        // Light-mode brand palette tokens
+        'ricotta-cream': '#F0E8D8',
+        'prussian-blue': '#1B3350',
+        'lobster-red': '#F03A2A',
+        // Dark-mode brand palette tokens
         'midnight-black': '#090A10',
         'electric-blue': '#2F6BFF',
         'sunset-orange': '#FF7A1A',

@@ -379,7 +379,7 @@ export function HomeInstagram() {
                     />
                   </div>
                   {post.tag && (
-                    <span className="chip absolute left-4 top-4 border-accent/30 bg-bg/95 backdrop-blur-sm text-accent dark:border-sunset/40 dark:text-sunset text-xs shadow-sm">
+                    <span className="chip absolute left-4 top-4 border-sunset/40 bg-bg/95 backdrop-blur-sm text-sunset text-xs shadow-sm font-medium">
                       {post.tag}
                     </span>
                   )}
