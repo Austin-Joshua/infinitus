@@ -77,17 +77,12 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Enforce non-www canonical host
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.infinitus-seven.vercel.app' }],
-        destination: 'https://infinitus-seven.vercel.app/:path*',
-        permanent: true,
-      },
-      // Short Instagram story / caption links
+      // Short vanity and campaign redirect URLs
+      // TODO(owner): confirm which Google Form is recruitment and which is feedback.
+      // Until confirmed by the owner, /join redirects temporarily (307) to /contact.
       {
         source: '/join',
-        destination: 'https://forms.gle/wMbC1SEdAXYYbFvn9',
+        destination: '/contact',
         permanent: false,
       },
       {
