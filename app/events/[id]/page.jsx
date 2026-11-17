@@ -114,8 +114,8 @@ export default async function EventPage({ params }) {
 
           <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
             <div className="lg:sticky lg:top-24 lg:self-start">
-              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 bg-bg-2/70 p-2 sm:p-3 flex items-center justify-center">
-                <div className="relative h-full w-full overflow-hidden rounded-lg bg-bg">
+              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-sunset-orange/40 bg-card/85 p-3 sm:p-4 flex items-center justify-center shadow-xl shadow-sunset-orange/15 backdrop-blur-md">
+                <div className="relative h-full w-full overflow-hidden rounded-xl bg-bg">
                   <EventPoster
                     event={event}
                     priority
@@ -158,7 +158,7 @@ export default async function EventPage({ params }) {
                 {event.highlights?.length > 0 && (
                   <ul className="mt-8 flex flex-wrap gap-2">
                     {event.highlights.map((h) => (
-                      <li key={h} className="rounded-sm border border-fg/15 px-3 py-1.5 text-sm text-fg">
+                      <li key={h} className="chip">
                         {h}
                       </li>
                     ))}

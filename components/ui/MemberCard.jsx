@@ -147,7 +147,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.97 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="relative z-10 w-full max-w-lg rounded-2xl border border-fg/15 bg-card p-6 shadow-2xl sm:p-8"
+            className="relative z-10 w-full max-w-lg rounded-2xl border border-sunset-orange/40 bg-card/90 p-6 shadow-2xl shadow-sunset-orange/15 backdrop-blur-xl sm:p-8"
           >
             {/* Close Button */}
             <button
@@ -155,7 +155,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-fg/60 transition-colors hover:bg-fg/10 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card/75 text-fg/70 backdrop-blur-md transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <CloseIcon className="h-5 w-5" />
             </button>
@@ -202,7 +202,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label={`${member.name} on LinkedIn`}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-fg/15 text-muted transition-colors hover:border-accent hover:text-accent"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card/75 text-fg/80 backdrop-blur-md transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                   >
                     <LinkedinIcon className="h-4 w-4" />
                   </a>
@@ -213,7 +213,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label={`${member.name} on Instagram`}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-fg/15 text-muted transition-colors hover:border-accent hover:text-accent"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card/75 text-fg/80 backdrop-blur-md transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                   >
                     <InstagramIcon className="h-4 w-4" />
                   </a>
@@ -223,7 +223,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label="INFINITUS on Instagram"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-fg/15 text-muted transition-colors hover:border-accent hover:text-accent"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card/75 text-fg/80 backdrop-blur-md transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                     title="Connect on Instagram"
                   >
                     <InstagramIcon className="h-4 w-4" />

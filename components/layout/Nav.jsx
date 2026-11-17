@@ -128,7 +128,7 @@ export default function Nav() {
 
       <motion.header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
-          solid ? 'border-fg/15 bg-bg/90 backdrop-blur-md shadow-sm' : 'border-transparent bg-transparent'
+          solid ? 'border-sunset-orange/20 bg-bg/85 backdrop-blur-xl shadow-md shadow-sunset-orange/5' : 'border-transparent bg-transparent'
         }`}
         onFocusCapture={() => setIsFocusedWithin(true)}
         onBlurCapture={(e) => {
@@ -153,7 +153,7 @@ export default function Nav() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-1.5 md:flex">
             {MAIN_NAV.map((item) => {
               const active = isActive(pathname, item.href);
               return (
@@ -161,14 +161,14 @@ export default function Nav() {
                   key={item.id}
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`relative rounded-md px-3.5 py-2 text-sm font-medium transition-colors ${
-                    active ? 'text-accent' : 'text-muted hover:text-fg'
+                  className={`relative rounded-xl px-3.5 py-2 text-sm font-medium transition-colors ${
+                    active ? 'text-sunset-orange font-semibold' : 'text-muted hover:text-fg'
                   }`}
                 >
                   {active && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-md bg-accent/10"
+                      className="absolute inset-0 -z-10 rounded-xl border border-sunset-orange/60 bg-card/85 backdrop-blur-md shadow-sm shadow-sunset-orange/20"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
@@ -186,7 +186,7 @@ export default function Nav() {
               rel="noreferrer noopener"
               aria-label={`Follow INFINITUS on Instagram (${SOCIAL.instagramHandle})`}
               title="Instagram @infinitus_club.rit"
-              className="relative hidden sm:flex h-10 w-10 items-center justify-center overflow-hidden rounded-md text-fg transition-colors hover:bg-fg/10 hover:text-accent"
+              className="relative hidden sm:flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange"
             >
               <InstagramNavIcon className="h-5 w-5" />
             </a>
@@ -196,7 +196,7 @@ export default function Nav() {
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={isDark ? 'Light mode' : 'Dark mode'}
-              className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-md text-fg transition-colors hover:bg-fg/10"
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -228,7 +228,7 @@ export default function Nav() {
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-menu"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              className="flex h-10 w-10 items-center justify-center rounded-md text-fg transition-colors hover:bg-fg/10 md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange md:hidden"
             >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-5 w-5" aria-hidden="true">
                 <motion.path
@@ -282,7 +282,7 @@ export default function Nav() {
                         aria-current={active ? 'page' : undefined}
                         className={`flex items-center justify-between rounded-xl px-4 py-3.5 font-heading text-lg font-semibold transition-all ${
                           active
-                            ? 'bg-accent text-white shadow-md'
+                            ? 'border border-sunset-orange/60 bg-card/90 text-sunset-orange shadow-md shadow-sunset-orange/20 backdrop-blur-md'
                             : 'text-fg hover:bg-fg/5'
                         }`}
                       >

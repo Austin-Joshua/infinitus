@@ -41,7 +41,7 @@ export default function TeamBrowser({ members }) {
   return (
     <div className="space-y-10">
       {/* Team Filter Pills for native-app experience on mobile/tablet/desktop */}
-      <div className="flex flex-wrap gap-2 border-b border-fg/15 pb-6">
+      <div className="flex flex-wrap gap-2.5 border-b border-fg/15 pb-6">
         {teamCategories.map((team) => {
           const active = team === selectedTeam;
           return (
@@ -50,18 +50,28 @@ export default function TeamBrowser({ members }) {
               type="button"
               aria-pressed={active}
               onClick={() => setSelectedTeam(team)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
                 active
-                  ? 'bg-accent text-white shadow-sm'
-                  : 'bg-card border border-fg/15 text-muted hover:border-fg/30 hover:text-fg'
+                  ? 'bg-sunset-orange text-white border border-sunset-orange shadow-lg shadow-sunset-orange/35 scale-[1.02]'
+                  : 'bg-card/75 backdrop-blur-md border border-sunset-orange/35 text-fg/85 shadow-sm shadow-sunset-orange/5 hover:border-sunset-orange/70 hover:text-fg hover:shadow-md hover:-translate-y-0.5'
               }`}
             >
               {team}
               {team === 'All' ? (
-                <span className="ml-1.5 opacity-60">({members.length})</span>
+                <span
+                  className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-mono transition-colors ${
+                    active ? 'bg-white/25 text-white' : 'bg-fg/10 text-muted'
+                  }`}
+                >
+                  {members.length}
+                </span>
               ) : (
-                <span className="ml-1.5 opacity-60">
-                  ({members.filter((m) => m.team === team).length})
+                <span
+                  className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-mono transition-colors ${
+                    active ? 'bg-white/25 text-white' : 'bg-fg/10 text-muted'
+                  }`}
+                >
+                  {members.filter((m) => m.team === team).length}
                 </span>
               )}
             </button>

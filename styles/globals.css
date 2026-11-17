@@ -166,7 +166,21 @@ body {
   }
 
   .btn-primary {
-    @apply btn bg-btn-bg text-btn-fg hover:bg-btn-bg/90 shadow-sm active:scale-95;
+    @apply btn active:scale-95 text-btn-fg;
+    background-color: rgb(var(--btn-bg));
+    border: 1px solid rgba(255, 122, 26, 0.45);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.25), 0 0 10px -2px rgba(255, 122, 26, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease,
+                background-color 0.25s ease;
+  }
+  .btn-primary:hover {
+    border-color: rgba(255, 122, 26, 0.9);
+    box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.35), 0 0 18px 0 rgba(255, 122, 26, 0.45), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.5);
+    transform: translateY(-1.5px);
   }
 
   /* Arrow inside a button/link nudges toward its direction on hover */
@@ -183,11 +197,36 @@ body {
   }
 
   .btn-ghost {
-    @apply btn border border-fg/20 text-fg hover:border-fg/40 hover:bg-fg/[0.04] active:scale-95;
+    @apply btn active:scale-95 text-fg;
+    background: rgb(var(--card-bg));
+    border: 1px solid rgba(255, 122, 26, 0.35);
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.12), 0 0 8px -2px rgba(255, 122, 26, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
+  }
+  .btn-ghost:hover {
+    border-color: rgba(255, 122, 26, 0.85);
+    box-shadow: 0 8px 20px -2px rgba(0, 0, 0, 0.18), 0 0 14px 0 rgba(255, 122, 26, 0.3), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.6);
+    transform: translateY(-1.5px);
   }
 
   .chip {
-    @apply inline-flex items-center rounded-full border border-fg/15 px-2.5 py-0.5 font-mono text-[11px] text-muted;
+    @apply inline-flex items-center rounded-full px-3 py-1 font-mono text-[11px] font-medium text-fg;
+    background: rgb(var(--card-bg));
+    border: 1px solid rgba(255, 122, 26, 0.3);
+    box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .chip:hover {
+    border-color: rgba(255, 122, 26, 0.65);
+    box-shadow: 0 4px 12px -1px rgba(255, 122, 26, 0.2);
   }
 }
 
