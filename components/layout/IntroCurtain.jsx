@@ -66,20 +66,20 @@ export default function IntroCurtain() {
       aria-hidden="true"
       className="fixed inset-0 z-[100] cursor-pointer overflow-hidden select-none"
     >
-      {/* Top Scroll Panel: Prussian Blue in light mode (#1B3350), Midnight Black in dark mode (#090A10) */}
+      {/* Top Scroll Panel: Signature Prussian Blue in both modes for distinct contrast against page backgrounds */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '-100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] dark:bg-[#090A10] border-b border-sunset-orange/30 shadow-2xl will-change-transform"
+        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] border-b-2 border-sunset-orange/70 shadow-[0_4px_24px_rgba(255,122,26,0.35)] will-change-transform"
       />
 
-      {/* Bottom Scroll Panel: Prussian Blue in light mode (#1B3350), Midnight Black in dark mode (#090A10) */}
+      {/* Bottom Scroll Panel: Signature Prussian Blue in both modes for distinct contrast against page backgrounds */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] dark:bg-[#090A10] border-t border-sunset-orange/30 shadow-2xl will-change-transform"
+        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] border-t-2 border-sunset-orange/70 shadow-[0_-4px_24px_rgba(255,122,26,0.35)] will-change-transform"
       />
 
       {/* Center Seal Logo: spins 360° clockwise briskly like an unsealing scroll, then dives as letter opens */}
