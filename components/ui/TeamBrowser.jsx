@@ -42,8 +42,12 @@ export default function TeamBrowser({ members }) {
     <div className="space-y-10">
       <h2 className="sr-only">Members Directory by Department & Domain</h2>
 
-      {/* Team Filter Pills for native-app experience on mobile/tablet/desktop */}
-      <div role="group" aria-label="Filter members by team domain" className="flex flex-wrap gap-2.5 border-b border-fg/15 pb-6">
+      {/* Team Filter Pills: swipeable horizontal bar on mobile, wrapped grid on tablet/desktop */}
+      <div
+        role="group"
+        aria-label="Filter members by team domain"
+        className="flex gap-2 overflow-x-auto no-scrollbar pb-3 pt-1 sm:flex-wrap sm:gap-2.5 sm:overflow-visible sm:pb-6 border-b border-fg/15"
+      >
         {teamCategories.map((team) => {
           const active = team === selectedTeam;
           return (
@@ -52,7 +56,7 @@ export default function TeamBrowser({ members }) {
               type="button"
               aria-pressed={active}
               onClick={() => setSelectedTeam(team)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-150 active:scale-95 ${
+              className={`shrink-0 sm:shrink rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold transition-all duration-150 active:scale-95 ${
                 active
                   ? 'bg-sunset-orange text-white border border-sunset-orange shadow-lg shadow-sunset-orange/35 scale-[1.02]'
                   : 'bg-card/75 backdrop-blur-md border border-sunset-orange/35 text-fg/85 shadow-sm shadow-sunset-orange/5 hover:border-sunset-orange/70 hover:text-fg hover:shadow-md hover:-translate-y-0.5'

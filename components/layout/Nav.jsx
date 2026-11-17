@@ -60,6 +60,69 @@ function InstagramNavIcon(props) {
   );
 }
 
+function HomeNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9-5v12m8-7l2 2m-2-2v9a2 2 0 01-2 2H8a2 2 0 01-2-2v-9" />
+    </svg>
+  );
+}
+
+function AboutNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8h.01M11 12h1v4h1" />
+    </svg>
+  );
+}
+
+function EventsNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <rect x="3" y="4" width="18" height="18" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16 2v4M8 2v4M3 10h18" />
+    </svg>
+  );
+}
+
+function TeamNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  );
+}
+
+function GalleryNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+    </svg>
+  );
+}
+
+function ContactNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    </svg>
+  );
+}
+
+const NAV_ICONS = {
+  home: HomeNavIcon,
+  about: AboutNavIcon,
+  events: EventsNavIcon,
+  team: TeamNavIcon,
+  gallery: GalleryNavIcon,
+  contact: ContactNavIcon,
+};
+
 export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -81,6 +144,19 @@ export default function Nav() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  // Auto-close mobile drawer when screen is resized to tablet/desktop breakpoint
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mql = window.matchMedia('(min-width: 768px)');
+    const handleBreakpointChange = (e) => {
+      if (e.matches) {
+        setMenuOpen(false);
+      }
+    };
+    mql.addEventListener('change', handleBreakpointChange);
+    return () => mql.removeEventListener('change', handleBreakpointChange);
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -137,13 +213,13 @@ export default function Nav() {
           }
         }}
       >
-        <div className="container-x flex h-16 items-center justify-between gap-3 sm:gap-4">
+        <div className="container-x flex h-14 sm:h-16 items-center justify-between gap-2.5 sm:gap-4">
           {/* Dual Branding: Infinitus Logo + College Logo */}
-          <Link href="/" className="group flex items-center gap-2.5 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
+          <Link href="/" className="group flex items-center gap-2 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
             <span className="transition-transform duration-700 ease-out group-hover:rotate-[360deg] shrink-0">
-              <InfinitusLogo size="nav" priority />
+              <InfinitusLogo size="nav" priority className="h-8 w-8 sm:h-9 sm:w-9" />
             </span>
-            <span className="h-5 w-px bg-fg/20 shrink-0" aria-hidden="true" />
+            <span className="h-4 sm:h-5 w-px bg-fg/20 shrink-0" aria-hidden="true" />
             <span className="shrink-0">
               <RitLogo size="xs" className="opacity-95 transition-opacity group-hover:opacity-100" />
             </span>
@@ -183,9 +259,9 @@ export default function Nav() {
               rel="noreferrer noopener"
               aria-label={`Follow INFINITUS on Instagram (${SOCIAL.instagramHandle})`}
               title="Instagram @infinitus_club.rit"
-              className="relative hidden sm:flex h-10 w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
+              className="relative hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
             >
-              <InstagramNavIcon className="h-5 w-5" />
+              <InstagramNavIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </a>
 
             <button
@@ -193,7 +269,7 @@ export default function Nav() {
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={isDark ? 'Light mode' : 'Dark mode'}
-              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
+              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -203,7 +279,7 @@ export default function Nav() {
                   exit={{ y: -16, rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.18, ease: EASE.out }}
                 >
-                  {isDark ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+                  {isDark ? <SunIcon className="h-4 w-4 sm:h-5 sm:w-5" /> : <MoonIcon className="h-4 w-4 sm:h-5 sm:w-5" />}
                 </motion.span>
               </AnimatePresence>
             </button>
@@ -225,9 +301,9 @@ export default function Nav() {
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-menu"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95 md:hidden"
+              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95 md:hidden"
             >
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-5 w-5" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true">
                 <motion.path
                   stroke="currentColor"
                   strokeLinecap="round"
@@ -255,36 +331,62 @@ export default function Nav() {
             ref={mobileNavRef}
             id="mobile-nav-menu"
             aria-label="Primary mobile"
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: reduce ? 0 : 0.25, ease: EASE.out }}
-            className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col justify-between overflow-y-auto bg-bg/95 backdrop-blur-xl p-6 md:hidden"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: reduce ? 0 : 0.22, ease: EASE.out }}
+            className="fixed inset-x-0 bottom-0 top-14 sm:top-16 z-40 flex flex-col justify-between overflow-y-auto bg-bg/95 dark:bg-bg/98 backdrop-blur-2xl p-4 sm:p-6 md:hidden border-t border-fg/10"
           >
             <div className="flex flex-col gap-2">
-              <p className="font-mono text-xs uppercase tracking-wider text-muted px-3">Navigation</p>
+              <div className="flex items-center justify-between px-2 pt-1 pb-1.5">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                  Menu
+                </span>
+                <span className="chip border-sunset-orange/30 text-sunset-orange text-[10px] font-semibold py-0.5 px-2">
+                  {CLUB_SHORT} CLUB
+                </span>
+              </div>
               <ul className="flex flex-col gap-1.5 mt-1">
                 {NAV_LINKS.map((item, i) => {
                   const active = isActive(pathname, item.href);
+                  const Icon = NAV_ICONS[item.id] || HomeNavIcon;
                   return (
                     <motion.li
                       key={item.id}
-                      initial={{ opacity: 0, x: -16 }}
+                      initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 * i, duration: 0.3, ease: EASE.out }}
+                      transition={{ delay: 0.04 * i, duration: 0.25, ease: EASE.out }}
                     >
                       <Link
                         href={item.href}
                         onClick={() => setMenuOpen(false)}
                         aria-current={active ? 'page' : undefined}
-                        className={`flex items-center justify-between rounded-xl px-4 py-3.5 font-heading text-lg font-semibold transition-all ${
+                        className={`group flex items-center justify-between rounded-xl px-3.5 py-3 font-heading text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
                           active
                             ? 'border border-sunset-orange/60 bg-card/90 text-sunset-orange shadow-md shadow-sunset-orange/20 backdrop-blur-md'
-                            : 'text-fg hover:bg-fg/5'
+                            : 'text-fg hover:bg-fg/5 hover:text-accent'
                         }`}
                       >
-                        <span>{item.navLabel}</span>
-                        <span aria-hidden="true" className="text-sm opacity-60">→</span>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                              active
+                                ? 'bg-sunset-orange/15 text-sunset-orange'
+                                : 'bg-fg/5 text-muted group-hover:bg-accent/10 group-hover:text-accent'
+                            }`}
+                          >
+                            <Icon className="h-4 w-4" />
+                          </span>
+                          <span>{item.navLabel}</span>
+                        </div>
+                        <span
+                          aria-hidden="true"
+                          className={`text-xs transition-transform duration-200 ${
+                            active ? 'text-sunset-orange translate-x-0.5' : 'text-muted group-hover:translate-x-1 group-hover:text-accent'
+                          }`}
+                        >
+                          →
+                        </span>
                       </Link>
                     </motion.li>
                   );
@@ -292,30 +394,44 @@ export default function Nav() {
               </ul>
             </div>
 
-            {/* Mobile Footer Quick Actions */}
-            <div className="mt-8 border-t border-fg/10 pt-6 flex flex-col gap-3">
-              <a
-                href={SOCIAL.queriesForm}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="btn-primary w-full text-center text-sm font-semibold !py-3 justify-center"
-              >
-                Queries & Feedback Form <span aria-hidden="true">↗</span>
-              </a>
-              <div className="flex items-center justify-between text-xs text-muted pt-2 px-1">
+            {/* Mobile Footer Quick Actions & Links */}
+            <div className="mt-6 border-t border-fg/10 pt-4 flex flex-col gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <a
                   href={SOCIAL.instagram}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="hover:text-accent transition-colors"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-sunset-orange/30 bg-card/80 py-2.5 px-3 text-xs font-semibold text-fg backdrop-blur-md transition-all hover:border-sunset-orange hover:text-sunset-orange active:scale-95"
                 >
-                  Instagram {SOCIAL.instagramHandle} ↗
+                  <InstagramNavIcon className="h-4 w-4 text-sunset-orange" />
+                  <span>Instagram</span>
                 </a>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-sunset-orange/30 bg-card/80 py-2.5 px-3 text-xs font-semibold text-fg backdrop-blur-md transition-all hover:border-sunset-orange hover:text-sunset-orange active:scale-95"
+                >
+                  {isDark ? <SunIcon className="h-4 w-4 text-sunset-orange" /> : <MoonIcon className="h-4 w-4 text-sunset-orange" />}
+                  <span>{isDark ? 'Light' : 'Dark'} Mode</span>
+                </button>
+              </div>
+
+              <a
+                href={SOCIAL.queriesForm}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="btn-primary w-full text-center text-xs sm:text-sm font-semibold !py-3 justify-center"
+              >
+                Queries & Feedback Form <span aria-hidden="true" className="nudge-ne">↗</span>
+              </a>
+
+              <div className="flex items-center justify-between text-[11px] text-muted pt-1 px-1">
+                <span className="truncate max-w-[180px]">{COLLEGE_NAME}</span>
                 <a
                   href={`mailto:${SITE.contactEmail}`}
-                  className="hover:text-accent transition-colors"
+                  className="hover:text-accent font-mono transition-colors shrink-0"
                 >
-                  Email Us
+                  {SITE.contactEmail}
                 </a>
               </div>
             </div>

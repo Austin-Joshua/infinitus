@@ -268,30 +268,30 @@ export default function MemberCard({ member, onOpen }) {
         whileHover={{ y: -6, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="card card-hover group flex h-full w-full cursor-pointer flex-col items-center p-5 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:p-6"
+        className="card card-hover group flex h-full w-full cursor-pointer flex-col items-center p-3.5 sm:p-5 lg:p-6 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         aria-haspopup="dialog"
       >
         {/* Circular Avatar */}
-        <div className="mx-auto h-20 w-20 overflow-hidden rounded-full ring-2 ring-fg/15 transition-all duration-300 group-hover:ring-accent/50 group-hover:shadow-md sm:h-24 sm:w-24">
+        <div className="mx-auto h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 overflow-hidden rounded-full ring-2 ring-fg/15 transition-all duration-300 group-hover:ring-accent/50 group-hover:shadow-md">
           <Avatar name={member.name} photoUrl={member.photoUrl} />
         </div>
 
         {/* Member Name */}
-        <h3 className="mt-4 font-heading text-base font-semibold leading-snug text-fg transition-colors group-hover:text-accent">
+        <h3 className="mt-3 sm:mt-4 font-heading text-sm sm:text-base font-semibold leading-snug text-fg transition-colors group-hover:text-accent">
           {member.name}
         </h3>
 
         {/* Role */}
-        <p className="mt-1 text-xs font-semibold text-gold sm:text-sm">
+        <p className="mt-1 text-[11px] sm:text-xs font-semibold text-gold">
           {member.role}
         </p>
 
         {/* Department · Year */}
-        {meta && <p className="mt-1 text-[11px] font-mono text-muted sm:text-xs">{meta}</p>}
+        {meta && <p className="mt-1 text-[10px] sm:text-[11px] font-mono text-muted">{meta}</p>}
 
         {/* Call-to-action prompt */}
-        <div className="mt-auto pt-4">
-          <span className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-muted transition-colors group-hover:text-accent">
+        <div className="mt-auto pt-3 sm:pt-4">
+          <span className="inline-flex items-center gap-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted transition-colors group-hover:text-accent">
             Role details <span aria-hidden="true" className="nudge">→</span>
           </span>
         </div>

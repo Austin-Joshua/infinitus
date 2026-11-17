@@ -245,6 +245,15 @@ body {
   mask-image: radial-gradient(ellipse 65% 50% at 50% 45%, #000 10%, rgba(0, 0, 0, 0.4) 40%, transparent 70%);
 }
 
+/* Hide scrollbar for clean horizontal swiping on mobile touch screens */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Infinite marquee: content is rendered twice and the track slides by half its width. */
 .marquee-track {
   animation: marquee var(--marquee-duration, 40s) linear infinite;

@@ -257,7 +257,7 @@ export function HomeEvents({ events }) {
 
           {/* 4th Card: Blurred poster background with "Show More Events" leading to /events */}
           <StaggerItem>
-            <article className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-sunset-orange/35 shadow-lg shadow-sunset-orange/10 min-h-[380px]">
+            <article className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-sunset-orange/35 shadow-lg shadow-sunset-orange/10 min-h-[320px] sm:min-h-[380px]">
               {/* Blurred Poster Background */}
               <div className="absolute inset-0 z-0 overflow-hidden bg-bg-2">
                 {fourthPosterUrl && (

@@ -61,7 +61,7 @@ export default function Hero({ stats = [] }) {
               {/* Tertiary CTA: Text Link */}
               <Link
                 href="/events"
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted hover:text-fg transition-colors ml-1"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted hover:text-fg transition-colors ml-0 sm:ml-1"
               >
                 Explore events <span aria-hidden="true" className="nudge">→</span>
               </Link>
@@ -82,11 +82,11 @@ export default function Hero({ stats = [] }) {
         </div>
 
         {stats.length > 0 && (
-          <motion.dl {...rise(0.8)} className="card mt-12 grid grid-cols-3 rounded-2xl p-4 sm:p-6">
+          <motion.dl {...rise(0.8)} className="card mt-10 sm:mt-12 grid grid-cols-3 rounded-2xl p-3.5 sm:p-6">
             {stats.map((stat, i) => (
-              <div key={stat.label} className={`flex flex-col-reverse py-2 sm:py-3 ${i ? 'border-l border-fg/10 pl-4 sm:pl-8' : ''}`}>
-                <dt className="mt-1 text-xs text-muted font-mono">{stat.label}</dt>
-                <dd className="font-heading text-2xl font-bold text-fg sm:text-4xl lg:text-5xl">
+              <div key={stat.label} className={`flex flex-col-reverse py-2 sm:py-3 ${i ? 'border-l border-fg/10 pl-3 sm:pl-8' : ''}`}>
+                <dt className="mt-1 text-[10px] sm:text-xs text-muted font-mono truncate sm:overflow-visible">{stat.label}</dt>
+                <dd className="font-heading text-xl sm:text-3xl lg:text-5xl font-bold text-fg">
                   <Counter value={stat.value} />
                 </dd>
               </div>

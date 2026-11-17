@@ -12,17 +12,17 @@ export default function Footer() {
         {/* Main Horizontal Content Row */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Brand Identity & Tagline */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 shrink-0">
             <div className="flex items-center gap-2">
               <InfinitusLogo size="nav" className="h-7 w-7" />
               <span aria-hidden="true" className="h-4 w-px bg-fg/20" />
               <RitLogo size="xs" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5 font-heading text-xs sm:text-sm font-bold tracking-wider text-fg">
+              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-heading text-xs sm:text-sm font-bold tracking-wider text-fg">
                 <span>{CLUB_SHORT} CLUB</span>
-                <span aria-hidden="true" className="text-fg/30 font-normal">·</span>
-                <span className="font-mono text-[11px] sm:text-xs font-normal text-muted">{COLLEGE_NAME}</span>
+                <span aria-hidden="true" className="text-fg/30 font-normal hidden sm:inline">·</span>
+                <span className="font-mono text-[11px] sm:text-xs font-normal text-muted block sm:inline">{COLLEGE_NAME}</span>
               </div>
               <p className="font-serif text-[11px] italic text-muted leading-tight">{COPY.footer.tagline}</p>
             </div>
