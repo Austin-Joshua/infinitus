@@ -11,6 +11,13 @@ import {
 import { galleryPhotos } from '@/components/sections/GallerySection';
 import { getMembers } from '@/lib/members';
 import { getEvents } from '@/lib/events';
+import { SITE } from '@/lib/site';
+
+export const metadata = {
+  alternates: {
+    canonical: SITE.url,
+  },
+};
 
 export const revalidate = 60;
 

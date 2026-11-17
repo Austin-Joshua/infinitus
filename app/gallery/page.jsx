@@ -2,13 +2,15 @@ import PageHeader from '@/components/layout/PageHeader';
 import GallerySection from '@/components/sections/GallerySection';
 import { getEvents } from '@/lib/events';
 import { COPY, SOCIAL, pageById } from '@/lib/site';
+import { pageMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: COPY.pages.gallery.title,
   description: COPY.pages.gallery.description,
-};
+  path: '/gallery',
+});
 
 export default async function GalleryPage() {
   const events = await getEvents();
