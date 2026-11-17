@@ -205,6 +205,12 @@ Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with
 </tr>
 </table>
 
+## License
+
+The source code in this repository is licensed under the [MIT License](LICENSE).
+
+The INFINITUS name, logos, emblems, event posters, photograph archives, and individual member names/photographs are NOT covered by the MIT license and remain proprietary under [NOTICE.md](NOTICE.md).
+
 ## Policy & Brand Notice
 
 - **Security:** Sourced according to RFC 9116 at [security.txt](public/.well-known/security.txt). Review [SECURITY.md](SECURITY.md) for vulnerability disclosure.
