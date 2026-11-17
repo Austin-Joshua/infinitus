@@ -7,52 +7,59 @@ import EventsBrowser from '@/components/ui/EventsBrowser';
 
 export function FeaturedEvent({ event }) {
   return (
-    <article className="card group grid overflow-hidden md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-stretch">
+    <article className="card group flex flex-col md:flex-row items-center overflow-hidden p-5 sm:p-6 md:p-7 lg:p-8 gap-6 sm:gap-8 lg:gap-10">
+      {/* Framed Poster with proper space, border, and aspect ratio */}
       <Link
         href={eventHref(event)}
         tabIndex={-1}
         aria-hidden="true"
-        className="relative block aspect-[4/5] w-full overflow-hidden border-b border-fg/15 bg-bg-2/40 md:border-b-0 md:border-r"
+        className="relative shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:w-[280px] lg:w-[320px] aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 shadow-md bg-bg transition-transform duration-500 ease-out group-hover:scale-[1.02] group-hover:border-accent/40"
       >
         <EventPoster
           event={event}
-          sizes="(min-width: 1280px) 35vw, (min-width: 768px) 45vw, 100vw"
+          sizes="(min-width: 1024px) 320px, (min-width: 768px) 280px, 100vw"
           fit="cover"
           priority
-          className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+          className="h-full w-full object-cover object-top"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </Link>
-      <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+
+      {/* Content Side: Naturally aligned and fitted to the poster height */}
+      <div className="flex flex-1 flex-col justify-center min-w-0 w-full">
         <div className="flex flex-wrap gap-2">
-          <span className="chip border-gold/40 text-gold">{COPY.events.featuredLabel}</span>
-          {event.eventType && <span className="chip">{event.eventType}</span>}
+          <span className="chip border-sunset/40 text-sunset font-semibold">{COPY.events.featuredLabel}</span>
+          {event.eventType && <span className="chip font-medium">{event.eventType}</span>}
         </div>
-        <h3 className="mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
+        <h3 className="mt-3 sm:mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
           <Link href={eventHref(event)} className="transition-colors hover:text-accent">
             {event.title}
           </Link>
         </h3>
-        <p className="mt-3 font-mono text-xs sm:text-sm text-accent">
+        <p className="mt-2.5 font-mono text-xs sm:text-sm text-accent font-medium">
           {formatEventDate(event.eventDate, event.endDate)}
           {event.venue ? ` · ${event.venue}` : ''}
         </p>
-        {event.description && <p className="lede mt-3 max-w-2xl text-xs sm:text-sm">{event.description}</p>}
+        {event.description && (
+          <p className="lede mt-3 max-w-2xl text-xs sm:text-sm leading-relaxed text-muted">
+            {event.description}
+          </p>
+        )}
         {event.highlights?.length > 0 && (
-          <ul className="mt-6 flex flex-wrap gap-2">
+          <ul className="mt-5 flex flex-wrap gap-2">
             {event.highlights.map((h) => (
-              <li key={h} className="rounded-sm border border-fg/15 px-3 py-1.5 text-sm text-fg">
+              <li key={h} className="rounded-lg border border-fg/15 bg-bg/50 px-3 py-1.5 text-xs sm:text-sm font-medium text-fg">
                 {h}
               </li>
             ))}
           </ul>
         )}
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href={eventHref(event)} className="btn-primary">
+        <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3">
+          <Link href={eventHref(event)} className="btn-primary text-xs sm:text-sm">
             {COPY.events.details} <span aria-hidden="true" className="nudge">→</span>
           </Link>
           {event.externalLink && (
-            <a href={event.externalLink} target="_blank" rel="noreferrer noopener" className="btn-ghost">
+            <a href={event.externalLink} target="_blank" rel="noreferrer noopener" className="btn-ghost text-xs sm:text-sm">
               {COPY.events.viewPost} <ExternalArrow />
             </a>
           )}
