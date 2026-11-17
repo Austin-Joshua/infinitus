@@ -141,12 +141,14 @@ export default function Nav() {
       {/* Scroll Progress Bar at the Top */}
       <motion.div
         aria-hidden="true"
+        data-scroll-progress="true"
         className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-gradient-to-r from-accent via-sunset to-accent"
         style={{ scaleX: progress }}
       />
 
       {/* Top Header Bar */}
       <motion.header
+        data-site-header="true"
         className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
           scrolled ? 'border-sunset-orange/20 bg-bg/85 backdrop-blur-xl shadow-md shadow-sunset-orange/5' : 'border-transparent bg-transparent'
         }`}
@@ -238,6 +240,7 @@ export default function Nav() {
       {/* Persistent Mobile Bottom Navigation Bar (Primary navigation in mobile display size) */}
       <nav
         aria-label="Mobile Navigation"
+        data-mobile-nav="true"
         className="fixed inset-x-0 bottom-0 z-40 block md:hidden border-t border-sunset-orange/25 bg-bg/95 dark:bg-bg/98 backdrop-blur-2xl shadow-[0_-6px_24px_rgba(0,0,0,0.12)]"
         style={{ paddingBottom: 'max(0.4rem, env(safe-area-inset-bottom, 0.4rem))' }}
       >
