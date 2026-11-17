@@ -1,28 +1,43 @@
 'use client';
 
 export default function GlobalError({ error, reset }) {
+  const handleReload = () => {
+    try {
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem('infinitus-intro');
+        window.location.href = '/';
+        return;
+      }
+    } catch {}
+    if (reset) reset();
+  };
+
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#F7F5EF] text-[#0C0E1F] flex items-center justify-center p-6 font-sans">
-        <div className="max-w-lg text-center space-y-4">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#1D2566]">500 · System Anomaly</p>
-          <h1 className="text-3xl font-bold">Unexpected Exception</h1>
-          <p className="text-sm opacity-80">
+      <body className="min-h-screen bg-[#F0E8D8] text-[#0C0E1F] flex items-center justify-center p-6 font-sans">
+        <div className="max-w-lg text-center space-y-4 rounded-2xl border border-[#FF7A1A]/35 bg-white/80 p-8 shadow-2xl backdrop-blur-xl">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#FF7A1A] font-semibold">500 · System Anomaly</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Unexpected Exception</h1>
+          <p className="text-sm opacity-80 leading-relaxed">
             A critical boundary error occurred. Please try reloading or returning home.
           </p>
-          <div className="pt-4 flex justify-center gap-3">
+          <div className="pt-4 flex flex-wrap justify-center gap-3">
             <button
               type="button"
-              onClick={() => reset()}
-              className="px-4 py-2 bg-[#1D2566] text-white rounded-lg text-sm font-medium hover:opacity-90 transition cursor-pointer"
+              onClick={handleReload}
+              className="px-5 py-2.5 bg-[#FF7A1A] text-white rounded-xl text-xs sm:text-sm font-semibold hover:opacity-90 transition cursor-pointer shadow-md shadow-[#FF7A1A]/30"
             >
-              Try again
+              Try again ↻
             </button>
             <a
               href="/"
-              className="px-4 py-2 border border-[#1D2566]/20 rounded-lg text-sm font-medium hover:bg-black/5 transition"
+              onClick={(e) => {
+                e.preventDefault();
+                handleReload();
+              }}
+              className="px-5 py-2.5 border border-[#FF7A1A]/40 rounded-xl text-xs sm:text-sm font-semibold hover:bg-black/5 transition"
             >
-              Return to Home
+              Return to Home →
             </a>
           </div>
         </div>

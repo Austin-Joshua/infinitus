@@ -7,7 +7,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-sunset-orange/15 bg-card/60 backdrop-blur-md py-5 sm:py-6 transition-colors">
+    <footer className="relative overflow-hidden border-t border-sunset-orange/15 bg-card/60 backdrop-blur-md pt-5 pb-20 sm:pt-6 md:pb-6 transition-colors">
       <div className="container-x">
         {/* Main Horizontal Content Row */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

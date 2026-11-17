@@ -56,7 +56,7 @@ export default function Hero({ stats = [] }) {
                 rel="noopener noreferrer"
                 className="btn-ghost text-xs sm:text-sm"
               >
-                Follow on Instagram <span aria-hidden="true" className="nudge-ne">↗</span>
+                Follow on Instagram
               </a>
               {/* Tertiary CTA: Text Link */}
               <Link

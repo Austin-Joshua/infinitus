@@ -33,7 +33,7 @@ function SectionHead({ eyebrow, heading, href, cta }) {
             rel="noreferrer noopener"
             className="btn-ghost self-start sm:self-auto text-xs sm:text-sm inline-flex items-center gap-1.5"
           >
-            {cta} <span aria-hidden="true" className="nudge-ne">↗</span>
+            {cta} {!cta.toLowerCase().includes('instagram') && <span aria-hidden="true" className="nudge-ne">↗</span>}
           </a>
         ) : (
           <Link href={href} className="btn-ghost self-start sm:self-auto text-xs sm:text-sm">

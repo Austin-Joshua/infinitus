@@ -20,6 +20,14 @@ import { CLUB_SHORT, COPY, NAV_LINKS, SOCIAL, SITE } from '@/lib/site';
 const MAIN_NAV = NAV_LINKS.filter((link) => link.navVariant !== 'button' && link.id !== 'home');
 const CONTACT_LINK = NAV_LINKS.find((link) => link.id === 'contact');
 
+const MOBILE_BOTTOM_NAV = [
+  { id: 'home', href: '/', navLabel: 'Home', icon: HomeNavIcon },
+  { id: 'events', href: '/events', navLabel: 'Events', icon: EventsNavIcon },
+  { id: 'team', href: '/team', navLabel: 'Team', icon: TeamNavIcon },
+  { id: 'gallery', href: '/gallery', navLabel: 'Gallery', icon: GalleryNavIcon },
+  { id: 'about', href: '/about', navLabel: 'About', icon: AboutNavIcon },
+];
+
 function isActive(pathname, href) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -147,15 +155,22 @@ export default function Nav() {
 
   // Auto-close mobile drawer when screen is resized to tablet/desktop breakpoint
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
     const mql = window.matchMedia('(min-width: 768px)');
     const handleBreakpointChange = (e) => {
       if (e.matches) {
         setMenuOpen(false);
       }
     };
-    mql.addEventListener('change', handleBreakpointChange);
-    return () => mql.removeEventListener('change', handleBreakpointChange);
+    if (mql.addEventListener) {
+      mql.addEventListener('change', handleBreakpointChange);
+      return () => mql.removeEventListener('change', handleBreakpointChange);
+    }
+    if (mql.addListener) {
+      mql.addListener(handleBreakpointChange);
+      return () => mql.removeListener(handleBreakpointChange);
+    }
+    return undefined;
   }, []);
 
   useEffect(() => {
@@ -438,6 +453,48 @@ export default function Nav() {
           </motion.nav>
         )}
       </AnimatePresence>
+
+      {/* Persistent Mobile Navigation Bar (Always visible in mobile display size) */}
+      <nav
+        aria-label="Mobile Navigation"
+        className="fixed inset-x-0 bottom-0 z-40 block md:hidden border-t border-sunset-orange/25 bg-bg/95 dark:bg-bg/98 backdrop-blur-2xl shadow-[0_-6px_24px_rgba(0,0,0,0.12)]"
+        style={{ paddingBottom: 'max(0.45rem, env(safe-area-inset-bottom, 0.45rem))' }}
+      >
+        <div className="flex items-center justify-around py-1.5 px-2">
+          {MOBILE_BOTTOM_NAV.map((item) => {
+            const active = isActive(pathname, item.href);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                aria-current={active ? 'page' : undefined}
+                className={`relative flex flex-1 flex-col items-center justify-center py-1 px-1 transition-all duration-200 active:scale-95 ${
+                  active ? 'text-sunset-orange' : 'text-muted hover:text-fg'
+                }`}
+              >
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
+                    active ? 'bg-sunset-orange/15 text-sunset-orange' : ''
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                </span>
+                <span className={`text-[10px] tracking-tight transition-colors ${active ? 'font-bold text-sunset-orange' : 'font-medium'}`}>
+                  {item.navLabel}
+                </span>
+                {active && (
+                  <motion.span
+                    layoutId="mobile-nav-dot"
+                    className="absolute -bottom-0.5 h-1 w-5 rounded-full bg-sunset-orange shadow-sm shadow-sunset-orange/50"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </>
   );
 }

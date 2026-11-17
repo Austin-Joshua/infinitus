@@ -61,7 +61,7 @@ export default async function EventPage({ params }) {
   if (!found) notFound();
   const { event, newer, older } = found;
   const isUpcoming = event.status === 'upcoming';
-  const photos = event.images.map((src, i) => ({ src, width: 1080, height: 1350, caption: `${event.title} — photo ${i + 1}` }));
+  const photos = (event.images || []).map((src, i) => ({ src, width: 1080, height: 1350, caption: `${event.title} — photo ${i + 1}` }));
 
   const isOnline = Boolean(event.venue && event.venue.toLowerCase().includes('online'));
   const eventJsonLd = {
