@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { EventPoster, ExternalArrow, eventHref } from '@/components/ui/EventCard';
+import { ExternalArrow, eventHref } from '@/components/ui/EventCard';
+import EventHeroPoster from '@/components/ui/EventHeroPoster';
 import GalleryGrid from '@/components/ui/GalleryGrid';
 import Reveal, { ClipReveal } from '@/components/ui/Reveal';
 import SplitText from '@/components/ui/SplitText';
@@ -61,7 +62,28 @@ export default async function EventPage({ params }) {
   if (!found) notFound();
   const { event, newer, older } = found;
   const isUpcoming = event.status === 'upcoming';
-  const photos = (event.images || []).map((src, i) => ({ src, width: 1080, height: 1350, caption: `${event.title} — photo ${i + 1}` }));
+  const formattedDate = formatEventDate(event.eventDate, event.endDate);
+  const photos = (event.images || []).map((src, i) => ({
+    src,
+    width: 1080,
+    height: 1350,
+    caption: `${event.title} — Photo ${i + 1}`,
+    date: formattedDate,
+  }));
+  const allPhotos = [
+    ...(event.coverImageUrl
+      ? [
+          {
+            src: event.coverImageUrl,
+            width: 1080,
+            height: 1350,
+            caption: `${event.title} — Official Poster`,
+            date: formattedDate,
+          },
+        ]
+      : []),
+    ...photos,
+  ];
 
   const isOnline = Boolean(event.venue && event.venue.toLowerCase().includes('online'));
   const eventJsonLd = {
@@ -123,15 +145,7 @@ export default async function EventPage({ params }) {
           <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
             <div className="lg:sticky lg:top-24 lg:self-start">
               <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-sunset-orange/40 bg-card/85 p-3 sm:p-4 flex items-center justify-center shadow-xl shadow-sunset-orange/15 backdrop-blur-md">
-                <div className="relative h-full w-full overflow-hidden rounded-xl bg-bg">
-                  <EventPoster
-                    event={event}
-                    priority
-                    sizes="(min-width: 1280px) 35vw, (min-width: 1024px) 45vw, 100vw"
-                    fit="contain"
-                    className="h-full w-full"
-                  />
-                </div>
+                <EventHeroPoster event={event} allPhotos={allPhotos} />
               </ClipReveal>
             </div>
 
@@ -198,7 +212,10 @@ export default async function EventPage({ params }) {
           </div>
 
           {photos.length > 0 && (
-            <div className="mt-24">
+            <div className="mt-20 sm:mt-24">
+              <h2 className="mb-6 font-heading text-2xl font-bold tracking-tight text-fg sm:text-3xl">
+                Event Moments
+              </h2>
               <GalleryGrid photos={photos} />
             </div>
           )}

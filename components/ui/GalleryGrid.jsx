@@ -1,87 +1,38 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import LightboxModal from '@/components/ui/LightboxModal';
 
 /**
- * Balanced, spacious gallery grid with keyboard-friendly lightbox modal,
- * focus trap, focus restoration, and preserved image hover animations.
+ * Balanced, spacious gallery grid with an immersive, full-screen lightbox modal:
+ * - Edge-to-edge larger image presentation in mobile and desktop viewports.
+ * - Floating left & right chevron navigation icons on the sides of the image.
+ * - Top description bar with caption, date, counter, and close button.
+ * - Tap/click on image toggles the UI visibility (descriptions and arrows).
+ * - Touch & pointer swipe left/right navigation across all devices.
+ * - Keyboard friendly with Escape, ArrowLeft, ArrowRight, and focus trap.
  */
 export default function GalleryGrid({ photos = [] }) {
   const [index, setIndex] = useState(null);
-  const open = index !== null;
   const triggerRef = useRef(null);
-  const dialogRef = useRef(null);
 
-  const close = useCallback(() => {
+  const close = () => {
     setIndex(null);
-    // Restore focus to the card that triggered the lightbox
     setTimeout(() => {
       triggerRef.current?.focus();
     }, 50);
-  }, []);
-
-  const step = useCallback(
-    (delta) => setIndex((i) => (i === null ? i : (i + delta + photos.length) % photos.length)),
-    [photos.length]
-  );
+  };
 
   const openLightbox = (i) => {
     triggerRef.current = document.activeElement;
     setIndex(i);
   };
 
-  useEffect(() => {
-    if (!open) return undefined;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    const onKey = (event) => {
-      if (event.key === 'Escape') {
-        close();
-        return;
-      }
-      if (event.key === 'ArrowRight') {
-        step(1);
-        return;
-      }
-      if (event.key === 'ArrowLeft') {
-        step(-1);
-        return;
-      }
-
-      // Focus trap
-      if (event.key === 'Tab' && dialogRef.current) {
-        const focusable = dialogRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusable.length === 0) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [open, close, step]);
-
-  const current = open ? photos[index] : null;
-
   return (
     <>
-      {/* Spacious, unclustered responsive photo grid with showcase animations intact */}
+      {/* Spacious, unclustered responsive photo grid */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 lg:gap-7">
         {photos.map((photo, i) => (
           <motion.button
@@ -104,7 +55,7 @@ export default function GalleryGrid({ photos = [] }) {
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
 
-            {/* Subtle frosted glass caption overlay */}
+            {/* Subtle frosted glass caption overlay on hover/mobile */}
             <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3.5 pt-10 text-left text-white">
               <span className="text-xs font-semibold leading-tight drop-shadow-sm sm:text-sm">
                 {photo.caption}
@@ -119,85 +70,13 @@ export default function GalleryGrid({ photos = [] }) {
         ))}
       </div>
 
-      {/* Lightbox Modal with focus trap and accessibility */}
-      <AnimatePresence>
-        {current && (
-          <motion.div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={current.caption}
-            className="fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-md"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={close}
-          >
-            {/* Main Photo Container */}
-            <motion.div
-              key={current.src}
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.25 }}
-              className="relative max-h-[75vh] w-full max-w-4xl flex items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Image
-                src={current.src}
-                alt={current.alt || current.caption}
-                width={current.width}
-                height={current.height}
-                sizes="(min-width: 1024px) 900px, 100vw"
-                unoptimized={current.src.startsWith('http')}
-                className="max-h-[75vh] w-auto rounded-lg object-contain shadow-2xl"
-              />
-            </motion.div>
-
-            {/* Lightbox Controls & Caption */}
-            <div
-              className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 text-white px-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                onClick={() => step(-1)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                aria-label="Previous photo"
-              >
-                ←
-              </button>
-
-              <div className="text-center px-2">
-                <p className="text-xs font-semibold sm:text-sm">{current.caption}</p>
-                <p className="mt-0.5 font-mono text-[11px] text-white/60">
-                  {current.date ? `${current.date} · ` : ''}
-                  {index + 1} of {photos.length}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => step(1)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  aria-label="Next photo"
-                >
-                  →
-                </button>
-                <button
-                  type="button"
-                  autoFocus
-                  onClick={close}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  aria-label="Close"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Fullscreen Immersive Lightbox Modal */}
+      <LightboxModal
+        photos={photos}
+        index={index}
+        onClose={close}
+        onIndexChange={(newIdx) => setIndex(newIdx)}
+      />
     </>
   );
 }
