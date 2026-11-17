@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
       : event.description || `${event.title} organized by INFINITUS at Rajalakshmi Institute of Technology.`;
 
   return pageMetadata({
-    title: `${event.title} | INFINITUS RIT`,
+    title: event.title,
     description,
     path: `/events/${encodeURIComponent(event.id)}`,
     image: event.coverImageUrl || '/opengraph-image',

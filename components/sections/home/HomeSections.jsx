@@ -122,7 +122,7 @@ export function HomeExplore() {
       <div className="container-x">
         <Reveal className="flex items-baseline justify-between gap-6">
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-accent font-medium">Explore The Club</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent font-medium">{COPY.home.exploreEyebrow}</p>
             <h2 className="font-heading text-2xl font-bold tracking-tight text-fg sm:text-3xl mt-1">
               {COPY.home.exploreHeading}
             </h2>
@@ -180,7 +180,7 @@ export function HomeEvents({ events }) {
     <section className="section !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
-          eyebrow="Competitions & Workshops"
+          eyebrow="Events"
           heading={COPY.home.eventsHeading}
           href="/events"
           cta={COPY.home.eventsCta}
@@ -281,7 +281,7 @@ export function HomeTeam({ members }) {
     <section className="section !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
-          eyebrow="Club Leadership"
+          eyebrow="Team"
           heading={COPY.home.teamHeading}
           href="/team"
           cta={COPY.home.teamCta}
@@ -314,7 +314,7 @@ export function HomeGallery({ photos }) {
     <section className="section overflow-hidden !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
-          eyebrow="Memories in Math"
+          eyebrow="Gallery"
           heading={COPY.home.galleryHeading}
           href="/gallery"
           cta={COPY.home.galleryCta}
@@ -352,10 +352,10 @@ export function HomeInstagram() {
     <section className="section overflow-hidden !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
-          eyebrow="Social Sync · @infinitus_club.rit"
-          heading="From our Instagram feed"
+          eyebrow="Social"
+          heading="From our feed"
           href={SOCIAL.instagram}
-          cta="Follow on Instagram"
+          cta="Follow"
         />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
