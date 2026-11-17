@@ -1,0 +1,471 @@
+{
+  "communities": {
+    "0": [
+      "app_layout",
+      "app_layout_body",
+      "app_layout_metadata",
+      "app_layout_mono",
+      "app_layout_rootlayout",
+      "app_layout_serif",
+      "app_layout_viewport",
+      "app_robots",
+      "app_robots_robots",
+      "app_sitemap",
+      "app_template_template",
+      "components_brand_infinituslogo",
+      "components_brand_infinituslogo_infinituslogo",
+      "components_brand_infinituslogo_size_map",
+      "components_brand_ritlogo",
+      "components_brand_ritlogo_ritlogo",
+      "components_brand_ritlogo_size_map",
+      "components_layout_footer",
+      "components_layout_footer_footer",
+      "components_layout_loader",
+      "components_layout_loader_loader",
+      "components_layout_nav",
+      "components_layout_nav_contact_link",
+      "components_layout_nav_isactive",
+      "components_layout_nav_main_nav",
+      "components_layout_nav_moonicon",
+      "components_layout_nav_nav",
+      "components_layout_nav_sunicon",
+      "components_ui_themeprovider",
+      "components_ui_themeprovider_themecontext",
+      "components_ui_themeprovider_themeprovider",
+      "components_ui_themeprovider_usetheme",
+      "lib_branding",
+      "lib_branding_favicon",
+      "lib_branding_infinitus_logo",
+      "lib_branding_rit_logo",
+      "lib_site",
+      "lib_site_club_name",
+      "lib_site_club_short",
+      "lib_site_college_name",
+      "lib_site_college_short",
+      "lib_site_nav_links",
+      "lib_site_pages",
+      "lib_site_site",
+      "styles_globals"
+    ],
+    "1": [
+      "app_api_events_route",
+      "app_api_events_route_get",
+      "app_api_events_route_revalidate",
+      "app_api_members_route",
+      "app_api_members_route_get",
+      "app_api_members_route_revalidate",
+      "app_page",
+      "app_page_home",
+      "app_page_revalidate",
+      "app_sitemap_sitemap",
+      "components_sections_gallerysection",
+      "components_sections_gallerysection_galleryphotos",
+      "components_sections_gallerysection_gallerysection",
+      "components_sections_home_homesections_homegallery",
+      "components_sections_home_homesections_keywordmarquee",
+      "components_ui_marquee",
+      "components_ui_marquee_marquee",
+      "lib_data",
+      "lib_data_events",
+      "lib_data_gallery",
+      "lib_data_ig_post",
+      "lib_data_members",
+      "lib_events",
+      "lib_events_getdbevents",
+      "lib_events_getevents",
+      "lib_events_mapevent",
+      "lib_events_mapmockevent",
+      "lib_events_staticevents",
+      "lib_members",
+      "lib_members_getmembers",
+      "lib_members_static_by_name",
+      "lib_members_withroledetails",
+      "lib_roleresponsibilities",
+      "lib_roleresponsibilities_getroledetails",
+      "lib_roleresponsibilities_role_responsibilities",
+      "lib_supabaseclient",
+      "lib_supabaseclient_getsupabaseclient",
+      "ref_node_url",
+      "scripts_db_seed",
+      "scripts_db_seed_loadenvlocal",
+      "scripts_db_seed_main",
+      "scripts_db_seed_seedevents",
+      "scripts_db_seed_seedmembers",
+      "scripts_db_seed_supabase"
+    ],
+    "2": [
+      "app_events_id_page",
+      "app_events_id_page_eventpage",
+      "app_events_id_page_generatemetadata",
+      "app_events_id_page_generatestaticparams",
+      "app_events_id_page_neighbourlink",
+      "app_events_id_page_revalidate",
+      "app_events_page",
+      "app_events_page_metadata",
+      "app_events_page_revalidate",
+      "components_sections_eventssection",
+      "components_sections_eventssection_eventssection",
+      "components_sections_eventssection_featuredevent",
+      "components_sections_eventssection_nexteventbanner",
+      "components_sections_home_homesections",
+      "components_sections_home_homesections_ctaband",
+      "components_sections_home_homesections_explore_metadata",
+      "components_sections_home_homesections_home_team_roles",
+      "components_sections_home_homesections_homeabout",
+      "components_sections_home_homesections_homeevents",
+      "components_sections_home_homesections_sectionhead",
+      "components_ui_eventcard",
+      "components_ui_eventcard_eventcard",
+      "components_ui_eventcard_eventposter",
+      "components_ui_eventcard_externalarrow",
+      "components_ui_eventsbrowser",
+      "components_ui_eventsbrowser_eventsbrowser",
+      "components_ui_gallerygrid",
+      "components_ui_gallerygrid_gallerygrid",
+      "components_ui_reveal_clipreveal",
+      "components_ui_reveal_reveal",
+      "lib_events_getevent",
+      "lib_format",
+      "lib_format_eventhref",
+      "lib_format_eventyear",
+      "lib_format_formateventdate",
+      "lib_format_leadership_roles",
+      "lib_format_month",
+      "lib_format_parse",
+      "lib_site_copy",
+      "ref_next"
+    ],
+    "3": [
+      "package",
+      "package_dependencies",
+      "package_dependencies_framer_motion",
+      "package_dependencies_next",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_supabase_supabase_js",
+      "package_devdependencies",
+      "package_devdependencies_autoprefixer",
+      "package_devdependencies_eslint",
+      "package_devdependencies_eslint_config_next",
+      "package_devdependencies_postcss",
+      "package_devdependencies_sharp",
+      "package_devdependencies_tailwindcss",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_branding_optimize",
+      "package_scripts_build",
+      "package_scripts_db_seed",
+      "package_scripts_dev",
+      "package_scripts_lint",
+      "package_scripts_start",
+      "package_version",
+      "ref_autoprefixer",
+      "ref_eslint",
+      "ref_eslint_config_next",
+      "ref_postcss",
+      "ref_react_dom",
+      "ref_sharp",
+      "ref_supabase_supabase_js",
+      "ref_tailwindcss"
+    ],
+    "4": [
+      "app_about_page",
+      "app_about_page_aboutpage",
+      "app_about_page_metadata",
+      "app_not_found",
+      "app_not_found_metadata",
+      "app_not_found_notfound",
+      "app_template",
+      "components_layout_pageheader",
+      "components_sections_aboutus",
+      "components_sections_aboutus_aboutus",
+      "components_sections_hero",
+      "components_sections_hero_hero",
+      "components_sections_journey",
+      "components_sections_journey_inview",
+      "components_sections_journey_journey",
+      "components_ui_counter",
+      "components_ui_counter_counter",
+      "components_ui_lemniscate",
+      "components_ui_lemniscate_lemniscate",
+      "components_ui_lemniscate_path",
+      "components_ui_splittext",
+      "components_ui_splittext_container",
+      "components_ui_splittext_piece",
+      "components_ui_splittext_splittext",
+      "lib_motion",
+      "lib_motion_ease",
+      "lib_motion_introdelay",
+      "lib_site_social",
+      "ref_framer_motion",
+      "ref_react"
+    ],
+    "5": [
+      "scripts_readme_build",
+      "scripts_readme_build_attr",
+      "scripts_readme_build_axes",
+      "scripts_readme_build_divider",
+      "scripts_readme_build_embed",
+      "scripts_readme_build_esc",
+      "scripts_readme_build_events",
+      "scripts_readme_build_f2",
+      "scripts_readme_build_files",
+      "scripts_readme_build_footer",
+      "scripts_readme_build_frame",
+      "scripts_readme_build_hero",
+      "scripts_readme_build_lemniscate",
+      "scripts_readme_build_month",
+      "scripts_readme_build_out",
+      "scripts_readme_build_pages",
+      "scripts_readme_build_past",
+      "scripts_readme_build_rider",
+      "scripts_readme_build_root",
+      "scripts_readme_build_shown",
+      "scripts_readme_build_stats",
+      "scripts_readme_build_track",
+      "scripts_readme_build_wiring",
+      "scripts_readme_build_wrap"
+    ],
+    "6": [
+      "app_opengraph_image",
+      "app_opengraph_image_alt",
+      "app_opengraph_image_contenttype",
+      "app_opengraph_image_opengraphimage",
+      "app_opengraph_image_size",
+      "ref_node_fs",
+      "ref_node_path",
+      "scripts_optimize_branding",
+      "scripts_optimize_branding_app_dir",
+      "scripts_optimize_branding_ensuredir",
+      "scripts_optimize_branding_ensuretransparentwhiterit",
+      "scripts_optimize_branding_infinitus_variants",
+      "scripts_optimize_branding_main",
+      "scripts_optimize_branding_optimizeritlogo",
+      "scripts_optimize_branding_optimizesquarelogo",
+      "scripts_optimize_branding_out_dir",
+      "scripts_optimize_branding_rit_variants",
+      "scripts_optimize_branding_rit_white_variants",
+      "scripts_optimize_branding_root",
+      "scripts_optimize_branding_source_dir",
+      "scripts_optimize_branding_sources"
+    ],
+    "7": [
+      "app_contact_page",
+      "app_contact_page_contactpage",
+      "app_contact_page_metadata",
+      "app_events_page_eventspage",
+      "app_gallery_page",
+      "app_gallery_page_gallerypage",
+      "app_gallery_page_metadata",
+      "app_gallery_page_revalidate",
+      "app_team_page",
+      "app_team_page_metadata",
+      "app_team_page_revalidate",
+      "app_team_page_teampage",
+      "components_layout_pageheader_pageheader",
+      "components_sections_contactsection",
+      "components_sections_contactsection_contactrow",
+      "components_sections_contactsection_contactsection",
+      "components_sections_membersgrid_membersgrid",
+      "lib_site_pagebyid"
+    ],
+    "8": [
+      "components_sections_home_homesections_homeexplore",
+      "components_sections_home_homesections_hometeam",
+      "components_sections_membersgrid",
+      "components_ui_membercard",
+      "components_ui_membercard_avatar",
+      "components_ui_membercard_closeicon",
+      "components_ui_membercard_instagramicon",
+      "components_ui_membercard_linkedinicon",
+      "components_ui_membercard_membercard",
+      "components_ui_membercard_memberdetailmodal",
+      "components_ui_reveal",
+      "components_ui_reveal_stagger",
+      "components_ui_reveal_staggeritem",
+      "components_ui_teambrowser",
+      "components_ui_teambrowser_teambrowser",
+      "lib_format_metaof"
+    ],
+    "9": [
+      "jsconfig",
+      "jsconfig_compileroptions",
+      "jsconfig_compileroptions_paths"
+    ],
+    "10": [
+      "next",
+      "next_config",
+      "next_config_nextconfig"
+    ],
+    "11": [
+      "tailwind_config",
+      "tailwind_config_token",
+      "tailwindcss"
+    ],
+    "12": [
+      "postcss_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.08888888888888889,
+    "1": 0.0824524312896406,
+    "2": 0.13974358974358975,
+    "3": 0.07862903225806452,
+    "4": 0.16551724137931034,
+    "5": 0.21739130434782608,
+    "6": 0.11904761904761904,
+    "7": 0.19607843137254902,
+    "8": 0.2916666666666667,
+    "9": 0.6666666666666666,
+    "10": 0.6666666666666666,
+    "11": 0.6666666666666666,
+    "12": 1.0
+  },
+  "gods": [
+    {
+      "id": "lib_site_copy",
+      "label": "COPY",
+      "degree": 18
+    },
+    {
+      "id": "ref_next",
+      "label": "next",
+      "degree": 18
+    },
+    {
+      "id": "components_ui_reveal_reveal",
+      "label": "Reveal()",
+      "degree": 16
+    },
+    {
+      "id": "ref_framer_motion",
+      "label": "framer-motion",
+      "degree": 16
+    },
+    {
+      "id": "lib_events_getevents",
+      "label": "getEvents()",
+      "degree": 14
+    },
+    {
+      "id": "components_ui_splittext_splittext",
+      "label": "SplitText()",
+      "degree": 14
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "degree": 14
+    },
+    {
+      "id": "app_page_home",
+      "label": "Home()",
+      "degree": 12
+    },
+    {
+      "id": "components_ui_eventcard_eventcard",
+      "label": "EventCard()",
+      "degree": 11
+    },
+    {
+      "id": "scripts_readme_build_pages",
+      "label": "pages()",
+      "degree": 11
+    }
+  ],
+  "surprises": [
+    {
+      "source": "PageHeader()",
+      "target": "introDelay()",
+      "source_files": [
+        "components/layout/PageHeader.jsx",
+        "lib/motion.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "Template()",
+      "target": "InfinitusLogo()",
+      "source_files": [
+        "app/template.jsx",
+        "components/brand/InfinitusLogo.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `Template()` unexpectedly reaches hub `InfinitusLogo()`"
+    },
+    {
+      "source": "GET()",
+      "target": "getEvents()",
+      "source_files": [
+        "app/api/events/route.js",
+        "lib/events.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `GET()` unexpectedly reaches hub `getEvents()`"
+    },
+    {
+      "source": "GET()",
+      "target": "getMembers()",
+      "source_files": [
+        "app/api/members/route.js",
+        "lib/members.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `GET()` unexpectedly reaches hub `getMembers()`"
+    },
+    {
+      "source": "Home()",
+      "target": "Hero()",
+      "source_files": [
+        "app/page.jsx",
+        "components/sections/Hero.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `next` connect `HomeSections.jsx` to `site.js`, `app/page.jsx`, `package.json`, `Hero.jsx`, `optimize-branding.mjs`?",
+      "why": "High betweenness centrality (0.147) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `site.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08888888888888889 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `COPY` connect `HomeSections.jsx` to `site.js`, `Hero.jsx`, `build.mjs`, `gallery/page.jsx`?",
+      "why": "High betweenness centrality (0.065) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `app/page.jsx` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.0824524312896406 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `sharp` connect `package.json` to `build.mjs`, `optimize-branding.mjs`?",
+      "why": "High betweenness centrality (0.064) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `HomeSections.jsx` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.13974358974358975 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07862903225806452 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
