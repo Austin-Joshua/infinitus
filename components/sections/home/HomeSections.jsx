@@ -1,12 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { COPY, PAGES } from '@/lib/site';
+import { COPY, PAGES, SOCIAL } from '@/lib/site';
+import { formatEventDate } from '@/lib/format';
 import Marquee from '@/components/ui/Marquee';
 import Reveal, { Stagger, StaggerItem } from '@/components/ui/Reveal';
 import SplitText from '@/components/ui/SplitText';
 import EventCard from '@/components/ui/EventCard';
 import MemberCard from '@/components/ui/MemberCard';
 import { FeaturedEvent } from '@/components/sections/EventsSection';
+
+function isGoogleFormUrl(url) {
+  if (!url) return false;
+  return url.includes('forms.gle') || url.includes('docs.google.com/forms');
+}
 
 /** Clean section heading row without artificial section numbering */
 function SectionHead({ eyebrow, heading, href, cta }) {
@@ -41,7 +47,7 @@ export function KeywordMarquee() {
 }
 
 export function HomeAbout() {
-  const { about } = COPY;
+  const { about, home } = COPY;
   return (
     <section className="section !py-16 sm:!py-24">
       <div className="container-x grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14">
@@ -50,8 +56,8 @@ export function HomeAbout() {
         </Reveal>
         <div>
           <h2 className="max-w-5xl font-heading text-2xl font-medium leading-[1.25] text-fg sm:text-4xl lg:text-5xl">
-            <SplitText text={about.statement} onView stagger={0.03} />{' '}
-            <SplitText text={about.statementAccent} onView delay={0.3} className="italic text-accent" />
+            <SplitText text={home.aboutStatement} onView stagger={0.03} />{' '}
+            <SplitText text={home.aboutStatementAccent} onView delay={0.3} className="italic text-accent" />
           </h2>
           <Reveal delay={0.2} className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
             <p className="lede max-w-2xl !text-sm sm:!text-base">{about.body}</p>
@@ -165,8 +171,9 @@ export function HomeExplore() {
 export function HomeEvents({ events }) {
   const past = events.filter((e) => e.status !== 'upcoming');
   const upcoming = events.filter((e) => e.status === 'upcoming');
+  const nextUp = upcoming[0];
   const featured = past.find((e) => e.featured) ?? past[0];
-  const latest = [...upcoming, ...past.filter((e) => e !== featured)].slice(0, 4);
+  const latest = past.filter((e) => e !== featured).slice(0, 4);
 
   return (
     <section className="section bg-bg-2/50 !py-16 sm:!py-24">
@@ -177,6 +184,75 @@ export function HomeEvents({ events }) {
           href="/events"
           cta={COPY.home.eventsCta}
         />
+
+        {/* Upcoming Slot above Past Events */}
+        <Reveal className="mt-8">
+          {nextUp ? (
+            <div className="card p-6 sm:p-8 border-accent/40 bg-card/90 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div>
+                  <span className="chip border-accent/40 text-accent font-semibold">Upcoming Event</span>
+                  <h3 className="font-heading text-2xl sm:text-3xl font-bold text-fg mt-2">
+                    {nextUp.title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-base text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span>{formatEventDate(nextUp.eventDate)}</span>
+                    {nextUp.venue && (
+                      <>
+                        <span aria-hidden="true" className="text-fg/30">·</span>
+                        <span>{nextUp.venue}</span>
+                      </>
+                    )}
+                  </p>
+                  {nextUp.description && (
+                    <p className="mt-3 text-xs sm:text-sm text-muted max-w-2xl line-clamp-2">
+                      {nextUp.description}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  {isGoogleFormUrl(nextUp.registrationFormUrl) && (
+                    <a
+                      href={nextUp.registrationFormUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary text-xs sm:text-sm"
+                    >
+                      Register Now <span aria-hidden="true" className="nudge-ne">↗</span>
+                    </a>
+                  )}
+                  <Link
+                    href={`/events/${encodeURIComponent(nextUp.id)}`}
+                    className="btn-ghost text-xs sm:text-sm"
+                  >
+                    View Details <span aria-hidden="true" className="nudge">→</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="card p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-dashed border-fg/20 bg-card/60">
+              <div>
+                <span className="chip border-accent/30 text-accent font-medium">Upcoming Schedule</span>
+                <h3 className="font-heading text-xl sm:text-2xl font-bold text-fg mt-2">
+                  Next event: announced on Instagram
+                </h3>
+                <p className="mt-1 text-xs sm:text-sm text-muted">
+                  Follow our official handle for competition briefs, dates, and registration announcements.
+                </p>
+              </div>
+              <a
+                href={SOCIAL.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary self-start sm:self-auto text-xs sm:text-sm shrink-0"
+              >
+                Follow {SOCIAL.instagramHandle} <span aria-hidden="true" className="nudge-ne">↗</span>
+              </a>
+            </div>
+          )}
+        </Reveal>
+
         {featured && (
           <Reveal className="mt-8">
             <FeaturedEvent event={featured} />

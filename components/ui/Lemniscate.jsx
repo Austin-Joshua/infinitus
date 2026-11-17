@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { EASE } from '@/lib/motion';
 
 // Lemniscate of Bernoulli, (x² + y²)² = a²(x² − y²), plotted with a = 100.
@@ -14,10 +14,13 @@ const PATH = Array.from({ length: 241 }, (_, i) => {
 }).join('');
 
 /**
- * The ∞ curve as a textbook figure. `axes` adds labelled axes, `dot` traces the curve,
- * `draw` sketches the curve in (after `drawDelay` seconds) when it mounts.
+ * The ∞ curve graph. `axes` adds labelled axes, `dot` traces the curve,
+ * `draw` sketches the curve in when it mounts.
+ * Respects reduced motion (static curve, no animated dot).
  */
 export default function Lemniscate({ axes = false, dot = false, draw = false, drawDelay = 0, className = '' }) {
+  const reduce = useReducedMotion();
+
   return (
     <svg viewBox="-120 -50 240 100" fill="none" aria-hidden="true" className={className}>
       {axes && (
@@ -36,7 +39,7 @@ export default function Lemniscate({ axes = false, dot = false, draw = false, dr
           <text x={-A - 3} y="12" textAnchor="end">−a</text>
         </g>
       )}
-      {draw ? (
+      {draw && !reduce ? (
         <motion.path
           d={PATH}
           className="stroke-accent"
@@ -49,8 +52,8 @@ export default function Lemniscate({ axes = false, dot = false, draw = false, dr
       ) : (
         <path d={PATH} pathLength="1" className="stroke-accent" strokeWidth="1.5" strokeLinejoin="round" />
       )}
-      {dot && (
-        <circle r="2.5" className="fill-fg motion-reduce:hidden">
+      {dot && !reduce && (
+        <circle r="2.5" className="fill-fg">
           <animateMotion dur="9s" repeatCount="indefinite" path={PATH} />
         </circle>
       )}

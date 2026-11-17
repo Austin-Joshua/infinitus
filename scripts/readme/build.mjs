@@ -173,10 +173,6 @@ ${i ? `<path d="M-16 384V446" stroke="${EDGE}"/>` : ''}</g>`
 <g class="r r1">${axes(a)}</g>
 <path class="curve" d="${d}" pathLength="1" fill="none" stroke="${ACC}" stroke-width="2" stroke-linejoin="round"/>
 ${rider(d, { begin: 3.2 })}
-</g>
-<g class="r r2">
-<text class="b" x="512" y="438" font-size="12" fill="${MUTED}"><tspan font-weight="600" fill="${INK}">Fig. 1.</tspan> The lemniscate of Bernoulli, <tspan class="s" font-style="italic" font-size="13" fill="${INK}">(x² + y²)² = a²(x² − y²)</tspan></text>
-<text class="b" x="512" y="456" font-size="12" fill="${MUTED}">— the curve behind our name.</text>
 </g>`;
 
   const css = `
