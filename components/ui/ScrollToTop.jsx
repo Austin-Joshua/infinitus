@@ -38,7 +38,7 @@ export default function ScrollToTop() {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
           aria-label="Scroll back to top of page"
-          className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-sunset-orange/40 bg-card/85 text-fg shadow-lg shadow-sunset-orange/15 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-sunset-orange/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-sunset-orange/40 bg-card/85 text-fg shadow-lg shadow-sunset-orange/15 backdrop-blur-md transition-all duration-150 active:scale-90 hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-sunset-orange/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
         >
           {/* Crisp SVG Up-Arrow Icon */}
           <svg

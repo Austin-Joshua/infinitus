@@ -17,9 +17,9 @@ export default function Hero({ stats = [] }) {
   const figureRotate = useTransform(scrollYProgress, [0, 1], [0, -4]);
 
   const rise = (delay) => ({
-    initial: { opacity: 0, y: 20 },
+    initial: { opacity: 0, y: 12 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, delay: start + delay, ease: EASE.out },
+    transition: { duration: 0.4, delay: Math.min(start + delay, 0.35), ease: EASE.out },
   });
 
   return (

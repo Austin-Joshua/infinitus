@@ -140,16 +140,16 @@ body {
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
     box-shadow: var(--card-shadow);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s ease,
-                background-color 0.3s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease,
+                background-color 0.2s ease;
   }
 
   .card-hover {
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease;
   }
 
   .card-hover:hover {
@@ -159,31 +159,35 @@ body {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-150;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
   }
 
   .btn-primary {
-    @apply btn active:scale-95 text-btn-fg;
+    @apply btn text-btn-fg;
     background-color: rgb(var(--btn-bg));
     border: 1px solid rgba(255, 122, 26, 0.45);
     box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.25), 0 0 10px -2px rgba(255, 122, 26, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.25s ease,
-                background-color 0.25s ease;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.15s ease,
+                background-color 0.15s ease;
   }
   .btn-primary:hover {
     border-color: rgba(255, 122, 26, 0.9);
     box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.35), 0 0 18px 0 rgba(255, 122, 26, 0.45), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.5);
     transform: translateY(-1.5px);
   }
+  .btn-primary:active {
+    transform: scale(0.96);
+    transition: transform 0.05s ease-out;
+  }
 
   /* Arrow inside a button/link nudges toward its direction on hover */
   .nudge {
-    @apply inline-block transition-transform duration-300 ease-out;
+    @apply inline-block transition-transform duration-200 ease-out;
   }
   .group:hover .nudge,
   .btn:hover .nudge {
@@ -195,22 +199,26 @@ body {
   }
 
   .btn-ghost {
-    @apply btn active:scale-95 text-fg;
+    @apply btn text-fg;
     background: rgb(var(--card-bg));
     border: 1px solid rgba(255, 122, 26, 0.35);
     box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.12), 0 0 8px -2px rgba(255, 122, 26, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(14px) saturate(160%);
     -webkit-backdrop-filter: blur(14px) saturate(160%);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.25s ease,
-                background-color 0.25s ease,
-                color 0.25s ease;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.15s ease,
+                background-color 0.15s ease,
+                color 0.15s ease;
   }
   .btn-ghost:hover {
     border-color: rgba(255, 122, 26, 0.85);
     box-shadow: 0 8px 20px -2px rgba(0, 0, 0, 0.18), 0 0 14px 0 rgba(255, 122, 26, 0.3), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.6);
     transform: translateY(-1.5px);
+  }
+  .btn-ghost:active {
+    transform: scale(0.96);
+    transition: transform 0.05s ease-out;
   }
 
   .chip {

@@ -186,7 +186,7 @@ export default function Nav() {
               rel="noreferrer noopener"
               aria-label={`Follow INFINITUS on Instagram (${SOCIAL.instagramHandle})`}
               title="Instagram @infinitus_club.rit"
-              className="relative hidden sm:flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange"
+              className="relative hidden sm:flex h-10 w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
             >
               <InstagramNavIcon className="h-5 w-5" />
             </a>
@@ -196,15 +196,15 @@ export default function Nav() {
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={isDark ? 'Light mode' : 'Dark mode'}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={isDark ? 'sun' : 'moon'}
-                  initial={{ y: 20, rotate: -90, opacity: 0 }}
+                  initial={{ y: 16, rotate: -90, opacity: 0 }}
                   animate={{ y: 0, rotate: 0, opacity: 1 }}
-                  exit={{ y: -20, rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: EASE.out }}
+                  exit={{ y: -16, rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.18, ease: EASE.out }}
                 >
                   {isDark ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
                 </motion.span>
@@ -215,7 +215,7 @@ export default function Nav() {
               <Link
                 href={CONTACT_LINK.href}
                 aria-current={isActive(pathname, CONTACT_LINK.href) ? 'page' : undefined}
-                className="btn-primary hidden !px-4 !py-2 text-xs font-semibold sm:inline-flex"
+                className="btn-primary hidden !rounded-full !px-4 !py-2 text-xs font-semibold sm:inline-flex"
               >
                 {CONTACT_LINK.navLabel} <span aria-hidden="true" className="nudge">→</span>
               </Link>
@@ -228,7 +228,7 @@ export default function Nav() {
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-menu"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-300 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95 md:hidden"
             >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-5 w-5" aria-hidden="true">
                 <motion.path

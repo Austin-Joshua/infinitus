@@ -87,10 +87,10 @@ export default function GalleryGrid({ photos = [] }) {
           <motion.button
             key={photo.src}
             type="button"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '0px 0px -5% 0px' }}
-            transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, margin: '180px 0px 50px 0px' }}
+            transition={{ duration: 0.32, delay: (i % 3) * 0.03, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => openLightbox(i)}
             className="card card-hover group relative flex aspect-[4/3] w-full cursor-pointer flex-col overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label={`View photo: ${photo.caption}`}

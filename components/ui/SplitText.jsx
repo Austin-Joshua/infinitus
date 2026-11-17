@@ -11,12 +11,12 @@ const container = (stagger, delay) => ({
 
 const piece = {
   hidden: { y: '110%' },
-  show: { y: '0%', transition: { duration: 0.9, ease: EASE.out } },
+  show: { y: '0%', transition: { duration: 0.35, ease: EASE.out } },
 };
 
 /**
  * Text that rises into place from below a mask, one word (or letter) at a time.
- * `onView` waits until it scrolls into view; otherwise it plays on mount, after the intro.
+ * `onView` waits until it approaches the viewport; otherwise it plays on mount, after the intro.
  * Screen readers get the plain text once; the animated pieces are hidden from them.
  */
 export default function SplitText({
@@ -33,13 +33,13 @@ export default function SplitText({
   const Component = motion[as] ?? motion.span;
   const pieces = by === 'char' ? [...text] : text.split(' ');
   const trigger = onView
-    ? { whileInView: 'show', viewport: { once: true, margin: '0px 0px -10% 0px' } }
+    ? { whileInView: 'show', viewport: { once: true, margin: '180px 0px 50px 0px' } }
     : { animate: 'show' };
 
   return (
     <Component
       className={className}
-      variants={container(stagger ?? (by === 'char' ? 0.045 : 0.06), start)}
+      variants={container(stagger ?? (by === 'char' ? 0.02 : 0.025), start)}
       initial="hidden"
       {...trigger}
     >
