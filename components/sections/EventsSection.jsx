@@ -7,18 +7,22 @@ import EventsBrowser from '@/components/ui/EventsBrowser';
 
 export function FeaturedEvent({ event }) {
   return (
-    <article className="card group grid overflow-hidden md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:grid-cols-[minmax(0,0.65fr)_minmax(0,1.35fr)]">
+    <article className="card group grid overflow-hidden md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] xl:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] items-stretch">
       <Link
         href={eventHref(event)}
         tabIndex={-1}
         aria-hidden="true"
-        className="relative block aspect-[4/5] overflow-hidden border-b border-fg/15 bg-bg-2 md:border-b-0 md:border-r"
+        className="relative flex items-center justify-center overflow-hidden border-b border-fg/15 bg-bg-2/70 p-3 sm:p-5 md:border-b-0 md:border-r min-h-[360px] sm:min-h-[440px] md:min-h-full"
       >
-        <EventPoster
-          event={event}
-          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 40vw, 100vw"
-          className="h-full w-full transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
-        />
+        <div className="relative aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-lg border border-fg/10 shadow-sm bg-bg">
+          <EventPoster
+            event={event}
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 40vw, 100vw"
+            fit="contain"
+            priority
+            className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+          />
+        </div>
       </Link>
       <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap gap-2">

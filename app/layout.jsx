@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import JsonLd from '@/components/seo/JsonLd';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 import '@/styles/globals.css';
 
 // STIX is the typeface of mathematical publishing; it sets both headings and italic accents.
@@ -172,6 +173,7 @@ export default function RootLayout({ children }) {
           <Nav />
           {children}
           <Footer />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>

@@ -64,7 +64,6 @@ export default function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [isFocusedWithin, setIsFocusedWithin] = useState(false);
   const reduce = useReducedMotion();
   const { isDark, toggleTheme } = useTheme();
@@ -74,16 +73,13 @@ export default function Nav() {
   const { scrollY, scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
 
-  // Solid once the page moves; tucks away while scrolling down, returns on any upward scroll
+  // Always sticky and visible: elevates with border and backdrop-blur once scrolled
   useMotionValueEvent(scrollY, 'change', (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setScrolled(y > 24);
-    setHidden(y > 160 && y > prev);
+    setScrolled(y > 16);
   });
 
   useEffect(() => {
     setMenuOpen(false);
-    setHidden(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -131,8 +127,8 @@ export default function Nav() {
       />
 
       <motion.header
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
-          solid ? 'border-fg/15 bg-bg/90 backdrop-blur-md shadow-sm' : 'border-transparent'
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+          solid ? 'border-fg/15 bg-bg/90 backdrop-blur-md shadow-sm' : 'border-transparent bg-transparent'
         }`}
         onFocusCapture={() => setIsFocusedWithin(true)}
         onBlurCapture={(e) => {
@@ -140,8 +136,6 @@ export default function Nav() {
             setIsFocusedWithin(false);
           }
         }}
-        animate={{ y: hidden && !menuOpen && !isFocusedWithin ? '-100%' : '0%' }}
-        transition={{ duration: 0.35, ease: EASE.out }}
       >
         <div className="container-x flex h-16 items-center justify-between gap-3 sm:gap-4">
           {/* Dual Branding: Infinitus Logo + College Logo + Wordmark */}

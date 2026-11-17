@@ -13,7 +13,7 @@ export function ExternalArrow() {
   );
 }
 
-export function EventPoster({ event, sizes, priority = false, className = '' }) {
+export function EventPoster({ event, sizes, priority = false, className = '', fit = 'cover' }) {
   if (!event.coverImageUrl) {
     return (
       <div className={`flex items-center justify-center ${className}`}>
@@ -30,7 +30,7 @@ export function EventPoster({ event, sizes, priority = false, className = '' }) 
       sizes={sizes}
       priority={priority}
       unoptimized={event.coverImageUrl.startsWith('http')}
-      className={`object-cover ${className}`}
+      className={`${fit === 'contain' ? 'object-contain' : 'object-cover'} ${className}`}
     />
   );
 }
@@ -41,23 +41,26 @@ export default function EventCard({ event }) {
 
   return (
     <article className="card card-hover group relative flex h-full flex-col transition-[transform,border-color,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_48px_-24px_rgb(var(--fg)/0.35)]">
-      <div className="relative aspect-[4/5] overflow-hidden border-b border-fg/15 bg-bg-2">
-        <EventPoster
-          event={event}
-          sizes="(min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-        />
-        <span className="chip absolute left-3 top-3 bg-bg text-fg">
+      <div className="relative aspect-[4/5] overflow-hidden border-b border-fg/15 bg-bg-2/60 p-2 flex items-center justify-center">
+        <div className="relative h-full w-full overflow-hidden rounded-lg">
+          <EventPoster
+            event={event}
+            sizes="(min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            fit="contain"
+            className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          />
+        </div>
+        <span className="chip absolute left-3 top-3 bg-bg/95 backdrop-blur-sm text-fg shadow-sm">
           {formatEventDate(event.eventDate, event.endDate)}
         </span>
         {isUpcoming && (
-          <span className="chip absolute right-3 top-3 border-gold/40 bg-bg text-gold">
+          <span className="chip absolute right-3 top-3 border-gold/40 bg-bg/95 backdrop-blur-sm text-gold shadow-sm">
             Upcoming
           </span>
         )}
         <span
           aria-hidden="true"
-          className="absolute bottom-3 right-3 flex h-10 w-10 translate-y-3 items-center justify-center rounded-full bg-bg text-fg opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
+          className="absolute bottom-3 right-3 flex h-9 w-9 translate-y-3 items-center justify-center rounded-full bg-bg/95 backdrop-blur-sm text-fg opacity-0 shadow-sm transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
         >
           →
         </span>

@@ -368,22 +368,24 @@ export function HomeInstagram() {
                 className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-fg/15 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-fg/30 hover:shadow-[0_20px_40px_-20px_rgb(var(--fg)/0.25)]"
                 aria-label={`View Instagram post: ${post.caption}`}
               >
-                <div className="relative aspect-square w-full overflow-hidden bg-bg-2 border-b border-fg/10">
-                  <Image
-                    src={post.image}
-                    alt={post.caption}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-bg-2/50 border-b border-fg/10 p-2 flex items-center justify-center">
+                  <div className="relative h-full w-full overflow-hidden rounded-xl bg-bg">
+                    <Image
+                      src={post.image}
+                      alt={post.caption}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  </div>
                   {post.tag && (
-                    <span className="chip absolute left-3 top-3 border-accent/30 bg-bg/90 backdrop-blur-sm text-accent text-xs">
+                    <span className="chip absolute left-4 top-4 border-accent/30 bg-bg/95 backdrop-blur-sm text-accent text-xs shadow-sm">
                       {post.tag}
                     </span>
                   )}
                   <span
                     aria-hidden="true"
-                    className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-bg/90 backdrop-blur-sm text-fg shadow-sm transition-transform duration-300 group-hover:scale-110"
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-bg/95 backdrop-blur-sm text-fg shadow-sm transition-transform duration-300 group-hover:scale-110"
                   >
                     ↗
                   </span>

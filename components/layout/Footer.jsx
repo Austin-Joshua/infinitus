@@ -3,68 +3,80 @@ import { CLUB_SHORT, COPY, NAV_LINKS, SITE, SOCIAL, COLLEGE_NAME } from '@/lib/s
 import InfinitusLogo from '@/components/brand/InfinitusLogo';
 import RitLogo from '@/components/brand/RitLogo';
 
-const linkClass = 'group inline-flex items-center gap-1.5 text-muted transition-colors hover:text-accent text-sm';
-
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-fg/15 bg-bg-2">
-      <div className="container-x py-14 sm:py-16">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr] lg:gap-16">
-          <div>
-            <div className="flex items-center gap-3.5">
-              <InfinitusLogo size="nav" className="h-10 w-10" />
-              <span aria-hidden="true" className="h-7 w-px bg-fg/20" />
-              <RitLogo size="sm" />
+    <footer className="relative overflow-hidden border-t border-fg/15 bg-bg-2/80 transition-colors">
+      <div className="container-x py-8 sm:py-10">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          {/* Brand Identity & Affiliation */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3.5 sm:gap-5">
+            <div className="flex items-center gap-3">
+              <InfinitusLogo size="nav" className="h-8 w-8" />
+              <span aria-hidden="true" className="h-5 w-px bg-fg/20" />
+              <RitLogo size="xs" />
             </div>
-            <p className="mt-4 font-heading text-lg font-semibold tracking-wide text-fg">{CLUB_SHORT} CLUB</p>
-            <p className="mt-1 text-xs font-mono text-muted">{COLLEGE_NAME}</p>
-            <p className="mt-4 max-w-sm font-serif text-base italic text-fg/80">{COPY.footer.tagline}</p>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-heading text-sm font-bold tracking-wider text-fg">{CLUB_SHORT} CLUB</span>
+                <span aria-hidden="true" className="text-fg/30">·</span>
+                <span className="font-mono text-xs text-muted">{COLLEGE_NAME}</span>
+              </div>
+              <p className="font-serif text-xs italic text-muted mt-0.5">{COPY.footer.tagline}</p>
+            </div>
           </div>
 
-          <nav aria-label="Footer Navigation">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted">Navigation</p>
-            <ul className="mt-4 space-y-2.5">
-              {NAV_LINKS.map((link) => (
-                <li key={link.id}>
-                  <Link href={link.href} className={linkClass}>
-                    <span aria-hidden="true" className="text-xs text-accent opacity-70">›</span>
-                    {link.navLabel}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Horizontal Navigation Links */}
+          <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.id}
+                href={link.href}
+                className="text-muted transition-colors hover:text-accent font-medium"
+              >
+                {link.navLabel}
+              </Link>
+            ))}
           </nav>
 
-          <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-muted">Connect & Support</p>
-            <ul className="mt-4 space-y-2.5">
-              <li>
-                <a href={SOCIAL.instagram} target="_blank" rel="noreferrer noopener me" className={linkClass}>
-                  Instagram ({SOCIAL.instagramHandle}) <span aria-hidden="true" className="nudge nudge-ne">↗</span>
-                </a>
-              </li>
-              <li>
-                <a href={SOCIAL.queriesForm} target="_blank" rel="noreferrer noopener" className={linkClass}>
-                  Queries & Feedback Form <span aria-hidden="true" className="nudge nudge-ne">↗</span>
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${SITE.contactEmail}`} className={`${linkClass} break-all`}>
-                  {SITE.contactEmail}
-                </a>
-              </li>
-              <li>
-                <a href="https://ritchennai.org" target="_blank" rel="noreferrer noopener" className={linkClass}>
-                  RIT Official Website <span aria-hidden="true" className="nudge nudge-ne">↗</span>
-                </a>
-              </li>
-            </ul>
+          {/* Social & Support Quick Links */}
+          <div className="flex flex-wrap items-center gap-2.5 text-xs">
+            <a
+              href={SOCIAL.instagram}
+              target="_blank"
+              rel="noreferrer noopener me"
+              className="inline-flex items-center gap-1 rounded-full border border-fg/15 bg-card px-3 py-1 font-mono text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              Instagram <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              href={SOCIAL.queriesForm}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-1 rounded-full border border-fg/15 bg-card px-3 py-1 font-mono text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              Feedback <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              href={`mailto:${SITE.contactEmail}`}
+              className="inline-flex items-center gap-1 rounded-full border border-fg/15 bg-card px-3 py-1 font-mono text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              Email <span aria-hidden="true">✉</span>
+            </a>
+            <a
+              href="https://ritchennai.org"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-1 rounded-full border border-fg/15 bg-card px-3 py-1 font-mono text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              RIT <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-fg/15 pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+        {/* Compact Bottom Bar */}
+        <div className="mt-6 flex flex-col gap-2 border-t border-fg/10 pt-4 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>{COPY.footer.copyright(year)}</p>
           <p>{COPY.footer.credit}</p>
         </div>

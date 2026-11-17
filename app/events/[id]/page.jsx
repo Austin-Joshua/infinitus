@@ -114,8 +114,16 @@ export default async function EventPage({ params }) {
 
           <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
             <div className="lg:sticky lg:top-24 lg:self-start">
-              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 bg-bg-2">
-                <EventPoster event={event} priority sizes="(min-width: 1280px) 35vw, (min-width: 1024px) 45vw, 100vw" className="h-full w-full" />
+              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 bg-bg-2/70 p-2 sm:p-3 flex items-center justify-center">
+                <div className="relative h-full w-full overflow-hidden rounded-lg bg-bg">
+                  <EventPoster
+                    event={event}
+                    priority
+                    sizes="(min-width: 1280px) 35vw, (min-width: 1024px) 45vw, 100vw"
+                    fit="contain"
+                    className="h-full w-full"
+                  />
+                </div>
               </ClipReveal>
             </div>
 
