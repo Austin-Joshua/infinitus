@@ -12,22 +12,27 @@
   --accent: 31 47 160;
   --accent-2: 14 22 92;
   --gold: 150 100 0;
+  --sunset: 210 90 10;
   --btn-bg: 21 23 40;
   --btn-fg: 247 245 239;
   color-scheme: light;
 }
 
 .dark {
-  --bg: 12 14 31;
-  --bg-2: 17 20 43;
-  --card: 21 25 52;
-  --fg: 236 234 226;
-  --muted: 160 163 184;
-  --accent: 138 155 255;
-  --accent-2: 186 197 255;
-  --gold: 236 190 80;
-  --btn-bg: 236 234 226;
-  --btn-fg: 12 14 31;
+  /* Midnight Black RGB 9 10 16 (HEX #090A10) as main canvas */
+  --bg: 9 10 16;
+  --bg-2: 15 17 26;
+  --card: 18 20 32;
+  --fg: 242 244 250;
+  --muted: 154 160 178;
+  /* Electric Blue RGB 47 107 255 (HEX #2F6BFF) as secondary */
+  --accent: 47 107 255;
+  --accent-2: 92 142 255;
+  /* Sunset Orange RGB 255 122 26 (HEX #FF7A1A) as accent */
+  --gold: 255 122 26;
+  --sunset: 255 122 26;
+  --btn-bg: 47 107 255;
+  --btn-fg: 255 255 255;
   color-scheme: dark;
 }
 
@@ -51,7 +56,7 @@ html.intro-pending::before {
 }
 
 html.dark.intro-pending::before {
-  background-color: #000F2E;
+  background-color: #090A10;
 }
 
 @keyframes introCoverFallback {

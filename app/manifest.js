@@ -8,7 +8,7 @@ export default function manifest() {
     start_url: '/',
     display: 'standalone',
     background_color: '#F7F5EF',
-    theme_color: '#0C0E1F',
+    theme_color: '#090A10',
     icons: [
       {
         src: '/icon.svg',

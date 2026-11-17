@@ -66,20 +66,20 @@ export default function IntroCurtain() {
       aria-hidden="true"
       className="fixed inset-0 z-[100] cursor-pointer overflow-hidden select-none"
     >
-      {/* Top Panel: Royal Indigo in light mode (#1D2566), Deep Midnight Navy in dark mode (#000F2E) */}
+      {/* Top Panel: Royal Indigo in light mode (#1D2566), Midnight Black in dark mode (#090A10) */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '-100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+2px)] bg-[#1D2566] dark:bg-[#000F2E] will-change-transform"
+        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+2px)] bg-[#1D2566] dark:bg-[#090A10] will-change-transform"
       />
 
-      {/* Bottom Panel: Royal Indigo in light mode (#1D2566), Deep Midnight Navy in dark mode (#000F2E) */}
+      {/* Bottom Panel: Royal Indigo in light mode (#1D2566), Midnight Black in dark mode (#090A10) */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+2px)] bg-[#1D2566] dark:bg-[#000F2E] will-change-transform"
+        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+2px)] bg-[#1D2566] dark:bg-[#090A10] will-change-transform"
       />
 
       {/* Center Logo: scales & dives into page as curtains open */}

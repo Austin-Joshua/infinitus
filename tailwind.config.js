@@ -19,8 +19,13 @@ module.exports = {
         accent: token('accent'),
         'accent-2': token('accent-2'),
         gold: token('gold'),
+        sunset: token('sunset'),
         'btn-bg': token('btn-bg'),
         'btn-fg': token('btn-fg'),
+        // Explicit dark-mode brand palette tokens
+        'midnight-black': '#090A10',
+        'electric-blue': '#2F6BFF',
+        'sunset-orange': '#FF7A1A',
       },
       fontFamily: {
         heading: ['var(--font-serif)', 'serif'],

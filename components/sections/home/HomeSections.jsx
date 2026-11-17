@@ -192,7 +192,7 @@ export function HomeEvents({ events }) {
             <div className="card p-6 sm:p-8 border-accent/40 bg-card/90 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
-                  <span className="chip border-accent/40 text-accent font-semibold">Upcoming Event</span>
+                  <span className="chip border-sunset/40 text-sunset font-semibold">Upcoming Event</span>
                   <h3 className="font-heading text-2xl sm:text-3xl font-bold text-fg mt-2">
                     {nextUp.title}
                   </h3>
@@ -379,7 +379,7 @@ export function HomeInstagram() {
                     />
                   </div>
                   {post.tag && (
-                    <span className="chip absolute left-4 top-4 border-accent/30 bg-bg/95 backdrop-blur-sm text-accent text-xs shadow-sm">
+                    <span className="chip absolute left-4 top-4 border-accent/30 bg-bg/95 backdrop-blur-sm text-accent dark:border-sunset/40 dark:text-sunset text-xs shadow-sm">
                       {post.tag}
                     </span>
                   )}

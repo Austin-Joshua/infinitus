@@ -144,7 +144,7 @@ export default function Journey({ heading, steps }) {
                         {step.year}
                       </p>
                       {step.tag && (
-                        <span className="chip border-accent/25 bg-accent/5 text-[11px] font-mono text-accent">
+                        <span className="chip border-accent/25 bg-accent/5 text-[11px] font-mono text-accent dark:border-sunset/40 dark:bg-sunset/10 dark:text-sunset">
                           {step.tag}
                         </span>
                       )}
