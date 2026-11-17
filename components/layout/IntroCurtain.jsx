@@ -66,20 +66,20 @@ export default function IntroCurtain() {
       aria-hidden="true"
       className="fixed inset-0 z-[100] cursor-pointer overflow-hidden select-none"
     >
-      {/* Top Scroll Panel: Signature Prussian Blue in both modes for distinct contrast against page backgrounds */}
+      {/* Top Scroll Panel: Prussian Blue in light mode, Royal Celestial Midnight in dark mode */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '-100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] border-b-2 border-sunset-orange/70 shadow-[0_4px_24px_rgba(255,122,26,0.35)] will-change-transform"
+        className="absolute inset-x-0 top-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] dark:bg-[#162347] will-change-transform"
       />
 
-      {/* Bottom Scroll Panel: Signature Prussian Blue in both modes for distinct contrast against page backgrounds */}
+      {/* Bottom Scroll Panel: Prussian Blue in light mode, Royal Celestial Midnight in dark mode */}
       <motion.div
         initial={{ y: '0%' }}
         animate={{ y: isOpening ? '100%' : '0%' }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] border-t-2 border-sunset-orange/70 shadow-[0_-4px_24px_rgba(255,122,26,0.35)] will-change-transform"
+        className="absolute inset-x-0 bottom-0 z-10 h-[calc(50%+1px)] bg-[#1B3350] dark:bg-[#162347] will-change-transform"
       />
 
       {/* Center Seal Logo: spins 360° clockwise briskly like an unsealing scroll, then dives as letter opens */}
@@ -105,9 +105,13 @@ export default function IntroCurtain() {
         className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center will-change-transform"
       >
         <div className="relative flex items-center justify-center">
-          {/* Glowing ambient backlight behind the central scroll seal */}
-          <div className="absolute h-36 w-36 rounded-full bg-sunset-orange/20 blur-2xl" />
-          <InfinitusLogo size="loader" priority />
+          {/* Luminous ambient orange backlight behind the lifted scroll seal */}
+          <div className="absolute -inset-4 rounded-full bg-sunset-orange/25 blur-2xl" />
+
+          {/* Lifted circular seal medallion with orange border */}
+          <div className="relative flex items-center justify-center rounded-full border-2 sm:border-[3px] border-sunset-orange bg-[#00257A] shadow-[0_16px_40px_rgba(0,0,0,0.6),0_0_24px_rgba(255,122,26,0.45)]">
+            <InfinitusLogo size="loader" priority className="rounded-full" />
+          </div>
         </div>
       </motion.div>
     </div>

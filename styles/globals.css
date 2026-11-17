@@ -57,7 +57,7 @@ html {
   overflow-x: clip;
 }
 
-/* Pre-paint cover for initial visit curtain (Prussian Blue #1B3350 in both modes for crisp contrast) */
+/* Pre-paint cover for initial visit curtain (Prussian Blue #1B3350 in light, Royal Celestial Midnight #162347 in dark) */
 html.intro-pending::before {
   content: '';
   position: fixed;
@@ -69,7 +69,7 @@ html.intro-pending::before {
 }
 
 html.dark.intro-pending::before {
-  background-color: #1B3350;
+  background-color: #162347;
 }
 
 @keyframes introCoverFallback {
