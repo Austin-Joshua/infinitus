@@ -105,6 +105,36 @@ async function ensureTransparentWhiteRit() {
   return transparentOut;
 }
 
+function createIcoFromPngs(pngBuffers, sizes) {
+  const count = pngBuffers.length;
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(count, 4);
+
+  const dirEntrySize = 16;
+  const entries = [];
+  let offset = 6 + count * dirEntrySize;
+
+  for (let i = 0; i < count; i++) {
+    const buf = pngBuffers[i];
+    const size = sizes[i];
+    const entry = Buffer.alloc(dirEntrySize);
+    entry.writeUInt8(size === 256 ? 0 : size, 0);
+    entry.writeUInt8(size === 256 ? 0 : size, 1);
+    entry.writeUInt8(0, 2);
+    entry.writeUInt8(0, 3);
+    entry.writeUInt16LE(1, 4);
+    entry.writeUInt16LE(32, 6);
+    entry.writeUInt32LE(buf.length, 8);
+    entry.writeUInt32LE(offset, 12);
+    entries.push(entry);
+    offset += buf.length;
+  }
+
+  return Buffer.concat([header, ...entries, ...pngBuffers]);
+}
+
 async function main() {
   await ensureDir(OUT_DIR);
   await ensureDir(APP_DIR);
@@ -146,7 +176,49 @@ async function main() {
     .toFile(faviconPath);
   console.log(`  ✓ favicon.png (${((await fs.stat(faviconPath)).size / 1024).toFixed(1)} KB)`);
 
-  // Next.js App Router touch icon (the tab icon is the hand-drawn app/icon.svg)
+  // App icons & favicons
+  const icon32 = await sharp(infinitusSrc)
+    .resize(32, 32, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  await fs.writeFile(path.join(APP_DIR, 'icon.png'), icon32);
+  console.log('  ✓ app/icon.png (32x32)');
+
+  const icon192 = await sharp(infinitusSrc)
+    .resize(192, 192, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  await fs.writeFile(path.join(APP_DIR, 'icon-192.png'), icon192);
+  await fs.writeFile(path.join(OUT_DIR, 'icon-192.png'), icon192);
+  console.log('  ✓ icon-192.png');
+
+  const icon512 = await sharp(infinitusSrc)
+    .resize(512, 512, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  await fs.writeFile(path.join(OUT_DIR, 'icon-512.png'), icon512);
+  console.log('  ✓ public/brand/icon-512.png');
+
+  // Maskable 512 icon with safe area padding
+  const innerLogo = await sharp(infinitusSrc)
+    .resize(410, 410, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  const iconMaskable = await sharp({
+    create: {
+      width: 512,
+      height: 512,
+      channels: 4,
+      background: { r: 9, g: 10, b: 16, alpha: 1 },
+    },
+  })
+    .composite([{ input: innerLogo, gravity: 'center' }])
+    .png()
+    .toBuffer();
+  await fs.writeFile(path.join(OUT_DIR, 'icon-maskable-512.png'), iconMaskable);
+  console.log('  ✓ public/brand/icon-maskable-512.png');
+
+  // Touch icon (180x180)
   await sharp(infinitusSrc)
     .resize(180, 180, {
       fit: 'contain',
@@ -155,6 +227,20 @@ async function main() {
     .png()
     .toFile(path.join(APP_DIR, 'apple-icon.png'));
   console.log('  ✓ app/apple-icon.png');
+
+  // Favicon.ico with 16, 32, 48
+  const icon16 = await sharp(infinitusSrc)
+    .resize(16, 16, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  const icon48 = await sharp(infinitusSrc)
+    .resize(48, 48, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  const icoBuffer = createIcoFromPngs([icon16, icon32, icon48], [16, 32, 48]);
+  await fs.writeFile(path.join(APP_DIR, 'favicon.ico'), icoBuffer);
+  await fs.writeFile(path.join(ROOT, 'public', 'favicon.ico'), icoBuffer);
+  console.log('  ✓ app/favicon.ico & public/favicon.ico');
 
   console.log('\nDone — optimized assets written to public/brand/');
 }
