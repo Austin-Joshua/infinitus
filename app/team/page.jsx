@@ -24,7 +24,7 @@ export default async function TeamPage() {
   return (
     <>
       <JsonLd data={breadcrumbs} />
-      <PageHeader label={page.navLabel} title={COPY.members.heading} intro={COPY.members.subheading} />
+      <PageHeader label={page.navLabel} title={COPY.members.heading} />
       <MembersGrid members={members} />
     </>
   );

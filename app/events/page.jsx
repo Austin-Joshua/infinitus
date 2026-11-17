@@ -24,7 +24,7 @@ export default async function EventsPage() {
   return (
     <>
       <JsonLd data={breadcrumbs} />
-      <PageHeader label={page.navLabel} title={COPY.events.heading} intro={COPY.events.intro} />
+      <PageHeader label={page.navLabel} title={COPY.events.heading} />
       <EventsSection events={events} />
     </>
   );

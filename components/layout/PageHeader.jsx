@@ -18,7 +18,13 @@ export default function PageHeader({ label, title, intro, children }) {
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <motion.div style={{ opacity: contentOpacity }} className="container-x relative">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
+        <div
+          className={`grid gap-6 ${
+            intro || children
+              ? 'lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end lg:gap-16'
+              : ''
+          }`}
+        >
           <SplitText
             as="h1"
             text={title}

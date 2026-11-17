@@ -1,7 +1,7 @@
 import PageHeader from '@/components/layout/PageHeader';
 import GallerySection from '@/components/sections/GallerySection';
 import { getEvents } from '@/lib/events';
-import { COPY, SOCIAL, pageById } from '@/lib/site';
+import { COPY, pageById } from '@/lib/site';
 import { pageMetadata, breadcrumbJsonLd } from '@/lib/seo';
 import JsonLd from '@/components/seo/JsonLd';
 
@@ -24,19 +24,7 @@ export default async function GalleryPage() {
   return (
     <>
       <JsonLd data={breadcrumbs} />
-      <PageHeader label={page.navLabel} title={COPY.gallery.heading} intro={COPY.gallery.intro}>
-        <a
-          href={SOCIAL.instagram}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="group mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
-        >
-          More on {SOCIAL.instagramHandle}{' '}
-          <span aria-hidden="true" className="nudge nudge-ne">
-            ↗
-          </span>
-        </a>
-      </PageHeader>
+      <PageHeader label={page.navLabel} title={COPY.gallery.heading} />
       <GallerySection events={events} />
     </>
   );
