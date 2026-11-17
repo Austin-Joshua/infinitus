@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -65,8 +65,11 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [isFocusedWithin, setIsFocusedWithin] = useState(false);
   const reduce = useReducedMotion();
   const { isDark, toggleTheme } = useTheme();
+  const menuBtnRef = useRef(null);
+  const mobileNavRef = useRef(null);
 
   const { scrollY, scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
@@ -85,7 +88,29 @@ export default function Nav() {
 
   useEffect(() => {
     if (!menuOpen) return undefined;
-    const onKey = (event) => event.key === 'Escape' && setMenuOpen(false);
+    const onKey = (event) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        menuBtnRef.current?.focus();
+        return;
+      }
+      if (event.key === 'Tab' && mobileNavRef.current) {
+        const focusable = mobileNavRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', onKey);
@@ -109,7 +134,13 @@ export default function Nav() {
         className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
           solid ? 'border-fg/15 bg-bg/90 backdrop-blur-md shadow-sm' : 'border-transparent'
         }`}
-        animate={{ y: hidden && !menuOpen ? '-100%' : '0%' }}
+        onFocusCapture={() => setIsFocusedWithin(true)}
+        onBlurCapture={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setIsFocusedWithin(false);
+          }
+        }}
+        animate={{ y: hidden && !menuOpen && !isFocusedWithin ? '-100%' : '0%' }}
         transition={{ duration: 0.35, ease: EASE.out }}
       >
         <div className="container-x flex h-16 items-center justify-between gap-3 sm:gap-4">
@@ -197,6 +228,7 @@ export default function Nav() {
             )}
 
             <button
+              ref={menuBtnRef}
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
@@ -229,6 +261,7 @@ export default function Nav() {
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
+            ref={mobileNavRef}
             id="mobile-nav-menu"
             aria-label="Primary mobile"
             initial={{ opacity: 0, y: -10 }}

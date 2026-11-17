@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { metaOf } from '@/lib/format';
 import { SOCIAL } from '@/lib/site';
@@ -66,18 +66,56 @@ export function Avatar({ name, photoUrl, className = '' }) {
 
 export function MemberDetailModal({ member, open, onClose, titleId }) {
   const meta = member ? metaOf(member) : '';
+  const dialogRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const lastFocusedRef = useRef(null);
 
   useEffect(() => {
     if (!open) return undefined;
+    lastFocusedRef.current = document.activeElement;
+
+    // Auto-focus close button when modal mounts
+    const timer = setTimeout(() => {
+      if (closeBtnRef.current) {
+        closeBtnRef.current.focus();
+      }
+    }, 50);
+
     const onKey = (event) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Keyboard focus trap
+      if (event.key === 'Tab' && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     document.addEventListener('keydown', onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
+      clearTimeout(timer);
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
+      if (lastFocusedRef.current && typeof lastFocusedRef.current.focus === 'function') {
+        lastFocusedRef.current.focus();
+      }
     };
   }, [open, onClose]);
 
@@ -101,6 +139,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
 
           {/* Modal Container */}
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
@@ -112,6 +151,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
           >
             {/* Close Button */}
             <button
+              ref={closeBtnRef}
               type="button"
               onClick={onClose}
               aria-label="Close"

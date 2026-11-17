@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "test": "node --test",
     "db:seed": "node scripts/db/seed.mjs",
     "branding:optimize": "node scripts/optimize-branding.mjs"
   },
