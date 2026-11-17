@@ -42,13 +42,12 @@ export default function Hero({ stats = [] }) {
               {COPY.hero.support}
             </motion.p>
             <motion.div {...rise(0.65)} className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
-              {/* Primary CTA: Recruitment Form or Contact fallback */}
-              {/* TODO(owner): Add official Google Form recruitment link when recruitment cycle opens */}
+              {/* Primary CTA: Contact / Join */}
               <Link
                 href={SOCIAL.recruitmentForm || '/contact'}
                 className="btn-primary text-xs sm:text-sm"
               >
-                Join INFINITUS <span aria-hidden="true" className="nudge">→</span>
+                Join the Club <span aria-hidden="true" className="nudge">→</span>
               </Link>
               {/* Secondary CTA: Official Instagram Handle */}
               <a
@@ -57,7 +56,7 @@ export default function Hero({ stats = [] }) {
                 rel="noopener noreferrer"
                 className="btn-ghost text-xs sm:text-sm"
               >
-                Follow {SOCIAL.instagramHandle} <span aria-hidden="true" className="nudge-ne">↗</span>
+                Follow on Instagram <span aria-hidden="true" className="nudge-ne">↗</span>
               </a>
               {/* Tertiary CTA: Text Link */}
               <Link

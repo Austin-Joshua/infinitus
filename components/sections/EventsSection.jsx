@@ -69,21 +69,7 @@ export function FeaturedEvent({ event }) {
   );
 }
 
-function NextEventBanner() {
-  return (
-    <div className="card flex flex-col items-start justify-between gap-6 border-dashed p-7 sm:flex-row sm:items-center sm:p-8">
-      <div>
-        <p className="font-heading text-xl font-semibold text-fg">{COPY.events.nextEventTitle}</p>
-        <p className="mt-1 max-w-xl text-sm text-muted">{COPY.events.nextEventBody}</p>
-      </div>
-      <a href={SOCIAL.instagram} target="_blank" rel="noreferrer noopener" className="btn-primary shrink-0">
-        Follow {SOCIAL.instagramHandle} <ExternalArrow />
-      </a>
-    </div>
-  );
-}
-
-/** Body of the Events page: upcoming, the latest event, then the full archive. */
+/** Body of the Events page: upcoming (when scheduled), the latest featured event, then the full archive. */
 export default function EventsSection({ events }) {
   const upcoming = events.filter((e) => e.status === 'upcoming');
   const past = events.filter((e) => e.status !== 'upcoming');
@@ -93,6 +79,7 @@ export default function EventsSection({ events }) {
   return (
     <section className="section !pt-4 sm:!pt-6 pb-20">
       <div className="container-x">
+        {/* Real upcoming events when scheduled */}
         {upcoming.length > 0 && (
           <div className="mb-14">
             <h2 className="font-heading text-xl font-semibold text-fg">{COPY.events.upcomingHeading}</h2>
@@ -115,12 +102,6 @@ export default function EventsSection({ events }) {
         {rest.length > 0 && (
           <Reveal className="mt-16">
             <EventsBrowser events={rest} />
-          </Reveal>
-        )}
-
-        {upcoming.length === 0 && (
-          <Reveal className="mt-16">
-            <NextEventBanner />
           </Reveal>
         )}
       </div>

@@ -186,8 +186,8 @@ export function HomeEvents({ events }) {
   const past = events.filter((e) => e.status !== 'upcoming');
   const upcoming = events.filter((e) => e.status === 'upcoming');
   const nextUp = upcoming[0];
-  const featured = past.find((e) => e.featured) ?? past[0];
-  const latest = past.filter((e) => e !== featured).slice(0, 4);
+  const displayEvents = past.slice(0, 4);
+  const fourthPosterUrl = displayEvents[3]?.coverImageUrl;
 
   return (
     <section className="section !py-16 sm:!py-24">
@@ -199,9 +199,9 @@ export function HomeEvents({ events }) {
           cta={COPY.home.eventsCta}
         />
 
-        {/* Upcoming Slot above Past Events */}
-        <Reveal className="mt-8">
-          {nextUp ? (
+        {/* Real Upcoming Event Slot (left blank when no genuine upcoming event is scheduled) */}
+        {nextUp && (
+          <Reveal className="mt-8">
             <div className="card p-6 sm:p-8 border-accent/40">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
@@ -244,40 +244,71 @@ export function HomeEvents({ events }) {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="card p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-dashed border-fg/20">
-              <div>
-                <span className="chip border-accent/30 text-accent font-medium">Upcoming Schedule</span>
-                <h3 className="font-heading text-xl sm:text-2xl font-bold text-fg mt-2">
-                  Next event: announced on Instagram
-                </h3>
-                <p className="mt-1 text-xs sm:text-sm text-muted">
-                  Follow our official handle for competition briefs, dates, and registration announcements.
-                </p>
-              </div>
-              <a
-                href={SOCIAL.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary self-start sm:self-auto text-xs sm:text-sm shrink-0"
-              >
-                Follow {SOCIAL.instagramHandle} <span aria-hidden="true" className="nudge-ne">↗</span>
-              </a>
-            </div>
-          )}
-        </Reveal>
-
-        {featured && (
-          <Reveal className="mt-8">
-            <FeaturedEvent event={featured} />
           </Reveal>
         )}
-        <Stagger className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {latest.map((event) => (
+
+        {/* 4-Card Responsive Grid with Last Poster Card Blurred for "Show More Events" */}
+        <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {displayEvents.slice(0, 3).map((event) => (
             <StaggerItem key={event.id}>
               <EventCard event={event} />
             </StaggerItem>
           ))}
+
+          {/* 4th Card: Blurred poster background with "Show More Events" leading to /events */}
+          <StaggerItem>
+            <article className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-sunset-orange/35 shadow-lg shadow-sunset-orange/10 min-h-[380px]">
+              {/* Blurred Poster Background */}
+              <div className="absolute inset-0 z-0 overflow-hidden bg-bg-2">
+                {fourthPosterUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={fourthPosterUrl}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-full w-full object-cover object-top filter blur-[3px] scale-110 opacity-35 transition-transform duration-700 ease-out group-hover:scale-125 group-hover:opacity-45"
+                  />
+                )}
+                {/* Gradient / Frosted Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/85 to-bg/60 backdrop-blur-[2px]" />
+              </div>
+
+              {/* Centered CTA Content */}
+              <div className="relative z-10 flex flex-1 flex-col items-center justify-center p-6 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sunset-orange/50 bg-sunset-orange/15 text-sunset-orange shadow-lg shadow-sunset-orange/25 backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" className="h-7 w-7">
+                    <rect x="3" y="4" width="18" height="18" rx="3" />
+                    <path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                </div>
+
+                <span className="chip mt-4 border-sunset/40 text-sunset font-semibold text-xs py-0.5 px-3">
+                  {past.length}+ Events Hosted
+                </span>
+
+                <h3 className="mt-3 font-heading text-xl sm:text-2xl font-bold text-fg">
+                  Show More Events
+                </h3>
+
+                <p className="mt-2 max-w-[220px] text-xs text-muted leading-relaxed">
+                  Explore our complete collection of workshops, competitions, talks, and team challenges.
+                </p>
+
+                <div className="mt-6">
+                  <span className="btn-primary text-xs inline-flex items-center gap-1.5 shadow-md shadow-sunset-orange/25 group-hover:shadow-lg group-hover:shadow-sunset-orange/40">
+                    View All Events <span aria-hidden="true" className="nudge">→</span>
+                  </span>
+                </div>
+
+                {/* Direct Link Overlay to /events */}
+                <Link
+                  href="/events"
+                  className="absolute inset-0 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-2xl"
+                  aria-label="View all INFINITUS events on the events page"
+                />
+              </div>
+            </article>
+          </StaggerItem>
         </Stagger>
       </div>
     </section>

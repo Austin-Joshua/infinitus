@@ -138,7 +138,7 @@ export default function Nav() {
         }}
       >
         <div className="container-x flex h-16 items-center justify-between gap-3 sm:gap-4">
-          {/* Dual Branding: Infinitus Logo + College Logo + Wordmark */}
+          {/* Dual Branding: Infinitus Logo + College Logo */}
           <Link href="/" className="group flex items-center gap-2.5 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
             <span className="transition-transform duration-700 ease-out group-hover:rotate-[360deg] shrink-0">
               <InfinitusLogo size="nav" priority />
@@ -146,9 +146,6 @@ export default function Nav() {
             <span className="h-5 w-px bg-fg/20 shrink-0" aria-hidden="true" />
             <span className="shrink-0">
               <RitLogo size="xs" className="opacity-95 transition-opacity group-hover:opacity-100" />
-            </span>
-            <span className="hidden font-heading text-sm font-bold tracking-[0.12em] text-fg xl:inline-block">
-              {CLUB_SHORT}
             </span>
           </Link>
 

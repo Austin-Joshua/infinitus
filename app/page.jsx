@@ -1,7 +1,6 @@
 import Hero from '@/components/sections/Hero';
 import {
   CtaBand,
-  HomeAbout,
   HomeEvents,
   HomeExplore,
   HomeGallery,
@@ -37,7 +36,6 @@ export default async function Home() {
     <>
       <Hero stats={stats} />
       <KeywordMarquee />
-      <HomeAbout />
       <HomeExplore />
       <HomeEvents events={events} />
       <HomeTeam members={members} />
