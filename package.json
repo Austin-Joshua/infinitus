@@ -11,9 +11,6 @@
     "db:seed": "node scripts/db/seed.mjs",
     "branding:optimize": "node scripts/optimize-branding.mjs"
   },
-  "engines": {
-    "node": ">=20.9.0"
-  },
   "dependencies": {
     "@supabase/supabase-js": "^2",
     "framer-motion": "^11",
