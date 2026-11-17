@@ -4,7 +4,7 @@
 // Sourced strictly: self, static theme-script sha256 hash, Vercel analytics, Supabase storage
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com 'sha256-NbowA9MZCzI/EkwGdDbacsfdC3fwM4p72KV8QvNnnOs=';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com;
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com;
   font-src 'self' data:;
