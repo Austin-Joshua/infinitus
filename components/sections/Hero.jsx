@@ -83,7 +83,7 @@ export default function Hero({ stats = [] }) {
         </div>
 
         {stats.length > 0 && (
-          <motion.dl {...rise(0.8)} className="mt-12 grid grid-cols-3 rounded-2xl border border-fg/10 bg-card/50 backdrop-blur-sm p-4 sm:p-6 shadow-sm">
+          <motion.dl {...rise(0.8)} className="card mt-12 grid grid-cols-3 rounded-2xl p-4 sm:p-6">
             {stats.map((stat, i) => (
               <div key={stat.label} className={`flex flex-col-reverse py-2 sm:py-3 ${i ? 'border-l border-fg/10 pl-4 sm:pl-8' : ''}`}>
                 <dt className="mt-1 text-xs text-muted font-mono">{stat.label}</dt>

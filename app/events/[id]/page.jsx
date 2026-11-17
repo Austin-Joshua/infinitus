@@ -140,7 +140,7 @@ export default async function EventPage({ params }) {
               />
 
               <Reveal delay={0.3}>
-                <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-fg/10 bg-card p-4 sm:p-5">
+                <dl className="card mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl p-4 sm:p-5">
                   <div>
                     <dt className="font-mono text-xs uppercase tracking-widest text-muted">Date</dt>
                     <dd className="mt-1 font-heading text-lg font-bold text-fg sm:text-xl">{formatEventDate(event.eventDate, event.endDate)}</dd>
