@@ -1,4 +1,5 @@
 import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
+import { headers } from 'next/headers';
 import { CLUB_NAME, COLLEGE_NAME, SITE, SOCIAL } from '@/lib/site';
 import { absoluteUrl } from '@/lib/seo';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
@@ -167,7 +168,7 @@ const organizationJsonLd = {
     'Rajalakshmi Institute of Technology Mathematics Club',
   ],
   url: SITE.url,
-  logo: absoluteUrl('/icon.svg'),
+  logo: absoluteUrl('/icon.png'),
   image: absoluteUrl('/opengraph-image'),
   foundingDate: '2023',
   email: SITE.contactEmail,
@@ -198,7 +199,14 @@ const organizationJsonLd = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  let nonce = undefined;
+  try {
+    nonce = (await headers()).get('x-nonce') || undefined;
+  } catch {
+    // Non-request context
+  }
+
   return (
     <html
       lang="en"
@@ -208,9 +216,9 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: initScript }} />
-        <JsonLd data={websiteJsonLd} />
-        <JsonLd data={organizationJsonLd} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: initScript }} />
+        <JsonLd data={websiteJsonLd} nonce={nonce} />
+        <JsonLd data={organizationJsonLd} nonce={nonce} />
         <noscript>
           <style>{`
             .page-in { opacity: 1 !important; transform: none !important; animation: none !important; }

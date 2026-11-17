@@ -1,26 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-// Content-Security-Policy (CSP)
-// Sourced strictly: self, static theme-script sha256 hash, Vercel analytics, Supabase storage
-const cspHeader = `
-  default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com;
-  style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com;
-  font-src 'self' data:;
-  connect-src 'self' https://*.supabase.co https://vitals.vercel-insights.com;
-  object-src 'none';
-  base-uri 'self';
-  form-action 'self' https://forms.gle https://docs.google.com;
-  frame-ancestors 'none';
-  upgrade-insecure-requests;
-`.replace(/\s{2,}/g, ' ').trim();
+const supabaseHost = process.env.SUPABASE_URL
+  ? new URL(process.env.SUPABASE_URL).hostname
+  : '**.supabase.co';
 
 const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: cspHeader,
-  },
   {
     key: 'Strict-Transport-Security',
     value: 'max-age=63072000; includeSubDomains; preload',
@@ -53,20 +37,14 @@ const securityHeaders = [
 
 const nextConfig = {
   reactStrictMode: true,
-  // Hides the bottom-left Next.js "N" dev badge during local development.
-  // It never appears on production builds (e.g. Vercel).
   devIndicators: false,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.supabase.co',
+        hostname: supabaseHost,
         pathname: '/storage/v1/object/public/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
       },
     ],
   },
@@ -75,6 +53,25 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: securityHeaders,
+      },
+      // Social crawler link previews (WhatsApp, LinkedIn, Facebook) require cross-origin access for OG images
+      {
+        source: '/opengraph-image',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
+      },
+      {
+        source: '/brand/infinitus-og.png',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'cross-origin',
+          },
+        ],
       },
     ];
   },

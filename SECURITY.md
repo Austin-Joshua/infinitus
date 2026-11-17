@@ -33,7 +33,7 @@ The INFINITUS website incorporates the following defensive controls:
 
 - **Zero-Secret Client Builds:** All public client code executes with zero private credentials. Database queries rely exclusively on anonymous public keys (`SUPABASE_ANON_KEY`) or bundled zero-downtime static data.
 - **Row Level Security (RLS):** All Supabase database tables (`members`, `events`, `event_images`) have Row Level Security enabled. Only active, sanitized records are readable by the public; all write and mutate permissions (`INSERT`, `UPDATE`, `DELETE`) are prohibited for anonymous and authenticated web roles.
-- **Strict Content Security Policy (CSP):** Sourced from canonical hosts, disallowing object embeds, restricting form submissions to official Google Forms, and blocking framing (`frame-ancestors 'none'`).
+- **Strict Content Security Policy (CSP):** Enforced via edge middleware with dynamic per-request cryptographic nonces (`'nonce-<base64>'` + `'strict-dynamic'`). Both `'unsafe-inline'` and `'unsafe-eval'` are completely eliminated from `script-src` in production. Note: `style-src 'unsafe-inline'` is retained exclusively for critical inline theme variables, Tailwind CSS style injection, and Framer Motion runtime animation transforms. Disallows object embeds, restricts form submissions to official Google Forms, and blocks clickjacking (`frame-ancestors 'none'`).
 - **HTTP Security Headers:**
   - `Strict-Transport-Security` (HSTS: 2 years, `includeSubDomains`, `preload`)
   - `X-Content-Type-Options: nosniff`
