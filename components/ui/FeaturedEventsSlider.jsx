@@ -7,7 +7,8 @@ import { formatEventDate, eventHref } from '@/lib/format';
 import { COPY } from '@/lib/site';
 import { EventPoster, ExternalArrow } from '@/components/ui/EventCard';
 
-const AUTO_PLAY_INTERVAL = 5500; // 5.5 seconds per slide (considerable comfortable reading time)
+// Increased slider speed: 3.2 seconds per slide (brisk, engaging, and dynamic)
+const AUTO_PLAY_INTERVAL = 3200;
 
 export default function FeaturedEventsSlider({
   events = [],
@@ -17,7 +18,10 @@ export default function FeaturedEventsSlider({
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const reduce = useReducedMotion();
-  const touchStartX = useRef(null);
+
+  // Pointer & touch swipe tracking for all display sizes (desktop mouse, tablet, mobile)
+  const pointerStartX = useRef(null);
+  const pointerStartY = useRef(null);
 
   const count = events.length;
 
@@ -38,7 +42,7 @@ export default function FeaturedEventsSlider({
     goTo(current + 1, 1);
   }, [current, goTo]);
 
-  // Slideshow auto-advance timer
+  // Slideshow auto-advance timer with brisk speed
   useEffect(() => {
     if (count <= 1 || isPaused || reduce) return undefined;
     const timer = setInterval(() => {
@@ -56,23 +60,26 @@ export default function FeaturedEventsSlider({
     }
   };
 
-  // Touch swipe support for mobile
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
+  // Universal pointer swipe support (desktop mouse drag, trackpad, tablet pen & mobile)
+  const handlePointerDown = (e) => {
+    pointerStartX.current = e.clientX;
+    pointerStartY.current = e.clientY;
   };
 
-  const handleTouchEnd = (e) => {
-    if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-    if (Math.abs(diff) > 40) {
-      if (diff > 0) {
+  const handlePointerUp = (e) => {
+    if (pointerStartX.current === null) return;
+    const diffX = pointerStartX.current - e.clientX;
+    const diffY = pointerStartY.current !== null ? Math.abs(pointerStartY.current - e.clientY) : 0;
+    // Horizontal swipe threshold: 40px and predominantly horizontal
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > diffY) {
+      if (diffX > 0) {
         next();
       } else {
         prev();
       }
     }
-    touchStartX.current = null;
+    pointerStartX.current = null;
+    pointerStartY.current = null;
   };
 
   if (!events || events.length === 0) return null;
@@ -87,8 +94,8 @@ export default function FeaturedEventsSlider({
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
       onKeyDown={handleKeyDown}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
       tabIndex={0}
       role="region"
       aria-roledescription="carousel"
@@ -124,11 +131,24 @@ export default function FeaturedEventsSlider({
           <motion.article
             key={activeEvent.id}
             custom={direction}
-            initial={{ opacity: 0, x: direction * 35 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -direction * 35 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col md:flex-row items-center p-5 sm:p-7 md:p-8 lg:p-9 gap-6 sm:gap-8 lg:gap-12"
+            initial={{ opacity: 0, x: direction * 40, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, x: -direction * 40, filter: 'blur(4px)' }}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.16}
+            dragMomentum={false}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipeConfidenceThreshold = 35;
+              const swipeVelocityThreshold = 250;
+              if (offset.x < -swipeConfidenceThreshold || velocity.x < -swipeVelocityThreshold) {
+                next();
+              } else if (offset.x > swipeConfidenceThreshold || velocity.x > swipeVelocityThreshold) {
+                prev();
+              }
+            }}
+            className="flex flex-col md:flex-row items-center p-5 sm:p-7 md:p-8 lg:p-9 gap-6 sm:gap-8 lg:gap-12 cursor-grab active:cursor-grabbing"
           >
             {/* Poster Frame */}
             <Link
@@ -142,7 +162,7 @@ export default function FeaturedEventsSlider({
                 sizes="(min-width: 1024px) 320px, (min-width: 768px) 280px, 100vw"
                 fit="cover"
                 priority
-                className="h-full w-full object-cover object-top"
+                className="h-full w-full object-cover object-top pointer-events-none"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 hover:opacity-100" />
             </Link>
@@ -220,9 +240,8 @@ export default function FeaturedEventsSlider({
           </motion.article>
         </AnimatePresence>
 
-        {/* Bottom Pagination & Slideshow Controls */}
-        <div className="border-t border-fg/10 bg-bg-2/30 px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
-          {/* Clickable Slide Pagination Dots */}
+        {/* Bottom Centered Pagination Dots (Without auto-playing status toggle) */}
+        <div className="border-t border-fg/10 bg-bg-2/30 px-5 sm:px-8 py-3.5 flex items-center justify-center">
           <div className="flex items-center gap-2">
             {events.map((ev, idx) => {
               const active = idx === current;
@@ -234,28 +253,13 @@ export default function FeaturedEventsSlider({
                   aria-label={`Go to event ${idx + 1}: ${ev.title}`}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     active
-                      ? 'w-7 bg-sunset-orange shadow-sm shadow-sunset-orange/50'
+                      ? 'w-8 bg-sunset-orange shadow-sm shadow-sunset-orange/50'
                       : 'w-2 bg-fg/20 hover:bg-fg/40'
                   }`}
                 />
               );
             })}
           </div>
-
-          {/* Autoplay / Pause Status Indicator Toggle */}
-          <button
-            type="button"
-            onClick={() => setIsPaused((p) => !p)}
-            className="flex items-center gap-1.5 font-mono text-[11px] text-muted hover:text-fg transition-colors"
-            title={isPaused ? 'Resume slideshow' : 'Pause slideshow'}
-          >
-            <span
-              className={`inline-block h-2 w-2 rounded-full transition-colors ${
-                isPaused ? 'bg-muted' : 'bg-green-500 animate-pulse'
-              }`}
-            />
-            <span className="hidden sm:inline">{isPaused ? 'Paused' : 'Auto-playing'}</span>
-          </button>
         </div>
       </div>
     </div>
