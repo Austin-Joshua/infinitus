@@ -23,7 +23,7 @@ export default function Hero({ stats = [] }) {
   });
 
   return (
-    <section ref={ref} className="relative overflow-hidden pb-8 pt-24 sm:pt-28">
+    <section ref={ref} className="relative overflow-hidden pb-6 pt-20 sm:pb-8 sm:pt-24">
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <div className="container-x relative">

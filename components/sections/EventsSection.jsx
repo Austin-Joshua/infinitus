@@ -77,7 +77,7 @@ export default function EventsSection({ events }) {
   const rest = past.filter((e) => e !== featured);
 
   return (
-    <section className="section !pt-4 sm:!pt-6 pb-20">
+    <section className="section !pt-2 sm:!pt-3 pb-12 sm:pb-16">
       <div className="container-x">
         {/* Real upcoming events when scheduled */}
         {upcoming.length > 0 && (

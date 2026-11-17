@@ -9,7 +9,7 @@ export default function AboutUs() {
 
   return (
     <>
-      <section className="relative overflow-hidden pb-12 pt-24 sm:pb-16 sm:pt-32">
+      <section className="relative overflow-hidden pb-8 pt-20 sm:pb-10 sm:pt-28">
         <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
         <div className="container-x relative grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
           <h1 className="font-heading text-3xl font-bold leading-[1.15] text-fg sm:text-4xl lg:text-5xl tracking-tight">
@@ -23,7 +23,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="section !py-14 sm:!py-20">
+      <section className="section !py-8 sm:!py-12">
         <div className="container-x">
           <Reveal className="flex items-baseline justify-between gap-6">
             <div>

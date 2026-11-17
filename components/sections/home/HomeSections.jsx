@@ -47,7 +47,7 @@ function SectionHead({ eyebrow, heading, href, cta }) {
 
 export function KeywordMarquee() {
   return (
-    <div className="py-6 sm:py-8 overflow-hidden">
+    <div className="py-4 sm:py-5 overflow-hidden border-y border-fg/10 bg-bg/50">
       <Marquee duration={45}>
         {COPY.home.marquee.map((word) => (
           <span key={word} className="flex items-center whitespace-nowrap font-heading text-2xl italic text-fg/85 sm:text-4xl">
@@ -131,7 +131,7 @@ const EXPLORE_METADATA = {
 export function HomeExplore() {
   const pages = PAGES.filter((p) => COPY.home.explore[p.id]);
   return (
-    <section className="section !py-16 sm:!py-24">
+    <section className="section !py-8 sm:!py-12">
       <div className="container-x">
         <Reveal className="flex items-baseline justify-between gap-6">
           <div>
@@ -190,7 +190,7 @@ export function HomeEvents({ events }) {
   const fourthPosterUrl = displayEvents[3]?.coverImageUrl;
 
   return (
-    <section className="section !py-16 sm:!py-24">
+    <section className="section !py-8 sm:!py-12">
       <div className="container-x">
         <SectionHead
           eyebrow="Events"
@@ -322,7 +322,7 @@ export function HomeTeam({ members }) {
   const leaders = HOME_TEAM_ROLES.flatMap((role) => members.filter((m) => m.role === role)).slice(0, 4);
 
   return (
-    <section className="section !py-16 sm:!py-24">
+    <section className="section !py-8 sm:!py-12">
       <div className="container-x">
         <SectionHead
           eyebrow="Team"
@@ -339,7 +339,7 @@ export function HomeTeam({ members }) {
           ))}
         </Stagger>
 
-        <div className="mt-10 flex justify-center">
+        <div className="mt-8 flex justify-center">
           <Link href="/team" className="btn-primary text-xs sm:text-sm">
             Meet the Full Committee ({members.length} Members) <span aria-hidden="true" className="nudge">→</span>
           </Link>
@@ -355,7 +355,7 @@ export function HomeGallery({ photos }) {
   const rows = [photos.slice(0, half), photos.slice(half)];
 
   return (
-    <section className="section overflow-hidden !py-16 sm:!py-24">
+    <section className="section overflow-hidden !py-8 sm:!py-12">
       <div className="container-x">
         <SectionHead
           eyebrow="Gallery"
@@ -393,13 +393,13 @@ export function HomeGallery({ photos }) {
 
 export function HomeInstagram() {
   return (
-    <section className="section overflow-hidden !py-16 sm:!py-24">
+    <section className="section overflow-hidden !py-8 sm:!py-12">
       <div className="container-x">
         <SectionHead
           eyebrow="Instagram"
           heading="From our feed"
           href={SOCIAL.instagram}
-          cta={`Follow ${SOCIAL.instagramHandle}`}
+          cta="Follow on Instagram"
         />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
@@ -473,7 +473,7 @@ export function HomeInstagram() {
 
 export function CtaBand() {
   return (
-    <section className="section relative overflow-hidden !py-20 sm:!py-28">
+    <section className="section relative overflow-hidden !py-10 sm:!py-16">
       {/* Softly diffused ambient backlight with no harsh edges */}
       <div
         aria-hidden="true"

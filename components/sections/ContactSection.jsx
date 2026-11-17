@@ -29,7 +29,7 @@ export default function ContactSection() {
   const { contact } = COPY;
 
   return (
-    <section className="section !pt-4 sm:!pt-6">
+    <section className="section !pt-2 sm:!pt-3 pb-12 sm:pb-16">
       <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
         <Reveal>
           <ContactRow href={`mailto:${SITE.contactEmail}`} label="Email" value={SITE.contactEmail} />

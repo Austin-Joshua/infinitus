@@ -109,7 +109,7 @@ export default async function EventPage({ params }) {
 
   return (
     <>
-      <article className="pb-24 pt-28 sm:pt-36">
+      <article className="pb-16 pt-20 sm:pt-28">
         <JsonLd data={eventJsonLd} />
         <JsonLd data={breadcrumbs} />
         <div className="container-x">

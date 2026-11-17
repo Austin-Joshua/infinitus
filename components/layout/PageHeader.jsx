@@ -14,7 +14,7 @@ export default function PageHeader({ label, title, intro, children }) {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   return (
-    <header ref={ref} className="relative overflow-hidden pb-6 pt-24 sm:pb-10 sm:pt-32">
+    <header ref={ref} className="relative overflow-hidden pb-4 pt-20 sm:pb-6 sm:pt-28">
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <motion.div style={{ opacity: contentOpacity }} className="container-x relative">

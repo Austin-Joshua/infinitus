@@ -25,7 +25,7 @@ export default function Journey({ heading, steps }) {
   const at = (i) => 0.2 + (DRAW * i) / steps.length;
 
   return (
-    <section className="section relative overflow-hidden !py-16 sm:!py-24">
+    <section className="section relative overflow-hidden !py-8 sm:!py-14">
       {/* Subtle graph paper and floating mathematical symbols */}
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0 opacity-40" />
 
