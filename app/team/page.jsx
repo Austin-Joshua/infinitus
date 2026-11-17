@@ -21,9 +21,28 @@ const breadcrumbs = breadcrumbJsonLd([
 export default async function TeamPage() {
   const members = await getMembers();
   const page = pageById('team');
+
+  const teamJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'INFINITUS Core Team 2026–2027',
+    description: 'Executive committee and student domain coordinators of INFINITUS Mathematics Club.',
+    itemListElement: members.map((m, i) => ({
+      '@type': 'Person',
+      position: i + 1,
+      name: m.name,
+      jobTitle: m.role,
+      worksFor: {
+        '@type': 'Organization',
+        name: 'INFINITUS',
+      },
+    })),
+  };
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
+      <JsonLd data={teamJsonLd} />
       <PageHeader label={page.navLabel} title={COPY.members.heading} />
       <MembersGrid members={members} />
     </>
