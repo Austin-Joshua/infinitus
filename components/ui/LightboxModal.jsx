@@ -157,7 +157,9 @@ export default function LightboxModal({
         >
           {/* Top Bar with Description, Counter & Close Button (Safe-area padded for iPhone Notch / Dynamic Island) */}
           <div
-                }`}
+            className={`relative w-full z-40 flex items-start justify-between px-4 pb-6 sm:px-6 sm:pb-8 bg-gradient-to-b from-black/95 via-black/80 to-transparent transition-all duration-300 ${
+              showUi ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+            }`}
             style={{
               paddingTop: 'max(2.5rem, env(safe-area-inset-top, 2.5rem))',
             }}
@@ -204,80 +206,80 @@ export default function LightboxModal({
                 step(-1);
               }}
               className={`absolute left-2.5 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-            showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
-          }`}
-          aria-label="Previous image"
+                showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+              }`}
+              aria-label="Previous image"
             >
-          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-      )}
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
 
-      {/* Floating Right Arrow Icon on Screen Edge (if more than 1 image) */}
-      {photos.length > 1 && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            step(1);
-          }}
-          className={`absolute right-2.5 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
-            }`}
-          aria-label="Next image"
-        >
-          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      )}
+          {/* Floating Right Arrow Icon on Screen Edge (if more than 1 image) */}
+          {photos.length > 1 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                step(1);
+              }}
+              className={`absolute right-2.5 sm:right-4 md:right-6 lg:left-auto lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+              }`}
+              aria-label="Next image"
+            >
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
 
-      {/* Main Photo / Poster Container (Maximizes available viewport height & width) */}
-      <div
-        className="flex-1 relative flex items-center justify-center w-full px-2 sm:px-6 overflow-hidden"
-        style={{
-          paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
-        }}
-        onClick={(e) => {
-          // Clicking on background outside image closes lightbox
-          if (e.target === e.currentTarget) {
-            onClose?.();
-          }
-        }}
-      >
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={current.src}
-            custom={direction}
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.97 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="relative flex items-center justify-center max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw]"
+          {/* Main Photo / Poster Container (Maximizes available viewport height & width) */}
+          <div
+            className="flex-1 relative flex items-center justify-center w-full px-2 sm:px-6 overflow-hidden"
+            style={{
+              paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
+            }}
             onClick={(e) => {
-              e.stopPropagation();
-              // Clicking the image toggles the UI (description and arrow buttons)
-              setShowUi((s) => !s);
+              // Clicking on background outside image closes lightbox
+              if (e.target === e.currentTarget) {
+                onClose?.();
+              }
             }}
           >
-            <Image
-              src={current.src}
-              alt={current.alt || current.caption}
-              width={current.width || 1200}
-              height={current.height || 1500}
-              sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 98vw"
-              priority
-              unoptimized={current.src.startsWith('http')}
-              className="max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw] w-auto h-auto rounded-xl sm:rounded-2xl object-contain shadow-2xl cursor-pointer select-none"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </motion.div>
-  )
-}
-    </AnimatePresence >
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={current.src}
+                custom={direction}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="relative flex items-center justify-center max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Clicking the image toggles the UI (description and arrow buttons)
+                  setShowUi((s) => !s);
+                }}
+              >
+                <Image
+                  src={current.src}
+                  alt={current.alt || current.caption}
+                  width={current.width || 1200}
+                  height={current.height || 1500}
+                  sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 98vw"
+                  priority
+                  unoptimized={current.src.startsWith('http')}
+                  className="max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw] w-auto h-auto rounded-xl sm:rounded-2xl object-contain shadow-2xl cursor-pointer select-none"
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 
-return createPortal(modalContent, document.body);
+  return createPortal(modalContent, document.body);
 }
