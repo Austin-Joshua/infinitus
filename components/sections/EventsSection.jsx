@@ -4,6 +4,7 @@ import Reveal from '@/components/ui/Reveal';
 import Link from 'next/link';
 import EventCard, { EventPoster, ExternalArrow, eventHref } from '@/components/ui/EventCard';
 import EventsBrowser from '@/components/ui/EventsBrowser';
+import FeaturedEventsSlider from '@/components/ui/FeaturedEventsSlider';
 
 export function FeaturedEvent({ event }) {
   return (
@@ -73,8 +74,8 @@ export function FeaturedEvent({ event }) {
 export default function EventsSection({ events }) {
   const upcoming = events.filter((e) => e.status === 'upcoming');
   const past = events.filter((e) => e.status !== 'upcoming');
-  const featured = past.find((e) => e.featured) ?? past[0];
-  const rest = past.filter((e) => e !== featured);
+  const featured = past.filter((e) => e.featured);
+  const featuredEvents = featured.length > 0 ? featured : past.slice(0, 6);
 
   return (
     <section className="section !pt-2 sm:!pt-3 pb-12 sm:pb-16">
@@ -93,15 +94,16 @@ export default function EventsSection({ events }) {
           </div>
         )}
 
-        {featured && (
+        {/* Large Format Interactive Featured Events Slideshow */}
+        {featuredEvents.length > 0 && (
           <Reveal>
-            <FeaturedEvent event={featured} />
+            <FeaturedEventsSlider events={featuredEvents} />
           </Reveal>
         )}
 
-        {rest.length > 0 && (
+        {past.length > 0 && (
           <Reveal className="mt-16">
-            <EventsBrowser events={rest} />
+            <EventsBrowser events={past} />
           </Reveal>
         )}
       </div>
