@@ -37,6 +37,48 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Pre-paint cover for initial visit curtain (matches #1D2566 light, #000F2E dark) */
+html.intro-pending::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: #1D2566;
+  pointer-events: auto;
+  animation: introCoverFallback 3.5s forwards ease-in-out;
+}
+
+html.dark.intro-pending::before {
+  background-color: #000F2E;
+}
+
+@keyframes introCoverFallback {
+  0%, 80% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Page fade-in transition replacing universal heavy route curtain */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-in {
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--fg));
@@ -123,7 +165,8 @@ body {
 .marquee-reverse .marquee-track {
   animation-direction: reverse;
 }
-.marquee:hover .marquee-track {
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
   animation-play-state: paused;
 }
 
@@ -136,6 +179,14 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  html.intro-pending::before {
+    display: none !important;
+  }
+  .page-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
   .marquee-track {
     animation: none !important;

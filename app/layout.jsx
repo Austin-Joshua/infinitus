@@ -28,7 +28,8 @@ const mono = IBM_Plex_Mono({
   display: 'swap',
 });
 
-// Before paint: apply saved theme or system preference so colors render instantly.
+// Before paint: apply saved theme or system preference so colors render instantly,
+// and evaluate curtain play state (first visit or landing reload only).
 const initScript = `
 (function () {
   var root = document.documentElement;
@@ -36,6 +37,40 @@ const initScript = `
     var stored = localStorage.getItem('infinitus-theme');
     root.classList.toggle('dark', stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
   } catch (e) {}
+
+  try {
+    var reduced = false;
+    try {
+      reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+
+    var reloaded = false;
+    try {
+      var navEntry = performance.getEntriesByType('navigation')[0];
+      reloaded = navEntry && navEntry.type === 'reload';
+    } catch (e) {}
+
+    var seen = false;
+    try {
+      seen = sessionStorage.getItem('infinitus-intro') === '1';
+    } catch (e) {}
+
+    var play = !reduced && (!seen || (location.pathname === '/' && reloaded));
+
+    try {
+      sessionStorage.setItem('infinitus-intro', '1');
+    } catch (e) {
+      play = false;
+    }
+
+    if (play) {
+      root.classList.add('intro-pending');
+    } else {
+      root.classList.add('intro-seen');
+    }
+  } catch (e) {
+    root.classList.add('intro-seen');
+  }
 })();
 `;
 
@@ -86,6 +121,14 @@ export default function RootLayout({ children }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: initScript }} />
+        <noscript>
+          <style>{`
+            .page-in { opacity: 1 !important; transform: none !important; animation: none !important; }
+            [style*="opacity:0"], [style*="opacity: 0"] { opacity: 1 !important; }
+            [style*="transform"] { transform: none !important; }
+            html.intro-pending::before { display: none !important; }
+          `}</style>
+        </noscript>
       </head>
       <body className="font-body antialiased" suppressHydrationWarning>
         <ThemeProvider>
