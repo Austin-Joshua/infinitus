@@ -136,7 +136,7 @@ export default function Journey({ heading, steps }) {
                 </div>
 
                 {/* Milestone Interactive Card */}
-                <div className="card relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-fg/15 bg-card/85 p-5 sm:p-6 shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-accent/40 group-hover:shadow-[0_16px_32px_-16px_rgb(var(--fg)/0.2)]">
+                <div className="card card-hover relative flex h-full flex-col justify-between overflow-hidden rounded-xl p-5 sm:p-6">
                   <div>
                     {/* Header Row: Year & Tag */}
                     <div className="flex items-center justify-between gap-2">

@@ -35,7 +35,7 @@ export default function AboutUs() {
 
           <Stagger as="ol" className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {about.pillars.map((pillar) => (
-              <StaggerItem as="li" key={pillar.title} className="card card-hover group relative p-6 sm:p-7 transition-all duration-300 hover:shadow-lg hover:shadow-accent/5">
+              <StaggerItem as="li" key={pillar.title} className="card card-hover group relative p-6 sm:p-7">
                 <span
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"

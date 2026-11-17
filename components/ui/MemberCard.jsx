@@ -268,7 +268,7 @@ export default function MemberCard({ member, onOpen }) {
         whileHover={{ y: -6, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="card card-hover group flex h-full w-full cursor-pointer flex-col items-center p-5 text-center transition-all duration-300 hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:p-6"
+        className="card card-hover group flex h-full w-full cursor-pointer flex-col items-center p-5 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:p-6"
         aria-haspopup="dialog"
       >
         {/* Circular Avatar */}

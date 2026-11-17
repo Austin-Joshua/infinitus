@@ -6,7 +6,7 @@ function ContactRow({ href, label, value, external = false }) {
     <a
       href={href}
       {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-      className="card card-hover group relative flex items-center justify-between gap-4 overflow-hidden rounded-2xl p-5 sm:p-6 mb-3.5 transition-all duration-300 hover:shadow-md"
+      className="card card-hover group relative flex items-center justify-between gap-4 overflow-hidden rounded-2xl p-5 sm:p-6 mb-3.5"
     >
       <div>
         <span className="block font-mono text-xs uppercase tracking-widest text-muted">{label}</span>

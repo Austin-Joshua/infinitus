@@ -40,7 +40,7 @@ export default function EventCard({ event }) {
   const isUpcoming = event.status === 'upcoming';
 
   return (
-    <article className="card card-hover group relative flex h-full flex-col transition-[transform,border-color,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_48px_-24px_rgb(var(--fg)/0.35)]">
+    <article className="card card-hover group relative flex h-full flex-col">
       <div className="relative aspect-[4/5] w-full overflow-hidden border-b border-fg/15 bg-bg-2/40">
         <EventPoster
           event={event}

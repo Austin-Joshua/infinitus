@@ -136,7 +136,7 @@ export function HomeExplore() {
               <StaggerItem key={page.id}>
                 <Link
                   href={page.href}
-                  className="card card-hover group relative flex h-full min-h-[14rem] flex-col justify-between p-6 sm:p-7 transition-all duration-300 hover:shadow-lg hover:shadow-accent/5"
+                  className="card card-hover group relative flex h-full min-h-[14rem] flex-col justify-between p-6 sm:p-7"
                 >
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2 font-mono text-xs font-semibold text-accent">
@@ -189,7 +189,7 @@ export function HomeEvents({ events }) {
         {/* Upcoming Slot above Past Events */}
         <Reveal className="mt-8">
           {nextUp ? (
-            <div className="card p-6 sm:p-8 border-accent/40 bg-card/90 shadow-sm">
+            <div className="card p-6 sm:p-8 border-accent/40">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
                   <span className="chip border-sunset/40 text-sunset font-semibold">Upcoming Event</span>
@@ -232,7 +232,7 @@ export function HomeEvents({ events }) {
               </div>
             </div>
           ) : (
-            <div className="card p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-dashed border-fg/20 bg-card/60">
+            <div className="card p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-dashed border-fg/20">
               <div>
                 <span className="chip border-accent/30 text-accent font-medium">Upcoming Schedule</span>
                 <h3 className="font-heading text-xl sm:text-2xl font-bold text-fg mt-2">
@@ -365,7 +365,7 @@ export function HomeInstagram() {
                 href={post.permalink}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-fg/15 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-fg/30 hover:shadow-[0_20px_40px_-20px_rgb(var(--fg)/0.25)]"
+                className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl"
                 aria-label={`View Instagram post: ${post.caption}`}
               >
                 {/* Clean Top Bar: Handle, Infinity Icon, and Tag Chip */}
