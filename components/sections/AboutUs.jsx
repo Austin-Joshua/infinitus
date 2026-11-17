@@ -23,7 +23,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      <section className="section bg-bg-2/30 !py-14 sm:!py-20">
+      <section className="section !py-14 sm:!py-20">
         <div className="container-x">
           <Reveal className="flex items-baseline justify-between gap-6">
             <div>

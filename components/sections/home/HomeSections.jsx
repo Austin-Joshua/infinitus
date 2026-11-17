@@ -34,12 +34,12 @@ function SectionHead({ eyebrow, heading, href, cta }) {
 
 export function KeywordMarquee() {
   return (
-    <div className="border-y border-fg/15 bg-bg-2/60 py-4 sm:py-5">
+    <div className="py-6 sm:py-8 overflow-hidden">
       <Marquee duration={45}>
         {COPY.home.marquee.map((word) => (
-          <span key={word} className="flex items-center whitespace-nowrap font-heading text-2xl italic text-fg sm:text-4xl">
+          <span key={word} className="flex items-center whitespace-nowrap font-heading text-2xl italic text-fg/85 sm:text-4xl">
             <span className="px-6 sm:px-8">{word}</span>
-            <span aria-hidden="true" className="font-serif not-italic text-accent text-xl sm:text-2xl">∞</span>
+            <span aria-hidden="true" className="font-serif not-italic text-sunset-orange text-xl sm:text-2xl">∞</span>
           </span>
         ))}
       </Marquee>
@@ -118,7 +118,7 @@ const EXPLORE_METADATA = {
 export function HomeExplore() {
   const pages = PAGES.filter((p) => COPY.home.explore[p.id]);
   return (
-    <section className="section !py-16 sm:!py-20 bg-bg-2/30">
+    <section className="section !py-16 sm:!py-24">
       <div className="container-x">
         <Reveal className="flex items-baseline justify-between gap-6">
           <div>
@@ -177,7 +177,7 @@ export function HomeEvents({ events }) {
   const latest = past.filter((e) => e !== featured).slice(0, 4);
 
   return (
-    <section className="section bg-bg-2/50 !py-16 sm:!py-24">
+    <section className="section !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
           eyebrow="Competitions & Workshops"
@@ -311,7 +311,7 @@ export function HomeGallery({ photos }) {
   const rows = [photos.slice(0, half), photos.slice(half)];
 
   return (
-    <section className="section overflow-hidden bg-bg-2/50 !py-16 sm:!py-24">
+    <section className="section overflow-hidden !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
           eyebrow="Memories in Math"
@@ -349,7 +349,7 @@ export function HomeGallery({ photos }) {
 
 export function HomeInstagram() {
   return (
-    <section className="section overflow-hidden bg-bg/90 !py-16 sm:!py-24 border-t border-fg/10">
+    <section className="section overflow-hidden !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
           eyebrow="Social Sync · @infinitus_club.rit"
@@ -420,8 +420,14 @@ export function HomeInstagram() {
 
 export function CtaBand() {
   return (
-    <section className="section relative overflow-hidden bg-bg-2/30 !py-16 sm:!py-24">
-      <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
+    <section className="section relative overflow-hidden !py-20 sm:!py-28">
+      {/* Softly diffused ambient backlight with no harsh edges */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
+      >
+        <div className="h-96 w-[42rem] max-w-full rounded-full bg-sunset-orange/[0.09] blur-[140px]" />
+      </div>
       <div className="container-x relative">
         <p className="font-mono text-xs uppercase tracking-widest text-accent font-medium">{COPY.home.ctaEyebrow}</p>
         <h2 className="mt-4 max-w-4xl font-heading text-2xl font-bold tracking-tight text-fg sm:text-4xl lg:text-5xl">

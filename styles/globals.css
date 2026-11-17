@@ -83,20 +83,18 @@ html.dark.intro-pending::before {
   }
 }
 
-/* Page fade-in transition replacing universal heavy route curtain */
+/* Page fade-in transition: smooth diffused dissolve */
 @keyframes pageIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
 .page-in {
-  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: pageIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 body {
@@ -230,12 +228,13 @@ body {
   }
 }
 
-/* Graph-paper motif: a faint grid that fades out toward the edges. */
+/* Graph-paper motif: a faint grid that softly diffuses toward the edges with no harsh seams */
 .graph-paper {
-  background-image: linear-gradient(rgb(var(--fg) / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--fg) / 0.06) 1px, transparent 1px);
+  background-image: linear-gradient(rgb(var(--fg) / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--fg) / 0.045) 1px, transparent 1px);
   background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 50% at 50% 45%, #000 10%, rgba(0, 0, 0, 0.4) 40%, transparent 70%);
+  mask-image: radial-gradient(ellipse 65% 50% at 50% 45%, #000 10%, rgba(0, 0, 0, 0.4) 40%, transparent 70%);
 }
 
 /* Infinite marquee: content is rendered twice and the track slides by half its width. */
