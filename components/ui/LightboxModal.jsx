@@ -14,15 +14,11 @@ import { AnimatePresence, motion } from 'framer-motion';
  * - iPads & Android tablets
  * - Laptops & Desktops
  *
- * Key guarantees:
- * - Renders via `createPortal(..., document.body)` so it sits outside any parent container,
- *   completely bypassing ancestor transforms and stacking context boundaries.
- * - Activates `body.lightbox-open` to completely hide the site header (logos, dark toggle, instagram)
- *   and mobile bottom navbar while active.
- * - Edge-to-edge dynamic viewport sizing (`max-h-[82dvh]`, `max-w-[96vw]`) for maximum image prominence.
- * - Tap anywhere on image to toggle top bar and side chevrons for an unobstructed fullscreen view.
- * - Left & Right swipe gestures for fluid 1-finger navigation.
- * - Neutral, unified frosted glass chevron controls on screen edges with no unwanted color flips.
+ * Guarantees:
+ * - Direct portal mount to document.body.
+ * - Entire screen covered with 100vw x 100vh solid black (#000000).
+ * - When open, body.lightbox-open hides main, header, footer, and nav completely.
+ * - Fluid swipe navigation, keyboard support (Escape, Left/Right), and tap-to-toggle UI.
  */
 export default function LightboxModal({
   photos = [],
@@ -67,7 +63,7 @@ export default function LightboxModal({
     [currentIndex, photos.length, onIndexChange]
   );
 
-  // Body scroll lockdown & header/nav disappearance
+  // Body scroll lockdown & full-bleed page isolation
   useEffect(() => {
     if (!open) return undefined;
 
@@ -89,7 +85,7 @@ export default function LightboxModal({
         return;
       }
 
-      // Accessible Focus trap
+      // Focus trap
       if (event.key === 'Tab' && dialogRef.current) {
         const focusable = dialogRef.current.querySelectorAll(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -150,7 +146,7 @@ export default function LightboxModal({
           role="dialog"
           aria-modal="true"
           aria-label={current.caption || 'Image viewer'}
-          className="fixed inset-0 z-[99999] flex h-dvh w-dvw flex-col items-center justify-center bg-black/98 select-none overflow-hidden touch-none"
+          className="fixed inset-0 top-0 left-0 right-0 bottom-0 z-[999999] h-screen h-[100dvh] w-screen w-full bg-black select-none overflow-hidden touch-none flex flex-col justify-between"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -161,11 +157,9 @@ export default function LightboxModal({
         >
           {/* Top Bar with Description, Counter & Close Button (Safe-area padded for iPhone Notch / Dynamic Island) */}
           <div
-            className={`absolute top-0 inset-x-0 z-40 flex items-start justify-between px-4 pb-6 sm:px-6 sm:pb-8 bg-gradient-to-b from-black/95 via-black/80 to-transparent transition-all duration-300 ${
-              showUi ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-            }`}
+                }`}
             style={{
-              paddingTop: 'max(2.75rem, env(safe-area-inset-top, 2.75rem))',
+              paddingTop: 'max(2.5rem, env(safe-area-inset-top, 2.5rem))',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -192,7 +186,7 @@ export default function LightboxModal({
               type="button"
               autoFocus
               onClick={onClose}
-              className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-black/60 text-white shadow-xl backdrop-blur-md transition-all duration-200 active:scale-95 hover:bg-white/20 hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/15 text-white shadow-xl backdrop-blur-md transition-all duration-200 active:scale-95 hover:bg-white/25 hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
               aria-label="Close image viewer"
             >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5">
@@ -210,80 +204,80 @@ export default function LightboxModal({
                 step(-1);
               }}
               className={`absolute left-2.5 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
-              }`}
-              aria-label="Previous image"
+            showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+          }`}
+          aria-label="Previous image"
             >
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          )}
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      )}
 
-          {/* Floating Right Arrow Icon on Screen Edge (if more than 1 image) */}
-          {photos.length > 1 && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                step(1);
-              }}
-              className={`absolute right-2.5 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
-              }`}
-              aria-label="Next image"
-            >
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
+      {/* Floating Right Arrow Icon on Screen Edge (if more than 1 image) */}
+      {photos.length > 1 && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            step(1);
+          }}
+          className={`absolute right-2.5 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+            }`}
+          aria-label="Next image"
+        >
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5 sm:h-6 sm:w-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
 
-          {/* Main Photo / Poster Container (Maximizes available viewport height & width) */}
-          <div
-            className="relative flex h-full w-full items-center justify-center p-2 sm:p-4 md:p-8 overflow-hidden"
-            style={{
-              paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
-            }}
+      {/* Main Photo / Poster Container (Maximizes available viewport height & width) */}
+      <div
+        className="flex-1 relative flex items-center justify-center w-full px-2 sm:px-6 overflow-hidden"
+        style={{
+          paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
+        }}
+        onClick={(e) => {
+          // Clicking on background outside image closes lightbox
+          if (e.target === e.currentTarget) {
+            onClose?.();
+          }
+        }}
+      >
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={current.src}
+            custom={direction}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex items-center justify-center max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw]"
             onClick={(e) => {
-              // Clicking on background outside image closes lightbox
-              if (e.target === e.currentTarget) {
-                onClose?.();
-              }
+              e.stopPropagation();
+              // Clicking the image toggles the UI (description and arrow buttons)
+              setShowUi((s) => !s);
             }}
           >
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={current.src}
-                custom={direction}
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex items-center justify-center max-h-[82dvh] sm:max-h-[86dvh] max-w-[96vw] sm:max-w-[88vw]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Clicking the image toggles the UI (description and arrow buttons)
-                  setShowUi((s) => !s);
-                }}
-              >
-                <Image
-                  src={current.src}
-                  alt={current.alt || current.caption}
-                  width={current.width || 1200}
-                  height={current.height || 1500}
-                  sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 98vw"
-                  priority
-                  unoptimized={current.src.startsWith('http')}
-                  className="max-h-[82dvh] sm:max-h-[86dvh] max-w-[96vw] sm:max-w-[88vw] w-auto h-auto rounded-xl sm:rounded-2xl object-contain shadow-2xl cursor-pointer select-none"
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <Image
+              src={current.src}
+              alt={current.alt || current.caption}
+              width={current.width || 1200}
+              height={current.height || 1500}
+              sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 98vw"
+              priority
+              unoptimized={current.src.startsWith('http')}
+              className="max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw] w-auto h-auto rounded-xl sm:rounded-2xl object-contain shadow-2xl cursor-pointer select-none"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  )
+}
+    </AnimatePresence >
   );
 
-  return createPortal(modalContent, document.body);
+return createPortal(modalContent, document.body);
 }

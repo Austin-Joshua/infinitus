@@ -73,10 +73,13 @@ html.dark.intro-pending::before {
 }
 
 @keyframes introCoverFallback {
-  0%, 80% {
+
+  0%,
+  80% {
     opacity: 1;
     visibility: visible;
   }
+
   100% {
     opacity: 0;
     visibility: hidden;
@@ -88,6 +91,7 @@ html.dark.intro-pending::before {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -110,6 +114,7 @@ body {
 }
 
 @layer components {
+
   /* Full-bleed layout: fluid gutters, capped only on ultra-wide screens. Long text sets its own measure. */
   .container-x {
     @apply mx-auto w-full max-w-[2000px] px-4 sm:px-6 lg:px-10 xl:px-14 2xl:px-20;
@@ -141,15 +146,15 @@ body {
     -webkit-backdrop-filter: blur(16px) saturate(160%);
     box-shadow: var(--card-shadow);
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s ease,
-                background-color 0.2s ease;
+      box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.2s ease,
+      background-color 0.2s ease;
   }
 
   .card-hover {
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s ease;
+      box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.2s ease;
   }
 
   .card-hover:hover {
@@ -171,15 +176,17 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.15s ease,
-                background-color 0.15s ease;
+      box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.15s ease,
+      background-color 0.15s ease;
   }
+
   .btn-primary:hover {
     border-color: rgba(255, 122, 26, 0.9);
     box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.35), 0 0 18px 0 rgba(255, 122, 26, 0.45), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.5);
     transform: translateY(-1.5px);
   }
+
   .btn-primary:active {
     transform: scale(0.96);
     transition: transform 0.05s ease-out;
@@ -189,10 +196,12 @@ body {
   .nudge {
     @apply inline-block transition-transform duration-200 ease-out;
   }
+
   .group:hover .nudge,
   .btn:hover .nudge {
     transform: translateX(3px);
   }
+
   .group:hover .nudge-ne,
   .btn:hover .nudge-ne {
     transform: translate(2px, -2px);
@@ -206,16 +215,18 @@ body {
     backdrop-filter: blur(14px) saturate(160%);
     -webkit-backdrop-filter: blur(14px) saturate(160%);
     transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.15s ease,
-                background-color 0.15s ease,
-                color 0.15s ease;
+      box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      color 0.15s ease;
   }
+
   .btn-ghost:hover {
     border-color: rgba(255, 122, 26, 0.85);
     box-shadow: 0 8px 20px -2px rgba(0, 0, 0, 0.18), 0 0 14px 0 rgba(255, 122, 26, 0.3), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.6);
     transform: translateY(-1.5px);
   }
+
   .btn-ghost:active {
     transform: scale(0.96);
     transition: transform 0.05s ease-out;
@@ -230,6 +241,7 @@ body {
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
+
   .chip:hover {
     border-color: rgba(255, 122, 26, 0.65);
     box-shadow: 0 4px 12px -1px rgba(255, 122, 26, 0.2);
@@ -249,6 +261,7 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -258,9 +271,11 @@ body {
 .marquee-track {
   animation: marquee var(--marquee-duration, 40s) linear infinite;
 }
+
 .marquee-reverse .marquee-track {
   animation-direction: reverse;
 }
+
 .marquee:hover .marquee-track,
 .marquee:focus-within .marquee-track {
   animation-play-state: paused;
@@ -276,17 +291,21 @@ body {
   html {
     scroll-behavior: auto;
   }
+
   html.intro-pending::before {
     display: none !important;
   }
+
   .page-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
   }
+
   .marquee-track {
     animation: none !important;
   }
+
   *,
   *::before,
   *::after {
@@ -297,7 +316,7 @@ body {
   }
 }
 
-/* Fullscreen Lightbox Lockdown: guarantees complete disappearance of headers, navbars, and background scrolls */
+/* Fullscreen Lightbox Lockdown: guarantees complete disappearance of headers, navbars, main content, and background scrolls */
 body.lightbox-open {
   overflow: hidden !important;
   touch-action: none !important;
@@ -310,6 +329,12 @@ body.lightbox-open header,
 body.lightbox-open nav[aria-label="Mobile Navigation"] {
   display: none !important;
   opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.lightbox-open main,
+body.lightbox-open footer {
   visibility: hidden !important;
   pointer-events: none !important;
 }
