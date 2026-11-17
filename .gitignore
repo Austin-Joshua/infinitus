@@ -12,3 +12,4 @@ out/
 # Raw Instagram downloads used to generate /public/{team,events,gallery}
 assets/ig-raw/
 data/
+Posters/
