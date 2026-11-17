@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { COPY, PAGES, SOCIAL } from '@/lib/site';
 import { INSTAGRAM_POSTS } from '@/lib/instagram';
 import { formatEventDate } from '@/lib/format';
+import InfinitusLogo from '@/components/brand/InfinitusLogo';
 import Marquee from '@/components/ui/Marquee';
 import Reveal, { Stagger, StaggerItem } from '@/components/ui/Reveal';
 import SplitText from '@/components/ui/SplitText';
@@ -17,6 +18,7 @@ function isGoogleFormUrl(url) {
 
 /** Clean section heading row without artificial section numbering */
 function SectionHead({ eyebrow, heading, href, cta }) {
+  const isExternal = href && (href.startsWith('http://') || href.startsWith('https://'));
   return (
     <Reveal className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div>
@@ -24,9 +26,20 @@ function SectionHead({ eyebrow, heading, href, cta }) {
         <h2 className="font-heading text-2xl font-bold tracking-tight text-fg sm:text-3xl lg:text-4xl mt-1.5">{heading}</h2>
       </div>
       {href && (
-        <Link href={href} className="btn-ghost self-start sm:self-auto text-xs sm:text-sm">
-          {cta} <span aria-hidden="true" className="nudge">→</span>
-        </Link>
+        isExternal ? (
+          <a
+            href={href}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="btn-ghost self-start sm:self-auto text-xs sm:text-sm inline-flex items-center gap-1.5"
+          >
+            {cta} <span aria-hidden="true" className="nudge-ne">↗</span>
+          </a>
+        ) : (
+          <Link href={href} className="btn-ghost self-start sm:self-auto text-xs sm:text-sm">
+            {cta} <span aria-hidden="true" className="nudge">→</span>
+          </Link>
+        )
       )}
     </Reveal>
   );
@@ -352,37 +365,46 @@ export function HomeInstagram() {
     <section className="section overflow-hidden !py-16 sm:!py-24">
       <div className="container-x">
         <SectionHead
-          eyebrow="Social"
+          eyebrow="Instagram"
           heading="From our feed"
           href={SOCIAL.instagram}
-          cta="Follow"
+          cta={`Follow ${SOCIAL.instagramHandle}`}
         />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
           {INSTAGRAM_POSTS.map((post, idx) => (
             <Reveal key={post.id} delay={idx * 0.04}>
               <a
-                href={post.permalink}
+                href={post.permalink || SOCIAL.instagram}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl"
                 aria-label={`View Instagram post: ${post.caption}`}
               >
-                {/* Clean Top Bar: Handle, Infinity Icon, and Tag Chip */}
+                {/* Official Club Header: Official Infinitus Logo, Instagram Handle, and Tag Chip */}
                 <div className="flex items-center justify-between px-4 py-2.5 border-b border-fg/10 bg-bg-2/40">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent text-[11px] font-mono font-bold">
-                      ∞
-                    </span>
-                    <span className="font-mono text-xs font-medium text-fg/80 truncate">
-                      @infinitus_club.rit
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full ring-1 ring-sunset-orange/40 shadow-xs bg-bg">
+                      <InfinitusLogo size="nav" className="h-full w-full object-cover" />
+                    </div>
+                    <span className="font-mono text-xs font-semibold text-fg/90 truncate tracking-tight">
+                      {SOCIAL.instagramHandle}
                     </span>
                   </div>
-                  {post.tag && (
-                    <span className="chip text-[10px] sm:text-[11px] py-0.5 px-2 border-sunset/40 text-sunset font-medium shrink-0">
-                      {post.tag}
+                  <div className="flex items-center gap-2 shrink-0">
+                    {post.tag && (
+                      <span className="chip text-[10px] sm:text-[11px] py-0.5 px-2 border-sunset/40 text-sunset font-medium">
+                        {post.tag}
+                      </span>
+                    )}
+                    <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center text-muted group-hover:text-sunset-orange transition-colors">
+                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-4 w-4">
+                        <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" />
+                        <circle cx="12" cy="12" r="3.3" stroke="currentColor" />
+                        <path d="M16.2 7.8h.01" stroke="currentColor" strokeLinecap="round" />
+                      </svg>
                     </span>
-                  )}
+                  </div>
                 </div>
 
                 {/* Poster Frame: 100% unobstructed edge-to-edge 4:5 frame */}
@@ -404,8 +426,8 @@ export function HomeInstagram() {
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-3 text-xs">
                     <span className="font-mono text-muted">{post.date}</span>
-                    <span className="font-mono font-medium text-accent flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                      View post <span aria-hidden="true">↗</span>
+                    <span className="font-mono font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
+                      View on Instagram <span aria-hidden="true">↗</span>
                     </span>
                   </div>
                 </div>

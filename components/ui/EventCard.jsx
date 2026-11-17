@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { COPY } from '@/lib/site';
 import { eventHref, formatEventDate } from '@/lib/format';
+import InfinitusLogo from '@/components/brand/InfinitusLogo';
 
 export { eventHref };
 
@@ -16,8 +17,8 @@ export function ExternalArrow() {
 export function EventPoster({ event, sizes, priority = false, className = '', fit = 'cover' }) {
   if (!event.coverImageUrl) {
     return (
-      <div className={`flex items-center justify-center ${className}`}>
-        <span aria-hidden="true" className="font-serif text-7xl text-accent/60">∞</span>
+      <div className={`flex items-center justify-center bg-card/60 p-6 ${className}`}>
+        <InfinitusLogo size="footer" className="opacity-75" />
       </div>
     );
   }
