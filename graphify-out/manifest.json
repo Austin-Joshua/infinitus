@@ -56,9 +56,9 @@
     "semantic_hash": ""
   },
   "app/layout.jsx": {
-    "mtime": 1794924490.3398337,
-    "seen": 1794927262.6840663,
-    "ast_hash": "05aacbea913e31d82cef497589f0f9e2",
+    "mtime": 1794927976.6417136,
+    "seen": 1794928194.8568096,
+    "ast_hash": "2c7013a6d0a162faf030499bb8566128",
     "semantic_hash": ""
   },
   "app/not-found.jsx": {
@@ -362,9 +362,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794926270.7759998,
-    "seen": 1794927262.6904671,
-    "ast_hash": "97d5608ac80aab4300e026f93adc08ae",
+    "mtime": 1794928168.5416994,
+    "seen": 1794928194.8717463,
+    "ast_hash": "39a51474d2fdcb94323ee1c9974ea38b",
     "semantic_hash": ""
   },
   "assets/brand/README.md": {
@@ -845,6 +845,30 @@
     "mtime": 1794927538.399927,
     "seen": 1794927837.3407326,
     "ast_hash": "f7bba646e5712140fba00b29795a6213",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1794928055.2183876,
+    "seen": 1794928194.85465,
+    "ast_hash": "6f464d5691746414320e5fb00a257f7b",
+    "semantic_hash": ""
+  },
+  ".github/pull_request_template.md": {
+    "mtime": 1794928071.9399316,
+    "seen": 1794928194.8711832,
+    "ast_hash": "2ecf0f0e6ce9ef803526b4b6da4f2cea",
+    "semantic_hash": ""
+  },
+  "CONTRIBUTORS.md": {
+    "mtime": 1794928049.7687397,
+    "seen": 1794928194.8711832,
+    "ast_hash": "268584ae92c9777d6561b2df0a2c2e7f",
+    "semantic_hash": ""
+  },
+  "NOTICE.md": {
+    "mtime": 1794928044.2613108,
+    "seen": 1794928194.8717463,
+    "ast_hash": "ec06deee3b283aff293f2dfd6c37b8c2",
     "semantic_hash": ""
   },
   "package-lock.json": {

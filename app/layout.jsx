@@ -89,6 +89,7 @@ export const metadata = {
   openGraph: {
     title: SITE.title,
     description: SITE.description,
+    url: SITE.url,
     type: 'website',
     locale: SITE.locale,
     siteName: CLUB_NAME,
