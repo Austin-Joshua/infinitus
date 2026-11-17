@@ -53,7 +53,7 @@ export default function GalleryGrid({ photos = [] }) {
           >
             <Image
               src={photo.src}
-              alt={photo.caption}
+              alt={photo.alt || photo.caption}
               fill
               sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
               unoptimized={photo.src.startsWith('http')}
@@ -99,7 +99,7 @@ export default function GalleryGrid({ photos = [] }) {
             >
               <Image
                 src={current.src}
-                alt={current.caption}
+                alt={current.alt || current.caption}
                 width={current.width}
                 height={current.height}
                 sizes="(min-width: 1024px) 900px, 100vw"

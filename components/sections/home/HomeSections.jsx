@@ -332,7 +332,7 @@ export function HomeGallery({ photos }) {
               >
                 <Image
                   src={photo.src}
-                  alt={photo.caption}
+                  alt={photo.alt || photo.caption}
                   fill
                   sizes="260px"
                   unoptimized={photo.src.startsWith('http')}
