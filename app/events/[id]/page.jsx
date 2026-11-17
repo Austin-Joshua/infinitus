@@ -9,7 +9,7 @@ import { EVENTS } from '@/lib/data';
 import { getEvent } from '@/lib/events';
 import { formatEventDate } from '@/lib/format';
 import { COPY, CLUB_NAME, SITE } from '@/lib/site';
-import { pageMetadata, absoluteUrl } from '@/lib/seo';
+import { pageMetadata, absoluteUrl, breadcrumbJsonLd } from '@/lib/seo';
 
 export const revalidate = 60;
 
@@ -85,10 +85,11 @@ export default async function EventPage({ params }) {
           name: event.venue || 'Rajalakshmi Institute of Technology',
           address: {
             '@type': 'PostalAddress',
+            streetAddress: 'Rajalakshmi Nagar, Kuthambakkam, Poonamallee',
             addressLocality: 'Chennai',
             addressRegion: 'Tamil Nadu',
+            postalCode: '600124',
             addressCountry: 'IN',
-            // TODO(owner): confirm from RIT website full campus street address and PIN code
           },
         },
     image: event.coverImageUrl ? absoluteUrl(event.coverImageUrl) : absoluteUrl('/opengraph-image'),
@@ -100,10 +101,17 @@ export default async function EventPage({ params }) {
     },
   };
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: 'Home', path: '/' },
+    { name: 'Events', path: '/events' },
+    { name: event.title, path: `/events/${encodeURIComponent(event.id)}` },
+  ]);
+
   return (
     <>
       <article className="pb-24 pt-28 sm:pt-36">
         <JsonLd data={eventJsonLd} />
+        <JsonLd data={breadcrumbs} />
         <div className="container-x">
           <Link
             href="/events"

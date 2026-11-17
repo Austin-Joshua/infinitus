@@ -31,11 +31,11 @@ export function FeaturedEvent({ event }) {
           <span className="chip border-sunset/40 text-sunset font-semibold">{COPY.events.featuredLabel}</span>
           {event.eventType && <span className="chip font-medium">{event.eventType}</span>}
         </div>
-        <h3 className="mt-3 sm:mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
+        <h2 className="mt-3 sm:mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
           <Link href={eventHref(event)} className="transition-colors hover:text-accent">
             {event.title}
           </Link>
-        </h3>
+        </h2>
         <p className="mt-2.5 font-mono text-xs sm:text-sm text-accent font-medium">
           {formatEventDate(event.eventDate, event.endDate)}
           {event.venue ? ` · ${event.venue}` : ''}
@@ -95,7 +95,7 @@ export default function EventsSection({ events }) {
       <div className="container-x">
         {upcoming.length > 0 && (
           <div className="mb-14">
-            <h3 className="font-heading text-xl font-semibold text-fg">{COPY.events.upcomingHeading}</h3>
+            <h2 className="font-heading text-xl font-semibold text-fg">{COPY.events.upcomingHeading}</h2>
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {upcoming.map((event) => (
                 <Reveal key={event.id}>

@@ -40,8 +40,10 @@ export default function TeamBrowser({ members }) {
 
   return (
     <div className="space-y-10">
+      <h2 className="sr-only">Members Directory by Department & Domain</h2>
+
       {/* Team Filter Pills for native-app experience on mobile/tablet/desktop */}
-      <div className="flex flex-wrap gap-2.5 border-b border-fg/15 pb-6">
+      <div role="group" aria-label="Filter members by team domain" className="flex flex-wrap gap-2.5 border-b border-fg/15 pb-6">
         {teamCategories.map((team) => {
           const active = team === selectedTeam;
           return (

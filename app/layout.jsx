@@ -84,9 +84,25 @@ export const metadata = {
     template: SITE.titleTemplate,
   },
   description: SITE.description,
+  keywords: [
+    'INFINITUS',
+    'INFINITUS RIT',
+    'INFINITUS Club',
+    'RIT Mathematics Club',
+    'Rajalakshmi Institute of Technology',
+    'RIT Chennai',
+    'Mathematics Club Chennai',
+    'Math Olympiad RIT',
+    'PiDoku',
+    'SHINKA 2026',
+    'Mathspire',
+    'Engineering Mathematics Club',
+    'College Math Club India',
+  ],
   authors: [{ name: CLUB_NAME }],
   creator: CLUB_NAME,
   publisher: COLLEGE_NAME,
+  category: 'education',
   openGraph: {
     title: SITE.title,
     description: SITE.description,
@@ -103,6 +119,13 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -117,32 +140,58 @@ const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: CLUB_NAME,
-  alternateName: 'INFINITUS RIT',
+  alternateName: [
+    'INFINITUS RIT',
+    'INFINITUS Club',
+    'RIT Mathematics Club',
+    'INFINITUS Mathematics Club',
+    'Rajalakshmi Institute of Technology Mathematics Club',
+  ],
   url: SITE.url,
   description: SITE.description,
 };
 
 const organizationJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': ['Organization', 'EducationalOrganization'],
   name: CLUB_NAME,
-  alternateName: 'INFINITUS Mathematics Club',
+  legalName: 'INFINITUS Mathematics Club',
+  alternateName: [
+    'INFINITUS RIT',
+    'INFINITUS Club',
+    'RIT Mathematics Club',
+    'INFINITUS Mathematics Club',
+    'Rajalakshmi Institute of Technology Mathematics Club',
+  ],
   url: SITE.url,
   logo: absoluteUrl('/icon.svg'),
+  image: absoluteUrl('/opengraph-image'),
+  foundingDate: '2023',
   email: SITE.contactEmail,
   description: SITE.description,
   parentOrganization: {
     '@type': 'CollegeOrUniversity',
     name: COLLEGE_NAME,
+    alternateName: 'RIT Chennai',
     url: 'https://ritchennai.org',
   },
   sameAs: [SOCIAL.instagram],
+  knowsAbout: [
+    'Mathematics',
+    'Mathematical Olympiad',
+    'Algorithms',
+    'Logic Puzzles',
+    'Problem Solving',
+    'Competitive Programming',
+    'Cryptography',
+  ],
   address: {
     '@type': 'PostalAddress',
+    streetAddress: 'Rajalakshmi Nagar, Kuthambakkam, Poonamallee',
     addressLocality: 'Chennai',
     addressRegion: 'Tamil Nadu',
+    postalCode: '600124',
     addressCountry: 'IN',
-    // TODO(owner): confirm from the RIT website the exact campus street address and PIN code
   },
 };
 
@@ -169,6 +218,12 @@ export default function RootLayout({ children }) {
         </noscript>
       </head>
       <body className="font-body antialiased" suppressHydrationWarning>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold focus:text-white focus:shadow-xl focus:outline-none"
+        >
+          Skip to content
+        </a>
         <ThemeProvider>
           <Nav />
           {children}

@@ -2,7 +2,8 @@ import PageHeader from '@/components/layout/PageHeader';
 import GallerySection from '@/components/sections/GallerySection';
 import { getEvents } from '@/lib/events';
 import { COPY, SOCIAL, pageById } from '@/lib/site';
-import { pageMetadata } from '@/lib/seo';
+import { pageMetadata, breadcrumbJsonLd } from '@/lib/seo';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 60;
 
@@ -12,11 +13,17 @@ export const metadata = pageMetadata({
   path: '/gallery',
 });
 
+const breadcrumbs = breadcrumbJsonLd([
+  { name: 'Home', path: '/' },
+  { name: 'Gallery', path: '/gallery' },
+]);
+
 export default async function GalleryPage() {
   const events = await getEvents();
   const page = pageById('gallery');
   return (
     <>
+      <JsonLd data={breadcrumbs} />
       <PageHeader label={page.navLabel} title={COPY.gallery.heading} intro={COPY.gallery.intro}>
         <a
           href={SOCIAL.instagram}
