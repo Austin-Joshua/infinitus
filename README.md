@@ -3,15 +3,16 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Austin-Joshua/infinitus/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Austin-Joshua/infinitus/ci.yml?branch=main&label=CI&style=flat-square" alt="CI Status"></a>&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License: MIT"></a>&nbsp;
+  <a href="https://infinitus-seven.vercel.app"><img src="https://img.shields.io/badge/Production-Live-success?style=flat-square" alt="Live Site"></a>&nbsp;
   <code>next.js 15</code>&nbsp;
   <code>react 19</code>&nbsp;
   <code>tailwind css</code>&nbsp;
-  <code>framer motion</code>&nbsp;
-  <code>supabase · optional</code>&nbsp;
-  <code>vercel</code>
+  <code>framer motion</code>
 </p>
 
-<p align="center"><b>Live:</b> <a href="https://infinitus-seven.vercel.app">infinitus-seven.vercel.app</a></p>
+<p align="center"><b>Live Website:</b> <a href="https://infinitus-seven.vercel.app">infinitus-seven.vercel.app</a></p>
 
 **INFINITUS is the official web portal of the Mathematics Club at Rajalakshmi Institute of Technology, Chennai.**
 
@@ -82,12 +83,15 @@ npm run dev        # http://localhost:3000
 > No `.env.local` is needed to start. Without Supabase keys the site serves the
 > bundled data in `lib/data.js`.
 
-| | |
+| Script | Description |
 |---|---|
-| `npm run dev` | dev server at localhost:3000 |
-| `npm run build` · `npm start` | production build, then serve it |
-| `npm run branding:optimize` | rebuild `public/brand/` from the master logos in `assets/brand/source/` |
-| `npm run db:seed` | push the bundled members and events into Supabase (needs `.env.local`) |
+| `npm run dev` | Development server at `localhost:3000` |
+| `npm run build` | Production build (compiles all static & SSG routes) |
+| `npm start` | Serve production build locally |
+| `npm test` | Run automated unit test suite (`node --test`) |
+| `npm run lint` | ESLint 9 Flat Config verification (`eslint .`) |
+| `npm run branding:optimize` | Rebuild `public/brand/` from master logos in `assets/brand/source/` |
+| `npm run db:seed` | Seed bundled data into Supabase (offline administrative use) |
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
@@ -156,24 +160,22 @@ Infinitus/
 <summary><b>Environment</b></summary>
 <br>
 
-Copy `.env.example` → `.env.local`. Every variable is optional.
+Copy `.env.example` → `.env.local`. Every variable is optional. Without environment variables, the site runs 100% on bundled data.
 
-| Variable | Default | Effect |
+| Variable | Default | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://infinitus-seven.vercel.app` | canonical URL for metadata, the sitemap and link previews |
-| `SUPABASE_URL` | — | turns Supabase on, together with a key below |
-| `SUPABASE_SERVICE_ROLE_KEY` | — | server-side key, used by the site and `db:seed` |
-| `SUPABASE_ANON_KEY` | — | used when there's no service-role key |
+| `NEXT_PUBLIC_SITE_URL` | `https://infinitus-seven.vercel.app` | Canonical production URL for metadata, sitemaps, and OpenGraph cards |
+| `SUPABASE_URL` | — | Optional Supabase project endpoint |
+| `SUPABASE_ANON_KEY` | — | Public client key (enforces Row Level Security on queries) |
+| `SUPABASE_SERVICE_ROLE_KEY` | — | Offline database seeding only (`npm run db:seed`). Never commit or deploy. |
 
 </details>
 
 <details>
-<summary><b>Database</b></summary>
+<summary><b>Database & Security</b></summary>
 <br>
 
-Run `scripts/db/schema.sql` in the Supabase SQL editor (plus the `migrate-*.sql`
-files if the database is older), set the keys in `.env.local`, then
-`npm run db:seed` to copy the bundled members and events across.
+Run `scripts/db/schema.sql` and `scripts/db/rls-audit.sql` in the Supabase SQL editor, configure keys in `.env.local`, and run `npm run db:seed` to populate the tables. Public tables enforce read-only policies; all public write mutations are strictly blocked.
 
 </details>
 
@@ -192,16 +194,21 @@ CSS keyframes or SMIL, so GitHub plays it as a plain image.
 
 ## Credits & Contributors
 
-Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with **Austin Joshua M** (President, INFINITUS).
+Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with **Austin Joshua M** (President, INFINITUS). See [CONTRIBUTORS.md](CONTRIBUTORS.md).
 
 <table>
 <tr>
 <td width="96"><a href="https://github.com/Austin-Joshua"><img src="https://github.com/Austin-Joshua.png?size=160" width="80" alt="Austin-Joshua"></a></td>
-<td><b>Austin Joshua M</b> · <a href="https://github.com/Austin-Joshua">@Austin-Joshua</a><br>President, INFINITUS 2026–27 (13 commits).<br>Leads the club and its Core Committee.</td>
+<td><b>Austin Joshua M</b> · <a href="https://github.com/Austin-Joshua">@Austin-Joshua</a><br>President, INFINITUS 2026–27.<br>Leads the club and repository maintainer.</td>
 <td width="96"><a href="https://github.com/Aakashxnoir"><img src="https://github.com/Aakashxnoir.png?size=160" width="80" alt="Aakashxnoir"></a></td>
-<td><b>Aakash B K</b> (Aakash Buddha Kannan) · <a href="https://github.com/Aakashxnoir">@Aakashxnoir</a><br>Technical Head / Technical Coordinator, INFINITUS 2026–27 (6 commits).<br>Built the website architecture and design foundation.</td>
+<td><b>Aakash B K</b> (Aakash Buddha Kannan) · <a href="https://github.com/Aakashxnoir">@Aakashxnoir</a><br>Technical Head / Technical Coordinator, INFINITUS 2026–27.<br>Built the website architecture and design foundation.</td>
 </tr>
 </table>
+
+## Policy & Brand Notice
+
+- **Security:** Sourced according to RFC 9116 at [security.txt](public/.well-known/security.txt). Review [SECURITY.md](SECURITY.md) for vulnerability disclosure.
+- **Brand & Content:** Sourced under [NOTICE.md](NOTICE.md). INFINITUS emblems, logos, posters, and member photography are all rights reserved to the club.
 
 <p align="center">
   <img src=".github/readme/footer.svg" width="100%" alt="Mathematics beyond the classroom.">

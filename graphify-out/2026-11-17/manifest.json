@@ -20,15 +20,15 @@
     "semantic_hash": ""
   },
   "app/api/events/route.js": {
-    "mtime": 1794925275.6461666,
-    "seen": 1794927262.6840663,
-    "ast_hash": "961544b551fdadf7188ac2191257e8bc",
+    "mtime": 1794927616.396312,
+    "seen": 1794927837.3277247,
+    "ast_hash": "4d0a0024afb687a9737995059045ba8a",
     "semantic_hash": ""
   },
   "app/api/members/route.js": {
-    "mtime": 1794925275.808519,
-    "seen": 1794927262.6840663,
-    "ast_hash": "e76b61e3434895ae870a3087c0296771",
+    "mtime": 1794927795.64879,
+    "seen": 1794927837.3277247,
+    "ast_hash": "36dfdacf8eb2fae90736178a56a5424b",
     "semantic_hash": ""
   },
   "app/contact/page.jsx": {
@@ -122,8 +122,8 @@
     "semantic_hash": ""
   },
   "components/layout/Nav.jsx": {
-    "mtime": 1794927219.442191,
-    "seen": 1794927262.6846185,
+    "mtime": 1794927827.4637468,
+    "seen": 1794927837.330448,
     "ast_hash": "589df2471ee77e641af91c26b43afb03",
     "semantic_hash": ""
   },
@@ -308,9 +308,9 @@
     "semantic_hash": ""
   },
   "next.config.mjs": {
-    "mtime": 1794925131.127387,
-    "seen": 1794927262.6899128,
-    "ast_hash": "69f06e69d2ebc662dd29ece2413b3e6d",
+    "mtime": 1794927674.937955,
+    "seen": 1794927837.336573,
+    "ast_hash": "7ff855881abfab8ad1dcff763b3673e2",
     "semantic_hash": ""
   },
   "package.json": {
@@ -817,10 +817,40 @@
     "ast_hash": "b3c6490f96e7d6a2097d140da418d157",
     "semantic_hash": ""
   },
+  ".github/dependabot.yml": {
+    "mtime": 1794927533.147136,
+    "seen": 1794927837.327,
+    "ast_hash": "b9d2b782ab9cdf497d44990bdfd84fa8",
+    "semantic_hash": ""
+  },
+  "lib/rateLimit.js": {
+    "mtime": 1794927576.4232073,
+    "seen": 1794927837.3359413,
+    "ast_hash": "70d82fcd19595737da2634bcd44b98fa",
+    "semantic_hash": ""
+  },
+  "test/rateLimit.test.mjs": {
+    "mtime": 1794927696.1544707,
+    "seen": 1794927837.3377306,
+    "ast_hash": "d3b4947e13d07701d9839475865bdac4",
+    "semantic_hash": ""
+  },
+  "SECURITY.md": {
+    "mtime": 1794927554.272195,
+    "seen": 1794927837.3390675,
+    "ast_hash": "87c78ec7377d6add45d651edb9721171",
+    "semantic_hash": ""
+  },
+  "public/.well-known/security.txt": {
+    "mtime": 1794927538.399927,
+    "seen": 1794927837.3407326,
+    "ast_hash": "f7bba646e5712140fba00b29795a6213",
+    "semantic_hash": ""
+  },
   "package-lock.json": {
-    "mtime": 1792129895.2253323,
-    "seen": 1794923655.8124754,
-    "ast_hash": "0c432cbaddbbbeb654138d0856bf8fe4",
+    "mtime": 1794927631.4653916,
+    "seen": 1794927837.3492908,
+    "ast_hash": "73c044523662c788e9526ddf8736a6c0",
     "semantic_hash": ""
   }
 }
