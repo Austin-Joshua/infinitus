@@ -41,36 +41,32 @@ export default function EventCard({ event }) {
 
   return (
     <article className="card card-hover group relative flex h-full flex-col transition-[transform,border-color,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_48px_-24px_rgb(var(--fg)/0.35)]">
-      <div className="relative aspect-[4/5] overflow-hidden border-b border-fg/15 bg-bg-2/60 p-2 flex items-center justify-center">
-        <div className="relative h-full w-full overflow-hidden rounded-lg">
-          <EventPoster
-            event={event}
-            sizes="(min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            fit="contain"
-            className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-          />
-        </div>
-        <span className="chip absolute left-3 top-3 bg-bg/95 backdrop-blur-sm text-fg shadow-sm">
-          {formatEventDate(event.eventDate, event.endDate)}
-        </span>
-        {isUpcoming && (
-          <span className="chip absolute right-3 top-3 border-gold/40 bg-bg/95 backdrop-blur-sm text-gold shadow-sm">
-            Upcoming
-          </span>
-        )}
-        <span
-          aria-hidden="true"
-          className="absolute bottom-3 right-3 flex h-9 w-9 translate-y-3 items-center justify-center rounded-full bg-bg/95 backdrop-blur-sm text-fg opacity-0 shadow-sm transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
-        >
-          →
-        </span>
+      <div className="relative aspect-[4/5] w-full overflow-hidden border-b border-fg/15 bg-bg-2/40">
+        <EventPoster
+          event={event}
+          sizes="(min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          fit="cover"
+          className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        {event.eventType && (
-          <p className="font-mono text-xs text-accent">{event.eventType}</p>
-        )}
-        <h3 className="mt-2 font-heading text-lg font-semibold leading-snug text-fg">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <span className="font-mono text-xs text-accent font-medium">
+            {formatEventDate(event.eventDate, event.endDate)}
+          </span>
+          {isUpcoming ? (
+            <span className="chip border-sunset/40 text-sunset text-[11px] font-semibold py-0.5 px-2">
+              Upcoming
+            </span>
+          ) : event.eventType ? (
+            <span className="chip text-[11px] py-0.5 px-2 text-muted">
+              {event.eventType}
+            </span>
+          ) : null}
+        </div>
+        <h3 className="mt-1 font-heading text-lg font-semibold leading-snug text-fg">
           <Link
             href={eventHref(event)}
             className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-md focus-visible:after:ring-2 focus-visible:after:ring-accent"

@@ -360,7 +360,7 @@ export function HomeInstagram() {
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
           {INSTAGRAM_POSTS.map((post, idx) => (
-            <Reveal key={post.id} delay={idx * 0.06}>
+            <Reveal key={post.id} delay={idx * 0.04}>
               <a
                 href={post.permalink}
                 target="_blank"
@@ -368,37 +368,44 @@ export function HomeInstagram() {
                 className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-fg/15 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-fg/30 hover:shadow-[0_20px_40px_-20px_rgb(var(--fg)/0.25)]"
                 aria-label={`View Instagram post: ${post.caption}`}
               >
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-bg-2/50 border-b border-fg/10 p-2 flex items-center justify-center">
-                  <div className="relative h-full w-full overflow-hidden rounded-xl bg-bg">
-                    <Image
-                      src={post.image}
-                      alt={post.caption}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
+                {/* Clean Top Bar: Handle, Infinity Icon, and Tag Chip */}
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-fg/10 bg-bg-2/40">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent text-[11px] font-mono font-bold">
+                      ∞
+                    </span>
+                    <span className="font-mono text-xs font-medium text-fg/80 truncate">
+                      @infinitus_club.rit
+                    </span>
                   </div>
                   {post.tag && (
-                    <span className="chip absolute left-4 top-4 border-sunset/40 bg-bg/95 backdrop-blur-sm text-sunset text-xs shadow-sm font-medium">
+                    <span className="chip text-[10px] sm:text-[11px] py-0.5 px-2 border-sunset/40 text-sunset font-medium shrink-0">
                       {post.tag}
                     </span>
                   )}
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-bg/95 backdrop-blur-sm text-fg shadow-sm transition-transform duration-300 group-hover:scale-110"
-                  >
-                    ↗
-                  </span>
                 </div>
 
-                <div className="flex flex-1 flex-col justify-between p-5">
+                {/* Poster Frame: 100% unobstructed edge-to-edge 4:5 frame */}
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-bg-2/20">
+                  <Image
+                    src={post.image}
+                    alt={post.caption}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                </div>
+
+                {/* Caption & Metadata Footer */}
+                <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
                   <p className="line-clamp-3 text-xs sm:text-sm leading-relaxed text-fg/90 font-sans">
                     {post.caption}
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-3 text-xs">
                     <span className="font-mono text-muted">{post.date}</span>
-                    <span className="font-mono font-medium text-accent flex items-center gap-1 group-hover:underline">
-                      View post <span aria-hidden="true">→</span>
+                    <span className="font-mono font-medium text-accent flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                      View post <span aria-hidden="true">↗</span>
                     </span>
                   </div>
                 </div>
