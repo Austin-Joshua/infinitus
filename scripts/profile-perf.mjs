@@ -15,7 +15,7 @@ async function waitForServer(url, timeout = 30000) {
   throw new Error(`Server failed to start at ${url} within ${timeout}ms`);
 }
 
-async function profileRoute(browser, path) {
+async function profileRoute(browser, path, port = 3000) {
   const context = await browser.newContext({
     ...devices['iPhone 14'],
   });
@@ -25,21 +25,11 @@ async function profileRoute(browser, path) {
   // 4x CPU slowdown
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
 
-  await page.goto(`http://localhost:3000${path}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`http://localhost:${port}${path}`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(500);
 
-  // Setup performance observer for long tasks and frame timings
+  // Setup performance observer for frame timings and rolling window
   await page.evaluate(() => {
-    window.__longTasks = [];
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        window.__longTasks.push(entry.duration);
-      }
-    });
-    try {
-      observer.observe({ entryTypes: ['longtask'] });
-    } catch (e) {}
-
     window.__frames = [];
     window.__recording = true;
     let prev = performance.now();
@@ -53,31 +43,58 @@ async function profileRoute(browser, path) {
     requestAnimationFrame(tick);
   });
 
-  // Perform continuous scrolling for 3 seconds
+  // Smooth scroll top-to-bottom over 4000ms
+  const scrollDurationMs = 4000;
   const start = Date.now();
-  while (Date.now() - start < 3000) {
+  while (Date.now() - start < scrollDurationMs) {
     await page.evaluate(() => {
-      window.scrollBy({ top: 120, behavior: 'instant' });
+      window.scrollBy({ top: 35, behavior: 'instant' });
     });
-    await page.waitForTimeout(30);
+    await page.waitForTimeout(25);
   }
 
   const results = await page.evaluate(() => {
     window.__recording = false;
     const frames = window.__frames || [];
-    const longTasks = window.__longTasks || [];
     const totalFrameTime = frames.reduce((a, b) => a + b, 0);
     const avgFrameDuration = frames.length > 0 ? totalFrameTime / frames.length : 16.6;
-    const fps = avgFrameDuration > 0 ? 1000 / avgFrameDuration : 60;
-    const jankFrames = frames.filter((d) => d > 33.3).length; // frames > 33ms (dropped below 30fps)
-    const totalLongTaskDuration = longTasks.reduce((a, b) => a + b, 0);
+    const meanFps = avgFrameDuration > 0 ? 1000 / avgFrameDuration : 60;
+    const jankFrames = frames.filter((d) => d > 33.3).length; // frames > 33.3ms (dropped below 30fps)
+
+    // Calculate worst-case FPS in any rolling 1-second (1000ms) window
+    let worstWindowFps = meanFps;
+    if (frames.length > 0) {
+      // Cumulative timestamps
+      const timestamps = [];
+      let acc = 0;
+      for (const dur of frames) {
+        acc += dur;
+        timestamps.push(acc);
+      }
+
+      let minFramesInSec = Infinity;
+      let left = 0;
+      for (let right = 0; right < timestamps.length; right++) {
+        while (timestamps[right] - timestamps[left] > 1000) {
+          left++;
+        }
+        if (timestamps[right] >= 1000) {
+          const countInSec = right - left + 1;
+          if (countInSec < minFramesInSec) {
+            minFramesInSec = countInSec;
+          }
+        }
+      }
+      if (minFramesInSec !== Infinity) {
+        worstWindowFps = minFramesInSec;
+      }
+    }
 
     return {
       framesCount: frames.length,
-      fps: Math.round(fps * 10) / 10,
+      fps: Math.round(meanFps * 10) / 10,
+      worstWindowFps: Math.round(worstWindowFps * 10) / 10,
       jankFrames,
-      longTaskCount: longTasks.length,
-      totalLongTaskDurationMs: Math.round(totalLongTaskDuration * 10) / 10,
     };
   });
 
@@ -85,54 +102,115 @@ async function profileRoute(browser, path) {
   return results;
 }
 
+function computeStats(runs) {
+  const fpsList = runs.map((r) => r.fps);
+  const worstList = runs.map((r) => r.worstWindowFps);
+  const jankList = runs.map((r) => r.jankFrames);
+
+  // Median FPS
+  const sortedFps = [...fpsList].sort((a, b) => a - b);
+  const medianFps = sortedFps[Math.floor(sortedFps.length / 2)];
+
+  // Median worst-case window FPS
+  const sortedWorst = [...worstList].sort((a, b) => a - b);
+  const medianWorstFps = sortedWorst[Math.floor(sortedWorst.length / 2)];
+
+  // Median jank frames
+  const sortedJank = [...jankList].sort((a, b) => a - b);
+  const medianJank = sortedJank[Math.floor(sortedJank.length / 2)];
+
+  // Standard deviation of FPS
+  const meanFps = fpsList.reduce((a, b) => a + b, 0) / fpsList.length;
+  const variance = fpsList.reduce((sum, val) => sum + Math.pow(val - meanFps, 2), 0) / fpsList.length;
+  const stdDevFps = Math.round(Math.sqrt(variance) * 100) / 100;
+
+  return {
+    runs,
+    medianFps,
+    medianWorstFps,
+    medianJank,
+    stdDevFps,
+  };
+}
+
+async function runBenchmark(port = 3000) {
+  const browser = await chromium.launch();
+  try {
+    console.log(`\n--- Profiling 5 runs on Home (/) ---`);
+    const homeRuns = [];
+    for (let i = 0; i < 5; i++) {
+      const res = await profileRoute(browser, '/', port);
+      homeRuns.push(res);
+      console.log(`  Run ${i + 1} [/]: FPS=${res.fps}, WorstWindowFPS=${res.worstWindowFps}, Jank=${res.jankFrames}`);
+    }
+    const homeStats = computeStats(homeRuns);
+
+    console.log(`\n--- Profiling 5 runs on Gallery (/gallery) ---`);
+    const galleryRuns = [];
+    for (let i = 0; i < 5; i++) {
+      const res = await profileRoute(browser, '/gallery', port);
+      galleryRuns.push(res);
+      console.log(`  Run ${i + 1} [/gallery]: FPS=${res.fps}, WorstWindowFPS=${res.worstWindowFps}, Jank=${res.jankFrames}`);
+    }
+    const galleryStats = computeStats(galleryRuns);
+
+    return { homeStats, galleryStats };
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
-  console.log('Starting Next.js production server for profiling...');
-  const server = spawn('cmd.exe', ['/c', 'npx', 'next', 'start', '-p', '3000'], {
-    cwd: process.cwd(),
-    stdio: 'ignore',
-  });
+  const customPort = (process.env.BENCHMARK_PORT || '3005').trim();
+  let server = null;
+
+  // Check if server is already running on port
+  let serverNeedsSpawn = false;
+  try {
+    const res = await fetch(`http://localhost:${customPort}`);
+    if (!res.ok && res.status !== 200 && res.status !== 304) {
+      serverNeedsSpawn = true;
+    }
+  } catch (e) {
+    serverNeedsSpawn = true;
+  }
+
+  if (serverNeedsSpawn) {
+    console.log(`Starting Next.js production server on port ${customPort}...`);
+    server = spawn('cmd.exe', ['/c', 'npx', 'next', 'start', '-p', String(customPort)], {
+      cwd: process.cwd(),
+      stdio: 'ignore',
+    });
+    await waitForServer(`http://localhost:${customPort}`);
+    console.log(`Server is running at http://localhost:${customPort}`);
+  } else {
+    console.log(`Reusing running server at http://localhost:${customPort}`);
+  }
 
   try {
-    await waitForServer('http://localhost:3000');
-    console.log('Server is running at http://localhost:3000');
+    const { homeStats, galleryStats } = await runBenchmark(customPort);
 
-    const browser = await chromium.launch();
-    try {
-      console.log('\n--- Throttled-CPU Profile (4x Slowdown, iPhone 14 Viewport) ---');
+    console.log('\n======================================================');
+    console.log('5-RUN BENCHMARK SUMMARY (4x CPU Slowdown, iPhone 14)');
+    console.log('======================================================');
+    console.log(`Route [/]:`);
+    console.log(`  Median FPS: ${homeStats.medianFps}`);
+    console.log(`  Worst-Window FPS: ${homeStats.medianWorstFps}`);
+    console.log(`  Jank Frames (>33.3ms): ${homeStats.medianJank}`);
+    console.log(`  Std Dev: ${homeStats.stdDevFps}`);
+    console.log(`Route [/gallery]:`);
+    console.log(`  Median FPS: ${galleryStats.medianFps}`);
+    console.log(`  Worst-Window FPS: ${galleryStats.medianWorstFps}`);
+    console.log(`  Jank Frames (>33.3ms): ${galleryStats.medianJank}`);
+    console.log(`  Std Dev: ${galleryStats.stdDevFps}`);
 
-      // 3 runs on Home (/)
-      const homeRuns = [];
-      for (let i = 0; i < 3; i++) {
-        const res = await profileRoute(browser, '/');
-        homeRuns.push(res);
-        console.log(`  Run ${i + 1} [/]: FPS = ${res.fps}, Jank Frames = ${res.jankFrames}`);
-      }
-      homeRuns.sort((a, b) => a.fps - b.fps);
-      const homeMedian = homeRuns[1];
-
-      // 3 runs on Gallery (/gallery)
-      const galleryRuns = [];
-      for (let i = 0; i < 3; i++) {
-        const res = await profileRoute(browser, '/gallery');
-        galleryRuns.push(res);
-        console.log(`  Run ${i + 1} [/gallery]: FPS = ${res.fps}, Jank Frames = ${res.jankFrames}`);
-      }
-      galleryRuns.sort((a, b) => a.fps - b.fps);
-      const galleryMedian = galleryRuns[1];
-
-      console.log('\n======================================================');
-      console.log('PROFILING RESULTS SUMMARY');
-      console.log('======================================================');
-      console.log(`Route [/] Median FPS: ${homeMedian.fps}, Median Jank Frames: ${homeMedian.jankFrames}`);
-      console.log(`Route [/gallery] Median FPS: ${galleryMedian.fps}, Median Jank Frames: ${galleryMedian.jankFrames}`);
-
-      return { homeMedian, galleryMedian };
-    } finally {
-      await browser.close();
-    }
+    console.log('\nJSON Output:');
+    console.log(JSON.stringify({ homeStats, galleryStats }, null, 2));
   } finally {
-    console.log('Stopping server...');
-    spawn('cmd.exe', ['/c', 'taskkill', '/F', '/T', '/PID', server.pid.toString()]);
+    if (server) {
+      console.log('Stopping server...');
+      spawn('cmd.exe', ['/c', 'taskkill', '/F', '/T', '/PID', server.pid.toString()]);
+    }
   }
 }
 

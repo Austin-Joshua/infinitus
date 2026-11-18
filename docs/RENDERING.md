@@ -157,4 +157,4 @@ Following the performance optimization in Phase 9.4 and enforced by `scripts/che
 | **4** | `components/ui/LightboxModal.jsx:320` | `backdrop-blur-md` | **Lightbox Previous Slide Arrow:** Floating circular control overlaid directly on image canvas margins. |
 | **5** | `components/ui/LightboxModal.jsx:339` | `backdrop-blur-md` | **Lightbox Next Slide Arrow:** Floating circular control overlaid directly on image canvas margins. |
 
-All other 35+ non-critical backdrop-blur declarations across cards, badges, footers, buttons, and section dividers were converted to solid high-opacity CSS tokens (`bg-card/95`, `bg-white/95`), boosting throttled mobile scroll frame rates from ~20 FPS to 54+ FPS.
+All other 35+ non-critical backdrop-blur declarations across cards, badges, footers, buttons, and section dividers were converted to solid high-opacity CSS tokens (`bg-card/95`, `bg-white/95`), boosting throttled mobile scroll frame rates from 28.2 FPS to 42.8 FPS on `/` and from 36.8 FPS to 53.4 FPS on `/gallery` (see authoritative benchmark table in `docs/QA-REPORT.md` Section 4.1).

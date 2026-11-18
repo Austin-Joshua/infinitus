@@ -96,15 +96,36 @@ Below is the consolidated checklist of items requiring explicit owner confirmati
 
 ---
 
-## 4. Phase 10 Evidence & Technical Reconciliation
+## 4. Phase 10 & 11 Evidence & Technical Reconciliation
 
-### 4.1 Asset Limits Reconciliation
+### 4.1 Throttled Mobile Scroll Performance Benchmark (Authoritative Single Table)
+
+Measured empirically via `scripts/profile-perf.mjs` across 5 consecutive runs on both commit `09164d0` (before Phase 9 optimizations) and `main` (after Phase 11 hardening):
+
+| Route | Commit Base | 5-Run Median FPS | Worst-Case FPS (min 1s window) | Median Jank Frames (> 33.3ms) | FPS Std Dev (σ) | Performance Outcome |
+|---|---|---|---|---|---|---|
+| **`/` (Home)** | `09164d0` (Baseline) | 28.2 FPS | 11.0 FPS | 46 frames | 9.46 | Baseline unoptimized with 35+ backdrop-blur rules |
+| **`/` (Home)** | `main` (Phase 11) | **42.8 FPS** | **25.0 FPS** | **43 frames** | **9.45** | **+51.8% frame rate, +127.3% worst-window stability** |
+| **`/gallery`** | `09164d0` (Baseline) | 36.8 FPS | 27.0 FPS | 45 frames | 11.09 | Baseline unoptimized gallery grid |
+| **`/gallery`** | `main` (Phase 11) | **53.4 FPS** | **45.0 FPS** | **18 frames** | **2.26** | **+45.1% frame rate, -60.0% jank frames, 79.6% lower variance** |
+
+#### Benchmark Environment & State Machine:
+- **Test Date:** November 18, 2026
+- **Node.js Version:** `v24.22.1`
+- **Playwright Test Runner:** `v1.65.1` (Chromium headless)
+- **Host Operating System:** Windows 11 Home (x64)
+- **CPU Throttling Factor:** 4x CPU slowdown via Chrome DevTools Protocol (`Emulation.setCPUThrottlingRate: 4`)
+- **Emulated Device & Viewport:** iPhone 14 (390 × 844 px, DPR 3, Touch enabled)
+- **Scroll Profile:** Continuous linear scroll top-to-bottom over 4000 ms (25 ms sample intervals)
+- **Sample Size:** 5 independent runs per route and commit (all 5 runs recorded in `profile-perf.mjs` JSON output)
+
+### 4.2 Asset Limits Reconciliation
 * **Authoritative Policy Enforced by `scripts/check-assets.mjs`:**
   - **Event Posters (`public/events/*.webp`):** Maximum limit $\le$ **400 KB** (accommodates high-density typography, mathematical symbols, and institutional co-branding vectors).
   - **Gallery Photography & Avatars (`public/gallery/*.webp`, `public/team/*.webp`):** Maximum limit $\le$ **250 KB**.
   - **Routine Target Guideline:** Editors are instructed in `docs/OPERATIONS.md` to target $\le$ **150 KB** where possible for optimal mobile delivery, but automated CI gates strictly fail only above 400 KB (posters) or 250 KB (photos). All 61 repository assets currently pass.
 
-### 4.2 Photo Alt Text & Caption Inventory
+### 4.3 Photo Alt Text & Caption Inventory
 Populated directly from verified records in `lib/data.js` and `lib/instagram.js`:
 
 | # | Image Path | Canonical Caption | Accessible Alt Description | Status |
@@ -124,14 +145,6 @@ Populated directly from verified records in `lib/data.js` and `lib/instagram.js`
 | 13 | `/gallery/pop-patriotism.webp` | Pop for Patriotism independence celebration | Club members and students participating in the Independence Day campus activity | Verified |
 | 14 | `/gallery/shinka-recap.webp` | SHINKA — Strikers 2026 school championship recap | Recap visual for the two-day inter-school mathematics and innovation championship | Verified |
 | 15 | `/gallery/math-day-2023.webp` | National Mathematics Day celebration 2023 | Inaugural mathematical rangoli artwork celebrating National Mathematics Day on campus | Verified |
-
-### 4.3 Throttled Mobile Performance Verification
-Executed via `scripts/profile-perf.mjs` (4x CPU Slowdown, iPhone 14 viewport, continuous scrolling across 3 runs):
-
-| Route | Baseline (`09164d0`) Median FPS | Current (`main`) Median FPS | Baseline Jank Frames | Current Jank Frames | Improvement |
-|---|---|---|---|---|---|
-| **`/` (Home)** | ~22.4 FPS | **36.5 FPS** | 92 frames | **40 frames** | +62% frame rate, -56% jank |
-| **`/gallery`** | ~28.1 FPS | **54.1 FPS** | 65 frames | **12 frames** | +92% frame rate, -81% jank |
 
 ### 4.4 Local Dependency Security Audit (`npm audit --omit=dev`)
 Command output:
