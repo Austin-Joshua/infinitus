@@ -106,7 +106,7 @@ export default function FeaturedEventsSlider({
         type="button"
         onClick={prev}
         aria-label="Previous event"
-        className="absolute left-1 sm:-left-5 lg:-left-6 top-1/2 -translate-y-1/2 z-30 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-sunset-orange/40 bg-card/95 text-fg shadow-xl shadow-sunset-orange/15 backdrop-blur-xl transition-all duration-200 hover:scale-110 hover:border-sunset-orange hover:bg-sunset-orange hover:text-white active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
+        className="absolute left-1 sm:-left-5 lg:-left-6 top-1/2 -translate-y-1/2 z-30 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-sunset-orange/40 bg-card text-fg shadow-xl shadow-sunset-orange/15 transition-all duration-200 hover:scale-110 hover:border-sunset-orange hover:bg-sunset-orange hover:text-white active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
       >
         <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-4 w-4 sm:h-5 sm:w-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -118,7 +118,7 @@ export default function FeaturedEventsSlider({
         type="button"
         onClick={next}
         aria-label="Next event"
-        className="absolute right-1 sm:-right-5 lg:-right-6 top-1/2 -translate-y-1/2 z-30 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-sunset-orange/40 bg-card/95 text-fg shadow-xl shadow-sunset-orange/15 backdrop-blur-xl transition-all duration-200 hover:scale-110 hover:border-sunset-orange hover:bg-sunset-orange hover:text-white active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
+        className="absolute right-1 sm:-right-5 lg:-right-6 top-1/2 -translate-y-1/2 z-30 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-sunset-orange/40 bg-card text-fg shadow-xl shadow-sunset-orange/15 transition-all duration-200 hover:scale-110 hover:border-sunset-orange hover:bg-sunset-orange hover:text-white active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
       >
         <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-4 w-4 sm:h-5 sm:w-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -126,7 +126,7 @@ export default function FeaturedEventsSlider({
       </button>
 
       {/* Main Large Card Container */}
-      <div className="card overflow-hidden rounded-2xl border border-sunset-orange/30 bg-card/90 shadow-2xl backdrop-blur-2xl">
+      <div className="card overflow-hidden rounded-2xl border border-sunset-orange/30 bg-card shadow-2xl">
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.article
             key={activeEvent.id}

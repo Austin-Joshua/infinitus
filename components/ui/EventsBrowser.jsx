@@ -35,7 +35,7 @@ export default function EventsBrowser({ events }) {
               className={`rounded-full px-4 py-2 font-mono text-xs font-semibold transition-all duration-150 active:scale-95 ${
                 active
                   ? 'bg-sunset-orange text-white border border-sunset-orange shadow-lg shadow-sunset-orange/35 scale-[1.02]'
-                  : 'bg-card/75 backdrop-blur-md border border-sunset-orange/35 text-fg/85 shadow-sm shadow-sunset-orange/5 hover:border-sunset-orange/70 hover:text-fg hover:shadow-md hover:-translate-y-0.5'
+                  : 'bg-card border border-sunset-orange/35 text-fg/85 shadow-sm shadow-sunset-orange/5 hover:border-sunset-orange/70 hover:text-fg hover:shadow-md hover:-translate-y-0.5'
               }`}
             >
               {y}

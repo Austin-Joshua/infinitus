@@ -146,7 +146,7 @@ export default async function EventPage({ params }) {
 
           <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
             <div className="lg:sticky lg:top-24 lg:self-start">
-              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-sunset-orange/40 bg-card/85 p-3 sm:p-4 flex items-center justify-center shadow-xl shadow-sunset-orange/15 backdrop-blur-md">
+              <ClipReveal delay={0.2} className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-sunset-orange/40 bg-card p-3 sm:p-4 flex items-center justify-center shadow-xl shadow-sunset-orange/15">
                 <EventHeroPoster event={event} allPhotos={allPhotos} />
               </ClipReveal>
             </div>

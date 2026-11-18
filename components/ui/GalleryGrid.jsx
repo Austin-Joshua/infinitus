@@ -62,7 +62,7 @@ export default function GalleryGrid({ photos = [] }) {
                 {photo.caption}
               </span>
               {photo.date && (
-                <span className="shrink-0 rounded-full bg-white/20 px-2 py-0.5 font-mono text-[10px] font-medium backdrop-blur-md">
+                <span className="shrink-0 rounded-full border border-white/20 bg-black/60 px-2 py-0.5 font-mono text-[10px] font-medium text-white">
                   {photo.date}
                 </span>
               )}

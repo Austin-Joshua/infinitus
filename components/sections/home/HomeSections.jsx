@@ -272,13 +272,13 @@ export function HomeEvents({ events }) {
                     className="h-full w-full object-cover object-top filter blur-[3px] scale-110 opacity-35 transition-transform duration-700 ease-out group-hover:scale-125 group-hover:opacity-45"
                   />
                 )}
-                {/* Gradient / Frosted Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/85 to-bg/60 backdrop-blur-[2px]" />
+                {/* Gradient / Opaque Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/90 to-bg/70" />
               </div>
 
               {/* Centered CTA Content */}
               <div className="relative z-10 flex flex-1 flex-col items-center justify-center p-6 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sunset-orange/50 bg-sunset-orange/15 text-sunset-orange shadow-lg shadow-sunset-orange/25 backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sunset-orange/50 bg-sunset-orange/20 text-sunset-orange shadow-lg shadow-sunset-orange/25 transition-transform duration-300 group-hover:scale-110">
                   <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" className="h-7 w-7">
                     <rect x="3" y="4" width="18" height="18" rx="3" />
                     <path d="M16 2v4M8 2v4M3 10h18" />

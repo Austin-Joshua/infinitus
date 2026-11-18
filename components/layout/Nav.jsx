@@ -181,7 +181,7 @@ export default function Nav() {
                   {active && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-xl border border-sunset-orange/60 bg-card/85 backdrop-blur-md shadow-sm shadow-sunset-orange/20"
+                      className="absolute inset-0 -z-10 rounded-xl border border-sunset-orange/60 bg-card shadow-sm shadow-sunset-orange/20"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
@@ -199,7 +199,7 @@ export default function Nav() {
               rel="noreferrer noopener"
               aria-label={`Follow INFINITUS on Instagram (${SOCIAL.instagramHandle})`}
               title="Instagram @infinitus_club.rit"
-              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
+              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card text-fg shadow-sm shadow-sunset-orange/10 transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
             >
               <InstagramNavIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </a>
@@ -209,7 +209,7 @@ export default function Nav() {
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={isDark ? 'Light mode' : 'Dark mode'}
-              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card/75 text-fg shadow-sm shadow-sunset-orange/10 backdrop-blur-md transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
+              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card text-fg shadow-sm shadow-sunset-orange/10 transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
