@@ -21,7 +21,7 @@ export default function GalleryGrid({ photos = [] }) {
   const close = () => {
     setIndex(null);
     setTimeout(() => {
-      triggerRef.current?.focus();
+      triggerRef.current?.focus({ preventScroll: true });
     }, 50);
   };
 

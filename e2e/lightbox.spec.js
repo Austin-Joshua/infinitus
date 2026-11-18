@@ -1,15 +1,13 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Fullscreen Gallery Lightbox Experience', () => {
-  test('opens, traps focus, changes slides on arrows, hides header/nav, and closes on Escape', async ({ page }) => {
+  test('opens, traps focus, changes slides on arrows, hides header/nav, and returns focus on close', async ({ page }) => {
     await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(500);
 
-    // Locate the first gallery card button/trigger using accessible role & name
+    // Locate the first gallery card button/trigger
     const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
     await expect(firstCard).toBeVisible({ timeout: 10000 });
 
-    // Verify header and nav are visible before opening
     const header = page.locator('header').first();
     await expect(header).toBeVisible();
 
@@ -33,23 +31,27 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
     expect(lockdown.htmlOverflow).toBe('hidden');
     await expect(header).not.toBeVisible();
 
-    // Verify image in modal is rendered and fills viewport generously
+    // 4. Verify image in modal is loaded with real dimensions
     const modalImg = dialog.locator('img');
     await expect(modalImg).toBeVisible();
-    const box = await modalImg.boundingBox();
-    expect(box).toBeTruthy();
-    expect(box.height).toBeGreaterThan(400);
+    await modalImg.evaluate(
+      (img) =>
+        new Promise((resolve) => {
+          if (img.complete && img.naturalWidth > 0) resolve(true);
+          else img.onload = () => resolve(true);
+        })
+    );
 
-    // 4. Test slide navigation with Arrow keys
+    // 5. Test slide navigation with Arrow keys
+    const initialSrc = await modalImg.getAttribute('src');
     await page.keyboard.press('ArrowRight');
-    await page.waitForTimeout(150);
+    await expect(modalImg).not.toHaveAttribute('src', initialSrc);
 
-    // 5. Test Close with Escape key
+    // 6. Test Close with Escape key
     await page.keyboard.press('Escape');
-    await page.waitForTimeout(300);
+    await expect(dialog).not.toBeVisible();
 
     // Assert modal is closed and scroll locks removed
-    await expect(dialog).not.toBeVisible();
     const isClosed = await page.evaluate(() => ({
       bodyClosed: !document.body.classList.contains('lightbox-open'),
       htmlClosed: !document.documentElement.classList.contains('lightbox-open'),
@@ -57,97 +59,185 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
     expect(isClosed.bodyClosed).toBe(true);
     expect(isClosed.htmlClosed).toBe(true);
 
-    // Verify header is restored
+    // 7. Verify header is restored and focus returned to the trigger button
     await expect(header).toBeVisible();
+    await expect(firstCard).toBeFocused();
   });
 
-  test('maximizes photo size and eliminates scrollbars on desktop and iPad viewports', async ({ page }) => {
-    // 1. Test Desktop (1440 x 900)
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(300);
+  test('scroll position survives open and close at 390x844 and 1440x900', async ({ page }) => {
+    const viewports = [
+      { width: 1440, height: 900, name: 'desktop' },
+      { width: 390, height: 844, name: 'mobile' },
+    ];
 
-    const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
-    await firstCard.click();
+    for (const vp of viewports) {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
+      await expect(page.locator('button[aria-haspopup="dialog"]').first()).toBeVisible({ timeout: 10000 });
+
+      // Scroll to Y=1500
+      await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = 'auto';
+        window.scrollTo(0, 1500);
+      });
+      await page.waitForFunction(() => Math.abs(window.scrollY - 1500) <= 2, { timeout: 10000 });
+
+      const beforeScrollY = await page.evaluate(() => window.scrollY);
+      expect(Math.abs(beforeScrollY - 1500)).toBeLessThanOrEqual(5);
+
+      // Open a photo trigger visible within current viewport without triggering Playwright auto-scroll
+      const clicked = await page.evaluate(() => {
+        const buttons = Array.from(document.querySelectorAll('button[aria-haspopup="dialog"]'));
+        const btn =
+          buttons.find((b) => {
+            const r = b.getBoundingClientRect();
+            return r.bottom > 50 && r.top < window.innerHeight - 50;
+          }) || buttons[0];
+        if (btn) {
+          btn.click();
+          return true;
+        }
+        return false;
+      });
+      expect(clicked).toBe(true);
+
+      const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+      await expect(dialog).toBeVisible({ timeout: 10000 });
+
+      // Close modal using Escape
+      await page.keyboard.press('Escape');
+      await expect(dialog).not.toBeVisible();
+
+      // Verify window.scrollY survived within 2px
+      const afterScrollY = await page.evaluate(() => window.scrollY);
+      expect(Math.abs(afterScrollY - beforeScrollY)).toBeLessThanOrEqual(2);
+
+      // Verify html does not have residual height: 100% !important
+      const htmlInlineHeight = await page.evaluate(() => document.documentElement.style.height);
+      expect(htmlInlineHeight).toBe('');
+    }
+  });
+
+  test('renders visible picture utilizing >= 85% of limiting dimension across 4:5 poster, landscape, and square', async ({ page }, testInfo) => {
+    const testCases = [
+      {
+        type: '4:5 Poster',
+        buttonName: /Club Inauguration Day/i,
+      },
+      {
+        type: 'Landscape',
+        buttonName: /Faculty coordinators/i,
+      },
+      {
+        type: 'Square',
+        buttonName: /National Mathematics Day/i,
+      },
+    ];
+
+    const viewports = [
+      { width: 1440, height: 900, name: 'desktop' },
+      { width: 1024, height: 768, name: 'ipad' },
+      { width: 390, height: 844, name: 'mobile' },
+    ];
+
+    for (const tc of testCases) {
+      for (const vp of viewports) {
+        await page.setViewportSize({ width: vp.width, height: vp.height });
+        await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+
+        const trigger = page.getByRole('button', { name: tc.buttonName });
+        await expect(trigger).toBeVisible({ timeout: 10000 });
+        await trigger.click();
+
+        const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+        await expect(dialog).toBeVisible({ timeout: 10000 });
+
+        const img = dialog.locator('img');
+        await expect(img).toBeVisible();
+
+        // Wait for image to fully load
+        await img.evaluate(
+          (node) =>
+            new Promise((resolve) => {
+              if (node.complete && node.naturalWidth > 0) resolve(true);
+              else node.onload = () => resolve(true);
+            })
+        );
+
+        // Compute visible picture dimensions via object-fit containment
+        const metrics = await img.evaluate((node) => {
+          const rect = node.getBoundingClientRect();
+          return {
+            naturalWidth: node.naturalWidth,
+            naturalHeight: node.naturalHeight,
+            boxWidth: rect.width,
+            boxHeight: rect.height,
+          };
+        });
+
+        expect(metrics.naturalWidth).toBeGreaterThan(0);
+        expect(metrics.naturalHeight).toBeGreaterThan(0);
+
+        const scale = Math.min(
+          metrics.boxWidth / metrics.naturalWidth,
+          metrics.boxHeight / metrics.naturalHeight
+        );
+        const renderedWidth = metrics.naturalWidth * scale;
+        const renderedHeight = metrics.naturalHeight * scale;
+
+        // Limiting dimension utilization against viewport
+        const utilW = renderedWidth / vp.width;
+        const utilH = renderedHeight / vp.height;
+        const maxUtilization = Math.max(utilW, utilH);
+
+        // Must utilize at least 85% of limiting side
+        expect(maxUtilization).toBeGreaterThanOrEqual(0.85);
+
+        // Capture artifact evidence screenshot to Playwright test output
+        await page.screenshot({
+          path: testInfo.outputPath(`${tc.type.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${vp.name}.png`),
+        });
+
+        // Close modal
+        await page.keyboard.press('Escape');
+        await expect(dialog).not.toBeVisible();
+      }
+    }
+  });
+
+  test('differentiates drag gesture from tap action', async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+
+    const trigger = page.getByRole('button', { name: /View photo:/i }).first();
+    await trigger.click();
 
     const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
     await expect(dialog).toBeVisible({ timeout: 10000 });
 
-    const desktopImg = dialog.locator('img');
-    await expect(desktopImg).toBeVisible();
-    const desktopBox = await desktopImg.boundingBox();
-    expect(desktopBox).toBeTruthy();
-    // In 900px high viewport, photo should utilize at least 80% height (>= 720px)
-    expect(desktopBox.height).toBeGreaterThanOrEqual(720);
+    const img = dialog.locator('img');
+    await expect(img).toBeVisible();
 
-    // Verify root html & body overflow is hidden (no scrollbar)
-    const desktopOverflow = await page.evaluate(() => ({
-      htmlOverflow: window.getComputedStyle(document.documentElement).overflow,
-      bodyOverflow: window.getComputedStyle(document.body).overflow,
-    }));
-    expect(desktopOverflow.htmlOverflow).toBe('hidden');
-    expect(desktopOverflow.bodyOverflow).toBe('hidden');
+    // Perform a drag > 8px on the image (drag from x=500 to x=480, delta 20px)
+    await page.mouse.move(500, 400);
+    await page.mouse.down();
+    await page.mouse.move(480, 400, { steps: 5 });
+    await page.mouse.up();
 
-    // Take screenshot of Desktop view for artifact verification
-    await page.screenshot({
-      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/desktop-lightbox-verified.png',
-    });
+    // The modal should remain open (drag did not trigger background close)
+    await expect(dialog).toBeVisible();
 
-    await page.keyboard.press('Escape');
-    await expect(dialog).not.toBeVisible();
+    // Now perform a clean tap on the image without dragging
+    const closeBtn = dialog.locator('button[aria-label="Close image viewer"]');
+    await expect(closeBtn).toBeVisible();
+    await img.click(); // tap toggles controls off
+    await expect(closeBtn).not.toBeVisible();
 
-    // 2. Test iPad Landscape (1024 x 768)
-    await page.setViewportSize({ width: 1024, height: 768 });
-    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(300);
+    await img.click(); // tap toggles controls back on
+    await expect(closeBtn).toBeVisible();
 
-    const ipadCard = page.getByRole('button', { name: /View photo:/i }).first();
-    await ipadCard.click();
-    await expect(dialog).toBeVisible({ timeout: 10000 });
-
-    const ipadImg = dialog.locator('img');
-    await expect(ipadImg).toBeVisible();
-    const ipadBox = await ipadImg.boundingBox();
-    expect(ipadBox).toBeTruthy();
-    // In 768px high viewport, photo should utilize at least 80% height (>= 614px)
-    expect(ipadBox.height).toBeGreaterThanOrEqual(614);
-
-    const ipadOverflow = await page.evaluate(() => ({
-      htmlOverflow: window.getComputedStyle(document.documentElement).overflow,
-      bodyOverflow: window.getComputedStyle(document.body).overflow,
-    }));
-    expect(ipadOverflow.htmlOverflow).toBe('hidden');
-    expect(ipadOverflow.bodyOverflow).toBe('hidden');
-
-    // Take screenshot of iPad view for artifact verification
-    await page.screenshot({
-      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/ipad-lightbox-verified.png',
-    });
-
-    await page.keyboard.press('Escape');
-    await expect(dialog).not.toBeVisible();
-
-    // 3. Test iPhone Portrait (390 x 844)
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(300);
-
-    const iphoneCard = page.getByRole('button', { name: /View photo:/i }).first();
-    await iphoneCard.click();
-    await expect(dialog).toBeVisible({ timeout: 10000 });
-
-    const iphoneImg = dialog.locator('img');
-    await expect(iphoneImg).toBeVisible();
-    const iphoneBox = await iphoneImg.boundingBox();
-    expect(iphoneBox).toBeTruthy();
-    // In iPhone viewport, photo should utilize at least 90% width (>= 350px) and substantial height (>= 700px)
-    expect(iphoneBox.width).toBeGreaterThanOrEqual(350);
-    expect(iphoneBox.height).toBeGreaterThanOrEqual(700);
-
-    await page.screenshot({
-      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/iphone-lightbox-verified.png',
-    });
-
+    // Close on Escape
     await page.keyboard.press('Escape');
     await expect(dialog).not.toBeVisible();
   });

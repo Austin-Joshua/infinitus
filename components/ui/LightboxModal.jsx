@@ -8,17 +8,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 /**
  * Reusable, Portal-mounted Fullscreen Immersive Lightbox Modal.
  *
- * Built for a native-app-quality experience across:
- * - iPhone (all notches, Dynamic Island, Home indicator bar)
- * - Android phones & foldables
- * - iPads & Android tablets
- * - Laptops & Desktops
- *
- * Guarantees:
- * - Direct portal mount to document.body.
- * - Entire screen covered with 100vw x 100vh solid black (#000000).
- * - When open, body.lightbox-open hides main, header, footer, and nav completely.
- * - Fluid swipe navigation, keyboard support (Escape, Left/Right), and tap-to-toggle UI.
+ * Implements:
+ * - Contained picture calculation with precise aspect-ratio wrapper hugging corners and shadow.
+ * - Scroll position preservation on open and restoration on close.
+ * - Focus return to thumbnail trigger upon closing.
+ * - Tap vs. drag distinction (> 8px threshold ignores tap toggles/closes).
+ * - Caption overlay clearance: reserves top padding when controls are visible so posters are never obscured.
+ * - Single viewport height rule via .lightbox-dialog.
  */
 export default function LightboxModal({
   photos = [],
@@ -30,11 +26,15 @@ export default function LightboxModal({
   const [internalIndex, setInternalIndex] = useState(index ?? 0);
   const [showUi, setShowUi] = useState(true);
   const [direction, setDirection] = useState(1);
-  const dialogRef = useRef(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [loadedDim, setLoadedDim] = useState(null);
 
-  // Swipe gesture tracking
-  const pointerStartX = useRef(null);
-  const pointerStartY = useRef(null);
+  const dialogRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  // Swipe & pointer drag gesture tracking
+  const pointerStart = useRef({ x: 0, y: 0 });
+  const hasDragged = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -52,6 +52,11 @@ export default function LightboxModal({
     }
   }, [index]);
 
+  // Reset loaded dimensions on slide change
+  useEffect(() => {
+    setLoadedDim(null);
+  }, [current?.src]);
+
   const step = useCallback(
     (delta) => {
       if (photos.length <= 1) return;
@@ -63,9 +68,12 @@ export default function LightboxModal({
     [currentIndex, photos.length, onIndexChange]
   );
 
-  // HTML & Body scroll lockdown & full-bleed page isolation
+  // Preserve scroll position, lock body scrolling, trap focus, and restore focus/scroll on close
   useEffect(() => {
     if (!open) return undefined;
+
+    const savedScrollY = window.scrollY;
+    const triggerEl = document.activeElement;
 
     const prevBodyOverflow = document.body.style.overflow;
     const prevHtmlOverflow = document.documentElement.style.overflow;
@@ -114,20 +122,53 @@ export default function LightboxModal({
       document.documentElement.style.overflow = prevHtmlOverflow;
       document.body.classList.remove('lightbox-open');
       document.documentElement.classList.remove('lightbox-open');
+      window.scrollTo({ top: savedScrollY, behavior: 'instant' });
+      if (triggerEl && typeof triggerEl.focus === 'function') {
+        triggerEl.focus({ preventScroll: true });
+      }
     };
   }, [open, onClose, step]);
 
-  // Universal pointer & touch swipe handler
+  // Track canvas size with ResizeObserver for exact aspect-ratio box containment
+  useEffect(() => {
+    if (!open || !canvasRef.current) return;
+    const updateSize = () => {
+      if (canvasRef.current) {
+        setCanvasSize({
+          width: canvasRef.current.clientWidth,
+          height: canvasRef.current.clientHeight,
+        });
+      }
+    };
+    updateSize();
+    const ro = new ResizeObserver(updateSize);
+    ro.observe(canvasRef.current);
+    window.addEventListener('resize', updateSize);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateSize);
+    };
+  }, [open, showUi]);
+
+  // Pointer drag & swipe tracking
   const handlePointerDown = (e) => {
-    pointerStartX.current = e.clientX;
-    pointerStartY.current = e.clientY;
+    pointerStart.current = { x: e.clientX, y: e.clientY };
+    hasDragged.current = false;
+  };
+
+  const handlePointerMove = (e) => {
+    if (hasDragged.current) return;
+    const dx = e.clientX - pointerStart.current.x;
+    const dy = e.clientY - pointerStart.current.y;
+    if (Math.hypot(dx, dy) > 8) {
+      hasDragged.current = true;
+    }
   };
 
   const handlePointerUp = (e) => {
-    if (pointerStartX.current === null) return;
-    const diffX = pointerStartX.current - e.clientX;
-    const diffY = pointerStartY.current !== null ? Math.abs(pointerStartY.current - e.clientY) : 0;
-    // Register swipe if movement is predominantly horizontal and > 35px
+    const diffX = pointerStart.current.x - e.clientX;
+    const diffY = Math.abs(pointerStart.current.y - e.clientY);
+    // Register swipe if predominantly horizontal and movement > 35px
     if (Math.abs(diffX) > 35 && Math.abs(diffX) > diffY) {
       if (diffX > 0) {
         step(1);
@@ -135,12 +176,42 @@ export default function LightboxModal({
         step(-1);
       }
     }
-    pointerStartX.current = null;
-    pointerStartY.current = null;
+    // Release drag flag after any immediate click event suppresses
+    setTimeout(() => {
+      hasDragged.current = false;
+    }, 50);
   };
 
   if (!mounted || typeof document === 'undefined') {
     return null;
+  }
+
+  // Compute contained photo wrapper dimensions
+  const photoWidth = current?.width || loadedDim?.width;
+  const photoHeight = current?.height || loadedDim?.height;
+  const hasKnownDims = Boolean(photoWidth && photoHeight);
+
+  let wrapperStyle = undefined;
+  if (hasKnownDims && canvasSize.width > 0 && canvasSize.height > 0) {
+    const photoAspect = photoWidth / photoHeight;
+    const canvasAspect = canvasSize.width / canvasSize.height;
+    let w, h;
+    if (canvasAspect > photoAspect) {
+      // Height is limiting
+      h = canvasSize.height;
+      w = Math.round(h * photoAspect);
+    } else {
+      // Width is limiting
+      w = canvasSize.width;
+      h = Math.round(w / photoAspect);
+    }
+    wrapperStyle = {
+      width: `${w}px`,
+      height: `${h}px`,
+      maxWidth: '100%',
+      maxHeight: '100%',
+      aspectRatio: `${photoWidth} / ${photoHeight}`,
+    };
   }
 
   const modalContent = (
@@ -151,22 +222,28 @@ export default function LightboxModal({
           role="dialog"
           aria-modal="true"
           aria-label={current.caption || 'Image viewer'}
-          className="fixed inset-0 top-0 left-0 right-0 bottom-0 z-[999999] h-screen h-[100dvh] w-screen w-full bg-black select-none overflow-hidden touch-none"
+          className="fixed inset-0 z-[999999] bg-black select-none overflow-hidden touch-none lightbox-dialog"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          onClick={onClose}
           onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          onClick={(e) => {
+            if (hasDragged.current) return;
+            if (e.target === e.currentTarget) {
+              onClose?.();
+            }
+          }}
         >
-          {/* Top Bar with Description, Counter & Close Button (Overlaid at top with dark gradient, safe-area padded) */}
+          {/* Top Bar with Caption, Counter & Close Button */}
           <div
-            className={`absolute top-0 inset-x-0 z-40 flex items-start justify-between px-4 sm:px-6 pt-3 pb-12 sm:pb-16 bg-gradient-to-b from-black/90 via-black/55 to-transparent transition-all duration-300 pointer-events-none ${
-              showUi ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+            className={`absolute top-0 inset-x-0 z-40 flex items-start justify-between px-4 sm:px-6 pt-3 pb-8 sm:pb-12 bg-gradient-to-b from-black/90 via-black/50 to-transparent transition-all duration-300 ${
+              showUi ? 'opacity-100 translate-y-0 visible pointer-events-auto' : 'opacity-0 -translate-y-4 invisible pointer-events-none'
             }`}
             style={{
-              paddingTop: 'max(1rem, env(safe-area-inset-top, 1rem))',
+              paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0.75rem))',
             }}
           >
             <div className="flex flex-col min-w-0 pr-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
@@ -187,7 +264,7 @@ export default function LightboxModal({
               </div>
             </div>
 
-            {/* Native-style Frosted Close Button */}
+            {/* Frosted Close Button */}
             <button
               type="button"
               autoFocus
@@ -204,7 +281,7 @@ export default function LightboxModal({
             </button>
           </div>
 
-          {/* Floating Left Arrow Button on Screen Edge (if more than 1 image) */}
+          {/* Floating Left Arrow Button */}
           {photos.length > 1 && (
             <button
               type="button"
@@ -213,7 +290,7 @@ export default function LightboxModal({
                 step(-1);
               }}
               className={`absolute left-3 sm:left-5 md:left-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/85 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                showUi ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-90 pointer-events-none'
+                showUi ? 'opacity-100 scale-100 visible pointer-events-auto' : 'opacity-0 scale-90 invisible pointer-events-none'
               }`}
               aria-label="Previous image"
             >
@@ -223,7 +300,7 @@ export default function LightboxModal({
             </button>
           )}
 
-          {/* Floating Right Arrow Button on Screen Edge (if more than 1 image) */}
+          {/* Floating Right Arrow Button */}
           {photos.length > 1 && (
             <button
               type="button"
@@ -232,7 +309,7 @@ export default function LightboxModal({
                 step(1);
               }}
               className={`absolute right-3 sm:right-5 md:right-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/85 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                showUi ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-90 pointer-events-none'
+                showUi ? 'opacity-100 scale-100 visible pointer-events-auto' : 'opacity-0 scale-90 invisible pointer-events-none'
               }`}
               aria-label="Next image"
             >
@@ -242,15 +319,22 @@ export default function LightboxModal({
             </button>
           )}
 
-          {/* Main Photo Canvas: Fullscreen centered, maximizes space utilization across Desktop, iPad, and Mobile */}
+          {/* Main Photo Canvas: Option (b) reserves top padding when UI is shown so caption never covers poster */}
           <div
-            className="w-full h-full flex items-center justify-center p-1 sm:p-3 md:p-6 overflow-hidden"
+            ref={canvasRef}
+            className="w-full h-full flex items-center justify-center overflow-hidden transition-all duration-200"
             style={{
-              paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0.5rem))',
-              paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0.5rem))',
+              paddingTop: showUi
+                ? 'max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.75rem))'
+                : 'max(0.75rem, env(safe-area-inset-top, 0.75rem))',
+              paddingBottom: showUi
+                ? 'max(1.25rem, env(safe-area-inset-bottom, 1.25rem))'
+                : 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))',
+              paddingLeft: showUi ? '1rem' : '0.5rem',
+              paddingRight: showUi ? '1rem' : '0.5rem',
             }}
             onClick={(e) => {
-              // Clicking on background outside image closes lightbox
+              if (hasDragged.current) return;
               if (e.target === e.currentTarget) {
                 onClose?.();
               }
@@ -264,10 +348,15 @@ export default function LightboxModal({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full h-full max-w-[99vw] sm:max-w-[96vw] lg:max-w-[94vw] max-h-[92vh] max-h-[92dvh] sm:max-h-[94vh] sm:max-h-[94dvh] lg:max-h-[96vh] flex items-center justify-center"
+                style={wrapperStyle}
+                className={
+                  hasKnownDims
+                    ? 'relative rounded-2xl shadow-2xl overflow-hidden cursor-pointer select-none'
+                    : 'relative w-full h-full max-w-full max-h-full flex items-center justify-center cursor-pointer select-none'
+                }
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Clicking the image toggles the UI (description and arrow buttons)
+                  if (hasDragged.current) return;
                   setShowUi((s) => !s);
                 }}
               >
@@ -275,10 +364,16 @@ export default function LightboxModal({
                   src={current.src}
                   alt={current.alt || current.caption}
                   fill
-                  sizes="(min-width: 1536px) 1400px, (min-width: 1024px) 96vw, 100vw"
+                  sizes="(min-width: 1280px) 90vw, (min-width: 768px) 94vw, 98vw"
                   priority
                   unoptimized={current.src.startsWith('http')}
-                  className="object-contain rounded-lg sm:rounded-xl shadow-2xl cursor-pointer select-none"
+                  onLoad={(e) => {
+                    const img = e.target;
+                    if (img && img.naturalWidth && img.naturalHeight) {
+                      setLoadedDim({ width: img.naturalWidth, height: img.naturalHeight });
+                    }
+                  }}
+                  className={hasKnownDims ? 'object-cover select-none' : 'object-contain select-none'}
                 />
               </motion.div>
             </AnimatePresence>

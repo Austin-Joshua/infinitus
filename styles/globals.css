@@ -316,38 +316,39 @@ body {
   }
 }
 
-/* Fullscreen Lightbox Lockdown: guarantees complete disappearance of headers, navbars, main content, and all window scrollbars */
-html.lightbox-open,
-body.lightbox-open {
-  overflow: hidden !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  overscroll-behavior: none !important;
-  touch-action: none !important;
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE 10+ / Edge */
+/* Lightbox modal dialog container: sized with viewport fallback first, dvh second */
+.lightbox-dialog {
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
 }
 
+/* Fullscreen Lightbox Lockdown: guarantees complete disappearance of headers, navbars, main content, and window scrollbars */
+html.lightbox-open,
+body.lightbox-open {
+  /* Disables background page scroll when lightbox modal is mounted */
+  overflow: hidden !important;
+  /* Prevents iOS Safari pull-to-refresh and rubber-banding during modal view */
+  overscroll-behavior: none !important;
+  /* Prevents gesture propagation to underlying document body */
+  touch-action: none !important;
+  /* Removes scrollbar track on Firefox without layout shift */
+  scrollbar-width: none !important;
+}
+
+/* Suppresses WebKit scrollbar track while modal is active */
 html.lightbox-open::-webkit-scrollbar,
 body.lightbox-open::-webkit-scrollbar {
   display: none !important;
-  width: 0 !important;
-  height: 0 !important;
 }
 
+/* Completely hides page chrome, header, and navigations to prevent visual bleed through modal without collapsing page height */
 body.lightbox-open [data-site-header],
 body.lightbox-open [data-mobile-nav],
 body.lightbox-open [data-scroll-progress],
 body.lightbox-open header,
-body.lightbox-open nav[aria-label="Mobile Navigation"] {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
+body.lightbox-open nav[aria-label="Mobile Navigation"],
 body.lightbox-open main,
 body.lightbox-open footer {
   visibility: hidden !important;
-  pointer-events: none !important;
 }
