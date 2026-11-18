@@ -13,6 +13,16 @@ import { NextResponse } from 'next/server';
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  // 0. Test Route Protection: /test-error is strictly gated to E2E environments
+  if (pathname === '/test-error' && process.env.E2E !== '1') {
+    return new NextResponse(null, {
+      status: 404,
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow',
+      },
+    });
+  }
+
   // 1. API Route Protection
   if (pathname.startsWith('/api/')) {
     const method = request.method.toUpperCase();

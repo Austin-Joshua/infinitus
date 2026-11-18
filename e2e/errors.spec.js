@@ -110,4 +110,41 @@ test.describe('Error Handling & 404 Safeguards', () => {
     expect(reportedData.route).toBe('/test-error');
     expect(reportedData.kind).toBe('route');
   });
+
+  test('/test-error returns 404 in standard production mode when E2E flag is unset', async () => {
+    const { spawn } = await import('node:child_process');
+    const port = 3012;
+    const env = { ...process.env };
+    delete env.E2E;
+    delete env.NEXT_PUBLIC_E2E;
+
+    const server = spawn('cmd.exe', ['/c', 'npx', 'next', 'start', '-p', String(port)], {
+      cwd: process.cwd(),
+      env,
+      stdio: 'ignore',
+    });
+
+    try {
+      // Poll until server is ready
+      const start = Date.now();
+      let ready = false;
+      while (Date.now() - start < 20000) {
+        try {
+          const check = await fetch(`http://localhost:${port}/robots.txt`);
+          if (check.ok) {
+            ready = true;
+            break;
+          }
+        } catch {
+          await new Promise((r) => setTimeout(r, 400));
+        }
+      }
+      expect(ready).toBe(true);
+
+      const res = await fetch(`http://localhost:${port}/test-error`);
+      expect(res.status).toBe(404);
+    } finally {
+      spawn('cmd.exe', ['/c', 'taskkill', '/F', '/T', '/PID', server.pid.toString()]);
+    }
+  });
 });

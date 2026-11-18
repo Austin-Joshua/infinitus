@@ -30,7 +30,6 @@ export default defineConfig({
     timeout: 60000,
     env: {
       E2E: '1',
-      NEXT_PUBLIC_E2E: '1',
     },
   },
 });
