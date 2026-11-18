@@ -316,10 +316,23 @@ body {
   }
 }
 
-/* Fullscreen Lightbox Lockdown: guarantees complete disappearance of headers, navbars, main content, and background scrolls */
+/* Fullscreen Lightbox Lockdown: guarantees complete disappearance of headers, navbars, main content, and all window scrollbars */
+html.lightbox-open,
 body.lightbox-open {
   overflow: hidden !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overscroll-behavior: none !important;
   touch-action: none !important;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE 10+ / Edge */
+}
+
+html.lightbox-open::-webkit-scrollbar,
+body.lightbox-open::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 body.lightbox-open [data-site-header],

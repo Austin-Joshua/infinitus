@@ -63,13 +63,16 @@ export default function LightboxModal({
     [currentIndex, photos.length, onIndexChange]
   );
 
-  // Body scroll lockdown & full-bleed page isolation
+  // HTML & Body scroll lockdown & full-bleed page isolation
   useEffect(() => {
     if (!open) return undefined;
 
-    const prevOverflow = document.body.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     document.body.classList.add('lightbox-open');
+    document.documentElement.classList.add('lightbox-open');
 
     const onKey = (event) => {
       if (event.key === 'Escape') {
@@ -107,8 +110,10 @@ export default function LightboxModal({
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
       document.body.classList.remove('lightbox-open');
+      document.documentElement.classList.remove('lightbox-open');
     };
   }, [open, onClose, step]);
 
@@ -146,7 +151,7 @@ export default function LightboxModal({
           role="dialog"
           aria-modal="true"
           aria-label={current.caption || 'Image viewer'}
-          className="fixed inset-0 top-0 left-0 right-0 bottom-0 z-[999999] h-screen h-[100dvh] w-screen w-full bg-black select-none overflow-hidden touch-none flex flex-col justify-between"
+          className="fixed inset-0 top-0 left-0 right-0 bottom-0 z-[999999] h-screen h-[100dvh] w-screen w-full bg-black select-none overflow-hidden touch-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -155,21 +160,20 @@ export default function LightboxModal({
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
         >
-          {/* Top Bar with Description, Counter & Close Button (Safe-area padded for iPhone Notch / Dynamic Island) */}
+          {/* Top Bar with Description, Counter & Close Button (Overlaid at top with dark gradient, safe-area padded) */}
           <div
-            className={`relative w-full z-40 flex items-start justify-between px-4 pb-6 sm:px-6 sm:pb-8 bg-gradient-to-b from-black/95 via-black/80 to-transparent transition-all duration-300 ${
-              showUi ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+            className={`absolute top-0 inset-x-0 z-40 flex items-start justify-between px-4 sm:px-6 pt-3 pb-12 sm:pb-16 bg-gradient-to-b from-black/90 via-black/55 to-transparent transition-all duration-300 pointer-events-none ${
+              showUi ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
             }`}
             style={{
-              paddingTop: 'max(2.5rem, env(safe-area-inset-top, 2.5rem))',
+              paddingTop: 'max(1rem, env(safe-area-inset-top, 1rem))',
             }}
-            onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex flex-col min-w-0 pr-3">
-              <h2 className="line-clamp-2 text-sm sm:text-lg font-bold text-white drop-shadow-md leading-tight">
+            <div className="flex flex-col min-w-0 pr-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+              <h2 className="line-clamp-2 text-sm sm:text-base md:text-lg font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight">
                 {current.caption}
               </h2>
-              <div className="mt-1 flex items-center flex-wrap gap-x-2 text-xs font-mono text-white/80 drop-shadow-sm">
+              <div className="mt-1 flex items-center flex-wrap gap-x-2 text-xs font-mono text-white/85 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
                 {current.date && <span>{current.date}</span>}
                 {photos.length > 1 && (
                   <span>
@@ -177,7 +181,7 @@ export default function LightboxModal({
                     {currentIndex + 1} of {photos.length}
                   </span>
                 )}
-                <span className="text-white/55 text-[11px] hidden xs:inline">
+                <span className="text-white/60 text-[11px] hidden xs:inline">
                   · Tap image to {showUi ? 'hide' : 'show'} controls
                 </span>
               </div>
@@ -187,8 +191,11 @@ export default function LightboxModal({
             <button
               type="button"
               autoFocus
-              onClick={onClose}
-              className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/15 text-white shadow-xl backdrop-blur-md transition-all duration-200 active:scale-95 hover:bg-white/25 hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose?.();
+              }}
+              className="pointer-events-auto flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white shadow-xl backdrop-blur-md transition-all duration-200 active:scale-95 hover:bg-white/20 hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
               aria-label="Close image viewer"
             >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5">
@@ -197,7 +204,7 @@ export default function LightboxModal({
             </button>
           </div>
 
-          {/* Floating Left Arrow Icon on Screen Edge (if more than 1 image) */}
+          {/* Floating Left Arrow Button on Screen Edge (if more than 1 image) */}
           {photos.length > 1 && (
             <button
               type="button"
@@ -205,8 +212,8 @@ export default function LightboxModal({
                 e.stopPropagation();
                 step(-1);
               }}
-              className={`absolute left-2.5 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+              className={`absolute left-3 sm:left-5 md:left-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/85 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                showUi ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-90 pointer-events-none'
               }`}
               aria-label="Previous image"
             >
@@ -216,7 +223,7 @@ export default function LightboxModal({
             </button>
           )}
 
-          {/* Floating Right Arrow Icon on Screen Edge (if more than 1 image) */}
+          {/* Floating Right Arrow Button on Screen Edge (if more than 1 image) */}
           {photos.length > 1 && (
             <button
               type="button"
@@ -224,8 +231,8 @@ export default function LightboxModal({
                 e.stopPropagation();
                 step(1);
               }}
-              className={`absolute right-2.5 sm:right-4 md:right-6 lg:left-auto lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/65 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-90 active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                showUi ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+              className={`absolute right-3 sm:right-5 md:right-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/85 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                showUi ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-90 pointer-events-none'
               }`}
               aria-label="Next image"
             >
@@ -235,11 +242,12 @@ export default function LightboxModal({
             </button>
           )}
 
-          {/* Main Photo / Poster Container (Maximizes available viewport height & width) */}
+          {/* Main Photo Canvas: Fullscreen centered, maximizes space utilization across Desktop, iPad, and Mobile */}
           <div
-            className="flex-1 relative flex items-center justify-center w-full px-2 sm:px-6 overflow-hidden"
+            className="w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-6"
             style={{
-              paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
+              paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0.75rem))',
+              paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))',
             }}
             onClick={(e) => {
               // Clicking on background outside image closes lightbox
@@ -252,11 +260,11 @@ export default function LightboxModal({
               <motion.div
                 key={current.src}
                 custom={direction}
-                initial={{ opacity: 0, scale: 0.97 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex items-center justify-center max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw]"
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                className="relative flex items-center justify-center max-w-full max-h-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   // Clicking the image toggles the UI (description and arrow buttons)
@@ -268,10 +276,10 @@ export default function LightboxModal({
                   alt={current.alt || current.caption}
                   width={current.width || 1200}
                   height={current.height || 1500}
-                  sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 98vw"
+                  sizes="(min-width: 1536px) 1400px, (min-width: 1024px) 96vw, (min-width: 768px) 96vw, 100vw"
                   priority
                   unoptimized={current.src.startsWith('http')}
-                  className="max-h-[80vh] sm:max-h-[85vh] max-w-[96vw] sm:max-w-[88vw] w-auto h-auto rounded-xl sm:rounded-2xl object-contain shadow-2xl cursor-pointer select-none"
+                  className="max-h-[92vh] sm:max-h-[94vh] lg:max-h-[96vh] max-w-[98vw] sm:max-w-[96vw] lg:max-w-[94vw] w-auto h-auto rounded-lg sm:rounded-xl object-contain shadow-2xl cursor-pointer select-none"
                 />
               </motion.div>
             </AnimatePresence>
