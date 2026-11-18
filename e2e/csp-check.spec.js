@@ -1,6 +1,17 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Content Security Policy & Console Integrity', () => {
+  test.beforeEach(async ({ page }) => {
+    // Intercept local /_vercel/* analytics requests so dev/test runs cleanly without shipping stubs
+    await page.route('**/_vercel/**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/javascript',
+        body: '/* mock local analytics */',
+      })
+    );
+  });
+
   const routes = [
     '/',
     '/about',

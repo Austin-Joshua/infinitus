@@ -33,14 +33,16 @@ This document provides operational guidelines, deployment procedures, monitoring
 ## 3. Monitoring & Telemetry
 
 ### 3.1 Vercel Web Analytics
-- **Package:** `@vercel/analytics`
+- **Package:** `@vercel/analytics` (pinned to `2.0.1`)
 - **Component:** `<Analytics />` embedded in `app/layout.jsx`.
+- **How to Enable:** In the Vercel project dashboard, navigate to **Settings** -> **Analytics** and toggle **Enable Web Analytics**. No code modification or redeployment is required; Vercel automatically injects the production collector script.
 - **Metrics Collected:** Page views, unique visitors, top referrers, device distributions, and geographic traffic without invasive third-party tracking cookies.
 - **Dashboard:** Available in the Vercel project console under the **Analytics** tab.
 
 ### 3.2 Vercel Speed Insights (Real-User Web Vitals)
-- **Package:** `@vercel/speed-insights`
+- **Package:** `@vercel/speed-insights` (pinned to `2.1.0`)
 - **Component:** `<SpeedInsights />` embedded in `app/layout.jsx`.
+- **How to Enable:** In the Vercel project dashboard, navigate to **Settings** -> **Speed Insights** and toggle **Enable Speed Insights**. No code modification or redeployment is required.
 - **Metrics Collected:** Core Web Vitals (Largest Contentful Paint `LCP`, Interaction to Next Paint `INP`, Cumulative Layout Shift `CLS`, and Time to First Byte `TTFB`).
 - **Dashboard:** Available in the Vercel project console under the **Speed Insights** tab.
 
