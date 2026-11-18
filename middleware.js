@@ -70,13 +70,13 @@ export function middleware(request) {
     : '*.supabase.co';
 
   // Strict CSP:
-  // - script-src: 'self' 'nonce-<n>' 'strict-dynamic' (no unsafe-eval in prod, no unsafe-inline)
+  // - script-src: 'self' 'nonce-<n>' 'strict-dynamic' 'sha256-Fr2wwH+Yw6Z62OVfoXDtbcTQSKXxXeqqXFIsyMDgdFM=' (theme initScript hash)
   // - style-src: 'self' 'unsafe-inline' (documented in SECURITY.md for Tailwind & Framer Motion)
   // - img-src: 'self' blob: data: https://${supabaseHost} (unsplash removed)
   // - connect-src: 'self' https://${supabaseHost}
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ''};
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'sha256-Fr2wwH+Yw6Z62OVfoXDtbcTQSKXxXeqqXFIsyMDgdFM=' ${isDev ? "'unsafe-eval'" : ''};
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https://${supabaseHost};
     font-src 'self' data:;
