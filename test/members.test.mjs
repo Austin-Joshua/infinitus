@@ -56,7 +56,7 @@ describe('getMembers', () => {
     const members = await getMembers();
 
     const withPosters = members.filter((m) => m.posterUrl);
-    assert.equal(withPosters.length, 23, 'Exactly 23 core members must have official posters');
+    assert.equal(withPosters.length, 24, 'Exactly 24 core members must have official posters');
 
     for (const m of withPosters) {
       assert.match(m.posterUrl, /^\/team\/posters\/[a-z0-9-]+\.webp$/);

@@ -49,6 +49,39 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
     await expect(austinContainer).toContainText('View poster & role');
   });
 
+  test('verifies Sabari Naathan D card flips and renders official poster', async ({ page }) => {
+    await page.goto('/team', { waitUntil: 'domcontentloaded' });
+
+    // Locate Sabari Naathan D card
+    const sabariContainer = page.locator('.perspective-1000', { hasText: 'Sabari Naathan D' });
+    await expect(sabariContainer).toBeVisible();
+    await expect(sabariContainer).toContainText('View poster & role');
+
+    // Click card to flip
+    await sabariContainer.click();
+
+    // Verify back face has Sabari's poster
+    const backPoster = sabariContainer.locator('img[src="/team/posters/sabari-naathan-d.webp"]');
+    await expect(backPoster).toBeVisible();
+
+    // Open detail modal
+    const fullViewBtn = sabariContainer.locator('button[data-action="details"]');
+    await fullViewBtn.click();
+
+    const dialog = page.locator('div[role="dialog"]');
+    await expect(dialog).toBeVisible();
+
+    // Verify poster in modal
+    const modalPosterImg = dialog.locator('img[src="/team/posters/sabari-naathan-d.webp"]');
+    await expect(modalPosterImg).toBeVisible();
+    await expect(modalPosterImg).toHaveAttribute('alt', 'Sabari Naathan D official poster');
+    await expect(dialog.locator('h3')).toHaveText('Sabari Naathan D');
+    await expect(dialog).toContainText('PRO');
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+  });
+
   test('falls back gracefully to role icon and details for members without poster', async ({ page }) => {
     await page.goto('/team', { waitUntil: 'domcontentloaded' });
 
