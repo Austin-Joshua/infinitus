@@ -126,5 +126,29 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
     await page.keyboard.press('Escape');
     await expect(dialog).not.toBeVisible();
+
+    // 3. Test iPhone Portrait (390 x 844)
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(300);
+
+    const iphoneCard = page.getByRole('button', { name: /View photo:/i }).first();
+    await iphoneCard.click();
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+
+    const iphoneImg = dialog.locator('img');
+    await expect(iphoneImg).toBeVisible();
+    const iphoneBox = await iphoneImg.boundingBox();
+    expect(iphoneBox).toBeTruthy();
+    // In iPhone viewport, photo should utilize at least 90% width (>= 350px) and substantial height (>= 700px)
+    expect(iphoneBox.width).toBeGreaterThanOrEqual(350);
+    expect(iphoneBox.height).toBeGreaterThanOrEqual(700);
+
+    await page.screenshot({
+      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/iphone-lightbox-verified.png',
+    });
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
   });
 });

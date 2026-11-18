@@ -244,10 +244,10 @@ export default function LightboxModal({
 
           {/* Main Photo Canvas: Fullscreen centered, maximizes space utilization across Desktop, iPad, and Mobile */}
           <div
-            className="w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-6"
+            className="w-full h-full flex items-center justify-center p-1 sm:p-3 md:p-6 overflow-hidden"
             style={{
-              paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0.75rem))',
-              paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))',
+              paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0.5rem))',
+              paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0.5rem))',
             }}
             onClick={(e) => {
               // Clicking on background outside image closes lightbox
@@ -264,7 +264,7 @@ export default function LightboxModal({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex items-center justify-center max-w-full max-h-full"
+                className="relative w-full h-full max-w-[99vw] sm:max-w-[96vw] lg:max-w-[94vw] max-h-[92vh] max-h-[92dvh] sm:max-h-[94vh] sm:max-h-[94dvh] lg:max-h-[96vh] flex items-center justify-center"
                 onClick={(e) => {
                   e.stopPropagation();
                   // Clicking the image toggles the UI (description and arrow buttons)
@@ -274,12 +274,11 @@ export default function LightboxModal({
                 <Image
                   src={current.src}
                   alt={current.alt || current.caption}
-                  width={current.width || 1200}
-                  height={current.height || 1500}
-                  sizes="(min-width: 1536px) 1400px, (min-width: 1024px) 96vw, (min-width: 768px) 96vw, 100vw"
+                  fill
+                  sizes="(min-width: 1536px) 1400px, (min-width: 1024px) 96vw, 100vw"
                   priority
                   unoptimized={current.src.startsWith('http')}
-                  className="max-h-[92vh] sm:max-h-[94vh] lg:max-h-[96vh] max-w-[98vw] sm:max-w-[96vw] lg:max-w-[94vw] w-auto h-auto rounded-lg sm:rounded-xl object-contain shadow-2xl cursor-pointer select-none"
+                  className="object-contain rounded-lg sm:rounded-xl shadow-2xl cursor-pointer select-none"
                 />
               </motion.div>
             </AnimatePresence>
