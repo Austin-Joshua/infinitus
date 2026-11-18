@@ -194,7 +194,7 @@ CSS keyframes or SMIL, so GitHub plays it as a plain image.
 
 ## Credits & Contributors
 
-Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with **Austin Joshua M** (President, INFINITUS). See [CONTRIBUTORS.md](CONTRIBUTORS.md).
+Built by **Aakash B K** (Technical Coordinator / Technical Head, INFINITUS) with **Austin Joshua M** (President, INFINITUS). See [CONTRIBUTORS.md](CONTRIBUTORS.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 <table>
 <tr>

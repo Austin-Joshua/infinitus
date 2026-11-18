@@ -35,7 +35,7 @@ The INFINITUS website incorporates the following defensive controls:
 - **Row Level Security (RLS):** All Supabase database tables (`members`, `events`, `event_images`) have Row Level Security enabled. Only active, sanitized records are readable by the public; all write and mutate permissions (`INSERT`, `UPDATE`, `DELETE`) are prohibited for anonymous and authenticated web roles.
 - **Strict Content Security Policy (CSP):** Enforced via edge middleware with dynamic per-request cryptographic nonces (`'nonce-<base64>'` + `'strict-dynamic'`). Both `'unsafe-inline'` and `'unsafe-eval'` are completely eliminated from `script-src` in production. Note: `style-src 'unsafe-inline'` is retained exclusively for critical inline theme variables, Tailwind CSS style injection, and Framer Motion runtime animation transforms. Disallows object embeds, restricts form submissions to official Google Forms, and blocks clickjacking (`frame-ancestors 'none'`).
 - **HTTP Security Headers:**
-  - `Strict-Transport-Security` (HSTS: 2 years, `includeSubDomains`, `preload`)
+  - `Strict-Transport-Security` (HSTS: 2 years, `max-age=63072000`; `includeSubDomains` and `preload` will be re-enabled upon mapping a custom root domain)
   - `X-Content-Type-Options: nosniff`
   - `Referrer-Policy: strict-origin-when-cross-origin`
   - `X-Frame-Options: DENY`

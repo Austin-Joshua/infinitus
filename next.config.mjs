@@ -7,7 +7,10 @@ const supabaseHost = process.env.SUPABASE_URL
 const securityHeaders = [
   {
     key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
+    // While hosted on *.vercel.app, includeSubDomains and preload are removed
+    // because vercel.app is a shared multi-tenant domain.
+    // They can return once a dedicated custom domain (e.g. infinitus.ritchennai.edu.in) is mapped.
+    value: 'max-age=63072000',
   },
   {
     key: 'X-Content-Type-Options',

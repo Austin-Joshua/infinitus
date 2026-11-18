@@ -20,9 +20,8 @@
     "@upstash/ratelimit": "^2.2.1",
     "@upstash/redis": "^1.41.0",
     "framer-motion": "^11",
-    "next": "^15",
-    "react": "^19",
-    "react-dom": "^19"
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
