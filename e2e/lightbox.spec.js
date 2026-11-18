@@ -246,4 +246,136 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
     await page.keyboard.press('Escape');
     await expect(dialog).not.toBeVisible();
   });
+
+  test('lock effect never un-hides or flickers lightbox-open class while navigating slides', async ({ page }) => {
+    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+    const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
+    await expect(firstCard).toBeVisible({ timeout: 10000 });
+    await firstCard.click();
+
+    const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+
+    // Track any transient removals of lightbox-open class from document.body or documentElement
+    await page.evaluate(() => {
+      window.__lightboxOpenRemovals = 0;
+      const origRemove = DOMTokenList.prototype.remove;
+      DOMTokenList.prototype.remove = function (...tokens) {
+        if (tokens.includes('lightbox-open')) {
+          window.__lightboxOpenRemovals++;
+        }
+        return origRemove.apply(this, tokens);
+      };
+    });
+
+    // Navigate 3 slides with ArrowRight
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('ArrowRight');
+      await page.waitForTimeout(80);
+    }
+
+    const removals = await page.evaluate(() => window.__lightboxOpenRemovals);
+    expect(removals).toBe(0);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+  });
+
+  test('focus returns to thumbnail N after navigating across slides (Escape, close button, and backdrop click)', async ({ page }) => {
+    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+
+    const cards = page.getByRole('button', { name: /View photo:/i });
+    const cardN = cards.nth(2); // Thumbnail N (index 2)
+    await expect(cardN).toBeVisible({ timeout: 10000 });
+    const expectedName = (await cardN.getAttribute('aria-label'))?.trim();
+    expect(expectedName).toBeTruthy();
+
+    const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+
+    // Subtest 1: Close via Escape
+    await cardN.click();
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('ArrowRight');
+      await page.waitForTimeout(60);
+    }
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+    const active1 = await page.evaluate(() => document.activeElement?.getAttribute('aria-label')?.trim());
+    expect(active1).toBe(expectedName);
+
+    // Subtest 2: Close via Close button
+    await cardN.click();
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('ArrowRight');
+      await page.waitForTimeout(60);
+    }
+    const closeBtn = dialog.locator('button[aria-label="Close image viewer"]');
+    await expect(closeBtn).toBeVisible();
+    await closeBtn.click();
+    await expect(dialog).not.toBeVisible();
+    const active2 = await page.evaluate(() => document.activeElement?.getAttribute('aria-label')?.trim());
+    expect(active2).toBe(expectedName);
+
+    // Subtest 3: Close via click on black backdrop area
+    await cardN.click();
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('ArrowRight');
+      await page.waitForTimeout(60);
+    }
+    // Click on the backdrop (near top-left edge outside controls and picture)
+    await page.mouse.click(20, 20);
+    await expect(dialog).not.toBeVisible();
+    const active3 = await page.evaluate(() => document.activeElement?.getAttribute('aria-label')?.trim());
+    expect(active3).toBe(expectedName);
+  });
+
+  test('scroll position survives open, navigation, and close at 390x844 and 1440x900', async ({ page }) => {
+    for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+      await page.setViewportSize(vp);
+      await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+
+      await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = 'auto';
+        document.body.style.scrollBehavior = 'auto';
+      });
+
+      await page.evaluate(() => window.scrollTo(0, 1500));
+      await page.waitForFunction(() => Math.abs(window.scrollY - 1500) <= 2);
+
+      // Open a photo trigger visible within current viewport around Y=1500 without Playwright auto-scroll
+      const clicked = await page.evaluate(() => {
+        const buttons = Array.from(document.querySelectorAll('button[aria-haspopup="dialog"]'));
+        const btn =
+          buttons.find((b) => {
+            const r = b.getBoundingClientRect();
+            return r.bottom > 50 && r.top < window.innerHeight - 50;
+          }) || buttons[0];
+        if (btn) {
+          btn.click();
+          return true;
+        }
+        return false;
+      });
+      expect(clicked).toBe(true);
+
+      const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+      await expect(dialog).toBeVisible({ timeout: 10000 });
+
+      // Navigate 3 slides
+      for (let i = 0; i < 3; i++) {
+        await page.keyboard.press('ArrowRight');
+        await page.waitForTimeout(60);
+      }
+
+      await page.keyboard.press('Escape');
+      await expect(dialog).not.toBeVisible();
+
+      // Assert window.scrollY is restored to within 2px of 1500
+      const finalScroll = await page.evaluate(() => window.scrollY);
+      expect(Math.abs(finalScroll - 1500)).toBeLessThanOrEqual(2);
+    }
+  });
 });

@@ -68,11 +68,17 @@ export default function LightboxModal({
     [currentIndex, photos.length, onIndexChange]
   );
 
-  // Preserve scroll position, lock body scrolling, trap focus, and restore focus/scroll on close
+  const stepRef = useRef(step);
+  const onCloseRef = useRef(onClose);
+  stepRef.current = step;
+  onCloseRef.current = onClose;
+
+  // Effect A: Scroll lock, body class, and focus restoration (deps: [open] only)
   useEffect(() => {
     if (!open) return undefined;
 
     const savedScrollY = window.scrollY;
+    // Save the opening element once upon opening
     const triggerEl = document.activeElement;
 
     const prevBodyOverflow = document.body.style.overflow;
@@ -82,17 +88,40 @@ export default function LightboxModal({
     document.body.classList.add('lightbox-open');
     document.documentElement.classList.add('lightbox-open');
 
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.classList.remove('lightbox-open');
+      document.documentElement.classList.remove('lightbox-open');
+      window.scrollTo({ top: savedScrollY, behavior: 'instant' });
+
+      // Focus the saved opening trigger element
+      if (triggerEl && document.contains(triggerEl) && typeof triggerEl.focus === 'function') {
+        triggerEl.focus({ preventScroll: true });
+      } else {
+        const fallback = document.querySelector('[role="region"][aria-label*="Gallery"], main, #main');
+        if (fallback && typeof fallback.focus === 'function') {
+          fallback.focus({ preventScroll: true });
+        }
+      }
+    };
+  }, [open]);
+
+  // Effect B: Keyboard events (Escape, arrow keys, focus trap) (deps: [open] only)
+  useEffect(() => {
+    if (!open) return undefined;
+
     const onKey = (event) => {
       if (event.key === 'Escape') {
-        onClose?.();
+        onCloseRef.current?.();
         return;
       }
       if (event.key === 'ArrowRight') {
-        step(1);
+        stepRef.current?.(1);
         return;
       }
       if (event.key === 'ArrowLeft') {
-        step(-1);
+        stepRef.current?.(-1);
         return;
       }
 
@@ -118,16 +147,8 @@ export default function LightboxModal({
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevBodyOverflow;
-      document.documentElement.style.overflow = prevHtmlOverflow;
-      document.body.classList.remove('lightbox-open');
-      document.documentElement.classList.remove('lightbox-open');
-      window.scrollTo({ top: savedScrollY, behavior: 'instant' });
-      if (triggerEl && typeof triggerEl.focus === 'function') {
-        triggerEl.focus({ preventScroll: true });
-      }
     };
-  }, [open, onClose, step]);
+  }, [open]);
 
   // Track canvas size with ResizeObserver for exact aspect-ratio box containment
   useEffect(() => {
@@ -232,8 +253,10 @@ export default function LightboxModal({
           onPointerUp={handlePointerUp}
           onClick={(e) => {
             if (hasDragged.current) return;
-            if (e.target === e.currentTarget) {
-              onClose?.();
+            const isInsidePicture = e.target.closest('[data-lightbox-picture="true"]');
+            const isInsideControl = e.target.closest('button, a, [role="button"]');
+            if (!isInsidePicture && !isInsideControl) {
+              onCloseRef.current?.();
             }
           }}
         >
@@ -333,16 +356,11 @@ export default function LightboxModal({
               paddingLeft: showUi ? '1rem' : '0.5rem',
               paddingRight: showUi ? '1rem' : '0.5rem',
             }}
-            onClick={(e) => {
-              if (hasDragged.current) return;
-              if (e.target === e.currentTarget) {
-                onClose?.();
-              }
-            }}
           >
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={current.src}
+                data-lightbox-picture="true"
                 custom={direction}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
