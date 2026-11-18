@@ -126,25 +126,64 @@ Measured empirically via `scripts/profile-perf.mjs` across 5 consecutive runs on
   - **Routine Target Guideline:** Editors are instructed in `docs/OPERATIONS.md` to target $\le$ **150 KB** where possible for optimal mobile delivery, but automated CI gates strictly fail only above 400 KB (posters) or 250 KB (photos). All 61 repository assets currently pass.
 
 ### 4.3 Photo Alt Text & Caption Inventory
-Populated directly from verified records in `lib/data.js` and `lib/instagram.js`:
 
-| # | Image Path | Canonical Caption | Accessible Alt Description | Status |
-|:---:|---|---|---|:---:|
-| 1 | `/gallery/inauguration.webp` | Club Inauguration Day 2025–26 at RIT | Inauguration ceremony gathering of faculty and students for the 2025-26 INFINITUS club opening | Verified |
-| 2 | `/gallery/mathspire-01.webp` | Mathspire ’25 award ceremony and prize distribution | Winning teams receiving certificates and prizes at the Mathspire 2025 valedictory session | Verified |
-| 3 | `/gallery/mathspire-02.webp` | Rapid Fire mental math session · Mathspire ’25 | Student participants concentrating during the timed Rapid Fire arithmetic round | Verified |
-| 4 | `/gallery/mathspire-03.webp` | Spot the Error challenge on stage · Mathspire ’25 | Contestants analyzing mathematical proof derivations on the display screen during the Spot the Error round | Verified |
-| 5 | `/gallery/mathspire-06.webp` | Faculty coordinators reviewing participant rounds · Mathspire ’25 | Faculty coordinators and student leads overseeing competition hall activities | Verified |
-| 6 | `/gallery/mathspire-09.webp` | Final round deliberation and score tabulation · Mathspire ’25 | Organizing committee tabulating scores while contestant teams await results | Verified |
-| 7 | `/gallery/mathspire-10.webp` | Thought Crafting round presentations · Mathspire ’25 | Speaker presenting mathematical insights and problem breakdowns at the podium | Verified |
-| 8 | `/gallery/mathspire-11.webp` | Audience and participants during the quiz round · Mathspire ’25 | Audience of engineering students actively following the Mathspire stage quiz | Verified |
-| 9 | `/gallery/mathspire-13.webp` | Mind Over Math problem-solving round · Mathspire ’25 | Participants working in teams on mathematical problem sheets during Mathspire 2025 | Verified |
-| 10 | `/gallery/best-vp.webp` | Best Vice President 2024–25 awarded to Shreenidhi A | Recognition poster for Shreenidhi A, named Best Vice President 2024-25 at RIT | Verified |
-| 11 | `/gallery/matrix-recap.webp` | Matrix Reloaded web development workshop recap | Workshop recap slide showing hands-on coding and matrix transformation examples | Verified |
-| 12 | `/gallery/pidoku-recap.webp` | PiDoku: Decode π competition recap | PiDoku competition poster recap with winner announcements and puzzle highlights | Verified |
-| 13 | `/gallery/pop-patriotism.webp` | Pop for Patriotism independence celebration | Club members and students participating in the Independence Day campus activity | Verified |
-| 14 | `/gallery/shinka-recap.webp` | SHINKA — Strikers 2026 school championship recap | Recap visual for the two-day inter-school mathematics and innovation championship | Verified |
-| 15 | `/gallery/math-day-2023.webp` | National Mathematics Day celebration 2023 | Inaugural mathematical rangoli artwork celebrating National Mathematics Day on campus | Verified |
+#### Table 1: Gallery Photography Alt Text (Drafts Awaiting Owner Confirmation)
+Populated from `lib/data.js` and `lib/instagram.js`. Descriptions are restricted to plainly visible features (camera frame) without speculative backstory.
+
+| # | Image Path | Canonical Caption | Accessible Alt Description | Status | Owner Correction |
+|:---:|---|---|---|:---:|---|
+| 1 | `/gallery/inauguration.webp` | Club Inauguration Day 2025–26 at RIT | Faculty member presenting club badge to a student on stage at the inauguration ceremony | Draft (owner to confirm) | |
+| 2 | `/gallery/mathspire-01.webp` | Mathspire ’25 award ceremony and prize distribution | Student teams on stage receiving awards and certificates from faculty | Draft (owner to confirm) | |
+| 3 | `/gallery/mathspire-02.webp` | Rapid Fire mental math session · Mathspire ’25 | Student participant seated and focused during a timed math competition round | Draft (owner to confirm) | |
+| 4 | `/gallery/mathspire-03.webp` | Spot the Error challenge on stage · Mathspire ’25 | Contestants on stage analyzing a mathematical proof displayed on the projection screen | Draft (owner to confirm) | |
+| 5 | `/gallery/mathspire-06.webp` | Faculty coordinators reviewing participant rounds · Mathspire ’25 | Faculty coordinator standing in the competition hall observing participants | Draft (owner to confirm) | |
+| 6 | `/gallery/mathspire-09.webp` | Final round deliberation and score tabulation · Mathspire ’25 | Event organizers seated at a desk reviewing score sheets | Draft (owner to confirm) | |
+| 7 | `/gallery/mathspire-10.webp` | Thought Crafting round presentations · Mathspire ’25 | Speaker at the podium presenting slides during the Mathspire event | Draft (owner to confirm) | |
+| 8 | `/gallery/mathspire-11.webp` | Audience and participants during the quiz round · Mathspire ’25 | Audience seated in the auditorium watching the stage during Mathspire | Draft (owner to confirm) | |
+| 9 | `/gallery/mathspire-13.webp` | Mind Over Math problem-solving round · Mathspire ’25 | Participants working in teams on mathematical problem sheets at classroom desks | Draft (owner to confirm) | |
+| 10 | `/gallery/best-vp.webp` | Best Vice President 2024–25 awarded to Shreenidhi A | Recognition poster for Shreenidhi A, named Best Vice President 2024-25 at RIT | Draft (owner to confirm) | |
+| 11 | `/gallery/matrix-recap.webp` | Matrix Reloaded web development workshop recap | Matrix Reloaded workshop recap poster showing code snippets and topic highlights | Draft (owner to confirm) | |
+| 12 | `/gallery/pidoku-recap.webp` | PiDoku: Decode π competition recap | PiDoku competition poster recap with winner announcements and puzzle highlights | Draft (owner to confirm) | |
+| 13 | `/gallery/pop-patriotism.webp` | Pop for Patriotism independence celebration | Students participating in an Independence Day campus activity with balloon board | Draft (owner to confirm) | |
+| 14 | `/gallery/shinka-recap.webp` | SHINKA — Strikers 2026 school championship recap | Recap poster for the SHINKA inter-school mathematics championship | Draft (owner to confirm) | |
+| 15 | `/gallery/math-day-2023.webp` | National Mathematics Day celebration 2023 | Floor rangoli artwork featuring mathematical symbols celebrating National Mathematics Day | Draft (owner to confirm) | |
+
+#### Table 2: Event Posters & Photo Assets Catalog (Awaiting Owner Review)
+Catalog of event posters used on `/events/[id]` and in `lib/data.js`. Currently using automated title fallbacks (`${event.title} poster`).
+
+| # | Poster Path | Event Title | Current Alt Description | Status | Owner Correction |
+|:---:|---|---|---|:---:|---|
+| 1 | `/events/scilab-workshop.webp` | Numerical Aspects of Scilab | `Numerical Aspects of Scilab poster` | TODO(owner) | |
+| 2 | `/events/math-mystique.webp` | MathMystique: Four Clues. One Mind. One Answer | `MathMystique: Four Clues. One Mind. One Answer poster` | TODO(owner) | |
+| 3 | `/events/from-bridges-to-ai.webp` | From Bridges to AI: The Mathematics That Builds Our World | `From Bridges to AI: The Mathematics That Builds Our World poster` | TODO(owner) | |
+| 4 | `/events/math-charades.webp` | Math Charades: Think Math. Act It! | `Math Charades: Think Math. Act It! poster` | TODO(owner) | |
+| 5 | `/events/guess-the-number.webp` | Guess the Number: Think • Deduce • Win | `Guess the Number: Think • Deduce • Win poster` | TODO(owner) | |
+| 6 | `/events/math-relay.webp` | Math Relay — Human Calculator | `Math Relay — Human Calculator poster` | TODO(owner) | |
+| 7 | `/events/teachers-day-2026.webp` | Teacher's Day Celebration 2026 | `Teacher's Day Celebration 2026 poster` | TODO(owner) | |
+| 8 | `/events/math-bomb.webp` | Math Bomb: Academic Year 2026–2027 | `Math Bomb: Academic Year 2026–2027 poster` | TODO(owner) | |
+| 9 | `/events/math-culprit.webp` | Math Culprit: The Forensic Deduction Challenge | `Math Culprit: The Forensic Deduction Challenge poster` | TODO(owner) | |
+| 10 | `/events/math-auction.webp` | Math Auction: Strategy, Speed & Numbers | `Math Auction: Strategy, Speed & Numbers poster` | TODO(owner) | |
+| 11 | `/events/the-silent-sort.webp` | The Silent Sort: Silent 30 Challenge | `The Silent Sort: Silent 30 Challenge poster` | TODO(owner) | |
+| 12 | `/events/shinka-2026.webp` | SHINKA — Strikers 2026 | `SHINKA — Strikers 2026 poster` | TODO(owner) | |
+| 13 | `/events/beyond-the-numbers.webp` | Beyond the Numbers | `Beyond the Numbers poster` | TODO(owner) | |
+| 14 | `/events/broken-blueprint.webp` | Broken Blueprint: Non-Verbal Relay Challenge | `Broken Blueprint: Non-Verbal Relay Challenge poster` | TODO(owner) | |
+| 15 | `/events/pidoku.webp` | PiDoku: Decode π | `PiDoku: Decode π poster` | TODO(owner) | |
+| 16 | `/events/geotrace.webp` | GeoTrace: Discover the Shape | `GeoTrace: Discover the Shape poster` | TODO(owner) | |
+| 17 | `/events/graphquest.webp` | GraphQuest: Decode the Function | `GraphQuest: Decode the Function poster` | TODO(owner) | |
+| 18 | `/events/pi-quest.webp` | PI-QUEST | `PI-QUEST poster` | TODO(owner) | |
+| 19 | `/events/treasure-hunt.webp` | Treasure Hunt | `Treasure Hunt poster` | TODO(owner) | |
+| 20 | `/events/nature-geometer.webp` | Nature: The Ultimate Geometer | `Nature: The Ultimate Geometer poster` | TODO(owner) | |
+| 21 | `/events/stat-story.webp` | Stat Story | `Stat Story poster` | TODO(owner) | |
+| 22 | `/events/mathspire.webp` | Mathspire — Expilog '25 | `Mathspire — Expilog '25 poster` | TODO(owner) | |
+| 23 | `/events/matrix-reloaded.webp` | Matrix Reloaded: Dive into Web Development | `Matrix Reloaded: Dive into Web Development poster` | TODO(owner) | |
+| 24 | `/events/remote-rush.webp` | Remote Rush | `Remote Rush poster` | TODO(owner) | |
+| 25 | `/events/algebruh.webp` | Algebruh! | `Algebruh! poster` | TODO(owner) | |
+| 26 | `/events/beauty-of-maths.webp` | The Beauty of Mathematics | `The Beauty of Mathematics poster` | TODO(owner) | |
+| 27 | `/events/infinity-quest.webp` | Infinity Quest '24 | `Infinity Quest '24 poster` | TODO(owner) | |
+| 28 | `/events/guest-lecture.webp` | The Role of Mathematics in Modern Technology | `The Role of Mathematics in Modern Technology poster` | TODO(owner) | |
+| 29 | `/events/guest-lecture.webp` | Math-O-Fest '24: Annual Symposium | `Math-O-Fest '24: Annual Symposium poster` | TODO(owner) | |
+| 30 | `/gallery/math-day-2023.webp` | National Mathematics Day 2023 | `National Mathematics Day 2023 poster` | TODO(owner) | |
+| 31 | `/gallery/inauguration.webp` | The Math Podcast: Ep 1 — Prime Numbers & Modern Cryptography | `The Math Podcast: Ep 1 — Prime Numbers & Modern Cryptography poster` | TODO(owner) | |
 
 ### 4.4 Local Dependency Security Audit (`npm audit --omit=dev`)
 Command output:

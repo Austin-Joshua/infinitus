@@ -97,7 +97,12 @@ The repository enforces mandatory automated checks on every push and pull reques
 3. Update `MEMBERS` array in `lib/data.js` (or insert in Supabase `members` table).
 4. Verify responsibilities in `lib/roleResponsibilities.js`.
 
-### 5.3 Upgrading Dependencies
+### 5.3 Image & Accessibility Contribution Rules
+- **Alt Text Rule:** Alt text describes what is plainly visible in the image, not the event backstory. If the caption gives the context, the alt text does not need to repeat it; it should help a blind visitor picture the scene.
+- **No Speculative Metadata:** Do not invent room numbers, participant counts, specific rounds, or unverified facts in alt text. Describe what the camera captured.
+- **File Constraints:** Posters must be WebP under 400 KB (target $\le$ 150 KB); photos and avatars must be WebP under 250 KB (target $\le$ 100 KB).
+
+### 5.4 Upgrading Dependencies
 Core dependencies (`next`, `react`, `react-dom`) are pinned to exact versions:
 ```bash
 npm install --save-exact next@<version> react@<version> react-dom@<version>
