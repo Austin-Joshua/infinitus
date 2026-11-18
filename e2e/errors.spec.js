@@ -29,7 +29,52 @@ test.describe('Error Handling & 404 Safeguards', () => {
   });
 
   test('/api/report-error endpoint validates payloads, enforces rate limits, and accepts valid telemetry', async ({ request }) => {
-    // 1. Valid payload returns 204
+    // 1. Cross-origin POST returns 403
+    const crossOriginRes1 = await request.post('/api/report-error', {
+      data: { route: '/events', kind: 'route' },
+      headers: {
+        'Origin': 'https://attacker.example.com',
+        'x-forwarded-for': '198.51.100.10',
+      },
+    });
+    expect(crossOriginRes1.status()).toBe(403);
+
+    const crossOriginRes2 = await request.post('/api/report-error', {
+      data: { route: '/events', kind: 'route' },
+      headers: {
+        'Sec-Fetch-Site': 'cross-site',
+        'x-forwarded-for': '198.51.100.11',
+      },
+    });
+    expect(crossOriginRes2.status()).toBe(403);
+
+    // 2. Oversized body returns 413
+    const oversizedPayload = {
+      route: '/events',
+      kind: 'route',
+      digest: 'A'.repeat(1200),
+    };
+    const oversizedRes = await request.post('/api/report-error', {
+      data: oversizedPayload,
+      headers: {
+        'x-forwarded-for': '198.51.100.12',
+      },
+    });
+    expect(oversizedRes.status()).toBe(413);
+
+    // 3. Invalid route format (e.g. script injection) returns 400
+    const scriptRouteRes = await request.post('/api/report-error', {
+      data: {
+        route: '<script>alert(1)</script>',
+        kind: 'route',
+      },
+      headers: {
+        'x-forwarded-for': '198.51.100.13',
+      },
+    });
+    expect(scriptRouteRes.status()).toBe(400);
+
+    // 4. Valid payload returns 204
     const validRes = await request.post('/api/report-error', {
       data: {
         digest: '1234567890',
@@ -42,7 +87,7 @@ test.describe('Error Handling & 404 Safeguards', () => {
     });
     expect(validRes.status()).toBe(204);
 
-    // 2. Malformed payload returns 400
+    // 5. Malformed payload returns 400
     const invalidRes1 = await request.post('/api/report-error', {
       data: {
         kind: 'unsupported-kind',
@@ -63,7 +108,7 @@ test.describe('Error Handling & 404 Safeguards', () => {
     });
     expect(invalidRes2.status()).toBe(400);
 
-    // 3. Rate limiting: 10 per minute per IP, 11th request returns 429
+    // 6. Rate limiting: 10 per minute per IP, 11th request returns 429
     const testIp = '203.0.113.88';
     for (let i = 0; i < 9; i++) {
       const res = await request.post('/api/report-error', {

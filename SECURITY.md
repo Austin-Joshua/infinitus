@@ -44,6 +44,12 @@ The INFINITUS website incorporates the following defensive controls:
 - **API Defense-in-Depth:**
   - Narrow route middleware (`/api/:path*`) providing `X-Robots-Tag: noindex, nofollow` on all endpoints
   - Strict method enforcement (JSON 405 for non-GET/HEAD/OPTIONS methods via edge middleware; POST is explicitly permitted exclusively on `/api/report-error` for client error reporting)
+  - **Client Error Reporting Endpoint (`POST /api/report-error`):**
+    - **Same-Origin Enforcement:** Requires `Sec-Fetch-Site: same-origin` and matching `Origin` header; cross-origin calls are rejected with 403 Forbidden.
+    - **Payload Size Ceiling:** Rejects requests with `Content-Length` or raw body exceeding 1,024 bytes (1 KB) with HTTP 413 Payload Too Large.
+    - **Strict Input Validation:** Gated by regular expressions: `route` (`^\/[A-Za-z0-9_\-/.]{0,199}$`), `digest` (`^[A-Za-z0-9_-]{1,200}$`), and `kind` (`'route' | 'global'`). Any illegal characters (such as HTML or scripts) return HTTP 400 Bad Request.
+    - **Abuse & Flood Controls:** Dual-layer rate limiting: max 10 reports/minute per IP, plus a global circuit breaker ceiling of 300 reports/hour to prevent distributed log flooding.
+    - **Zero Sensitive Data Logging:** Never logs, transmits, or stores user-agent headers, IP addresses, cookies, personal identifiers, error message strings, or stack traces. Outputs strictly sanitized `{ digest, route, kind, t }` to Vercel runtime logs.
   - Query parameter allowlists and input sanitization
   - Sliding-window rate limiting: distributed cross-instance protection via Upstash Redis (`@upstash/ratelimit`) when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set. If Upstash is not configured, an in-memory sliding-window limiter is used as a best-effort fallback per serverless instance (not globally coordinated across isolated serverless functions).
   - Generic errors (no stack trace or database error leaking)
