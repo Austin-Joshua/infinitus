@@ -11,6 +11,7 @@
     "test": "node --test",
     "test:e2e": "playwright test",
     "check:assets": "node scripts/check-assets.mjs",
+    "check:blur": "node scripts/check-blur.mjs",
     "check:links": "node scripts/check-links.mjs",
     "db:seed": "node scripts/db/seed.mjs",
     "branding:optimize": "node scripts/optimize-branding.mjs"

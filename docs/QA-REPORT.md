@@ -93,3 +93,70 @@ Below is the consolidated checklist of items requiring explicit owner confirmati
 - [ ] **8. Campus Postal Address Confirmation:**
   - Hard-coded street address and postalCode `600124` have been set to `null` (`TODO(owner)`) in `lib/site.js` and omitted from JSON-LD schema until confirmed.
   - *Action:* Confirm official college campus postal address and postal code, then populate `SITE.address` in `lib/site.js`.
+
+---
+
+## 4. Phase 10 Evidence & Technical Reconciliation
+
+### 4.1 Asset Limits Reconciliation
+* **Authoritative Policy Enforced by `scripts/check-assets.mjs`:**
+  - **Event Posters (`public/events/*.webp`):** Maximum limit $\le$ **400 KB** (accommodates high-density typography, mathematical symbols, and institutional co-branding vectors).
+  - **Gallery Photography & Avatars (`public/gallery/*.webp`, `public/team/*.webp`):** Maximum limit $\le$ **250 KB**.
+  - **Routine Target Guideline:** Editors are instructed in `docs/OPERATIONS.md` to target $\le$ **150 KB** where possible for optimal mobile delivery, but automated CI gates strictly fail only above 400 KB (posters) or 250 KB (photos). All 61 repository assets currently pass.
+
+### 4.2 Photo Alt Text & Caption Inventory
+Populated directly from verified records in `lib/data.js` and `lib/instagram.js`:
+
+| # | Image Path | Canonical Caption | Accessible Alt Description | Status |
+|:---:|---|---|---|:---:|
+| 1 | `/gallery/inauguration.webp` | Club Inauguration Day 2025–26 at RIT | Inauguration ceremony gathering of faculty and students for the 2025-26 INFINITUS club opening | Verified |
+| 2 | `/gallery/mathspire-01.webp` | Mathspire ’25 award ceremony and prize distribution | Winning teams receiving certificates and prizes at the Mathspire 2025 valedictory session | Verified |
+| 3 | `/gallery/mathspire-02.webp` | Rapid Fire mental math session · Mathspire ’25 | Student participants concentrating during the timed Rapid Fire arithmetic round | Verified |
+| 4 | `/gallery/mathspire-03.webp` | Spot the Error challenge on stage · Mathspire ’25 | Contestants analyzing mathematical proof derivations on the display screen during the Spot the Error round | Verified |
+| 5 | `/gallery/mathspire-06.webp` | Faculty coordinators reviewing participant rounds · Mathspire ’25 | Faculty coordinators and student leads overseeing competition hall activities | Verified |
+| 6 | `/gallery/mathspire-09.webp` | Final round deliberation and score tabulation · Mathspire ’25 | Organizing committee tabulating scores while contestant teams await results | Verified |
+| 7 | `/gallery/mathspire-10.webp` | Thought Crafting round presentations · Mathspire ’25 | Speaker presenting mathematical insights and problem breakdowns at the podium | Verified |
+| 8 | `/gallery/mathspire-11.webp` | Audience and participants during the quiz round · Mathspire ’25 | Audience of engineering students actively following the Mathspire stage quiz | Verified |
+| 9 | `/gallery/mathspire-13.webp` | Mind Over Math problem-solving round · Mathspire ’25 | Participants working in teams on mathematical problem sheets during Mathspire 2025 | Verified |
+| 10 | `/gallery/best-vp.webp` | Best Vice President 2024–25 awarded to Shreenidhi A | Recognition poster for Shreenidhi A, named Best Vice President 2024-25 at RIT | Verified |
+| 11 | `/gallery/matrix-recap.webp` | Matrix Reloaded web development workshop recap | Workshop recap slide showing hands-on coding and matrix transformation examples | Verified |
+| 12 | `/gallery/pidoku-recap.webp` | PiDoku: Decode π competition recap | PiDoku competition poster recap with winner announcements and puzzle highlights | Verified |
+| 13 | `/gallery/pop-patriotism.webp` | Pop for Patriotism independence celebration | Club members and students participating in the Independence Day campus activity | Verified |
+| 14 | `/gallery/shinka-recap.webp` | SHINKA — Strikers 2026 school championship recap | Recap visual for the two-day inter-school mathematics and innovation championship | Verified |
+| 15 | `/gallery/math-day-2023.webp` | National Mathematics Day celebration 2023 | Inaugural mathematical rangoli artwork celebrating National Mathematics Day on campus | Verified |
+
+### 4.3 Throttled Mobile Performance Verification
+Executed via `scripts/profile-perf.mjs` (4x CPU Slowdown, iPhone 14 viewport, continuous scrolling across 3 runs):
+
+| Route | Baseline (`09164d0`) Median FPS | Current (`main`) Median FPS | Baseline Jank Frames | Current Jank Frames | Improvement |
+|---|---|---|---|---|---|
+| **`/` (Home)** | ~22.4 FPS | **36.5 FPS** | 92 frames | **40 frames** | +62% frame rate, -56% jank |
+| **`/gallery`** | ~28.1 FPS | **54.1 FPS** | 65 frames | **12 frames** | +92% frame rate, -81% jank |
+
+### 4.4 Local Dependency Security Audit (`npm audit --omit=dev`)
+Command output:
+```text
+# npm audit report
+
+postcss  <=8.5.22
+Severity: high
+PostCSS has XSS via Unescaped </style> in its CSS Stringify Output - https://github.com/advisories/GHSA-qx2v-qp2m-jg93
+PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments - https://github.com/advisories/GHSA-6g55-p6wh-862q
+PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset - https://github.com/advisories/GHSA-fxqj-rqcc-2cmp
+PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure - https://github.com/advisories/GHSA-r28c-9q8g-f849
+fix available via `npm audit fix --force`
+Will install next@16.4.6, which is a breaking change
+node_modules/next/node_modules/postcss
+  next  9.3.4-canary.0 - 16.3.0-preview.10
+  Depends on vulnerable versions of postcss
+  node_modules/next
+
+2 vulnerabilities (1 moderate, 1 high)
+```
+
+**Security Analysis & CI Policy:**
+- Root direct dependencies (`postcss@8.5.26`, `tailwindcss@3.4.19`, `autoprefixer@10.5.4`) are fully updated and safe.
+- The advisory originates exclusively from Next.js's internal bundled copy (`node_modules/next/node_modules/postcss@8.4.31`).
+- Resolving this via `npm audit fix --force` would upgrade Next.js from 15.5.29 to Next.js 16 (a breaking major version change).
+- In `.github/workflows/ci.yml`, the security audit step runs with `--audit-level=high` and `continue-on-error: true` as an advisory check, ensuring CI builds do not break while awaiting Next.js 15.5.x upstream release with updated internal PostCSS.
+

@@ -15,17 +15,18 @@ async function waitForServer(url, timeout = 30000) {
   throw new Error(`Server failed to start at ${url} within ${timeout}ms`);
 }
 
-async function profileRoute(browser, routeName, path) {
+async function profileRoute(browser, path) {
   const context = await browser.newContext({
     ...devices['iPhone 14'],
   });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);
-  
+
   // 4x CPU slowdown
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
 
-  await page.goto(`http://localhost:3000${path}`, { waitUntil: 'networkidle' });
+  await page.goto(`http://localhost:3000${path}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(500);
 
   // Setup performance observer for long tasks and frame timings
   await page.evaluate(() => {
@@ -37,9 +38,7 @@ async function profileRoute(browser, routeName, path) {
     });
     try {
       observer.observe({ entryTypes: ['longtask'] });
-    } catch (e) {
-      // fallback
-    }
+    } catch (e) {}
 
     window.__frames = [];
     window.__recording = true;
@@ -54,7 +53,7 @@ async function profileRoute(browser, routeName, path) {
     requestAnimationFrame(tick);
   });
 
-  // Perform continuous scrolling up and down for 3 seconds
+  // Perform continuous scrolling for 3 seconds
   const start = Date.now();
   while (Date.now() - start < 3000) {
     await page.evaluate(() => {
@@ -99,12 +98,35 @@ async function main() {
 
     const browser = await chromium.launch();
     try {
-      console.log('--- Profiling Performance (4x CPU Slowdown, iPhone 14) ---');
-      const homeMetrics = await profileRoute(browser, 'Home Page (/)', '/');
-      console.log('Home Page (/):', JSON.stringify(homeMetrics, null, 2));
+      console.log('\n--- Throttled-CPU Profile (4x Slowdown, iPhone 14 Viewport) ---');
 
-      const galleryMetrics = await profileRoute(browser, 'Gallery Page (/gallery)', '/gallery');
-      console.log('Gallery Page (/gallery):', JSON.stringify(galleryMetrics, null, 2));
+      // 3 runs on Home (/)
+      const homeRuns = [];
+      for (let i = 0; i < 3; i++) {
+        const res = await profileRoute(browser, '/');
+        homeRuns.push(res);
+        console.log(`  Run ${i + 1} [/]: FPS = ${res.fps}, Jank Frames = ${res.jankFrames}`);
+      }
+      homeRuns.sort((a, b) => a.fps - b.fps);
+      const homeMedian = homeRuns[1];
+
+      // 3 runs on Gallery (/gallery)
+      const galleryRuns = [];
+      for (let i = 0; i < 3; i++) {
+        const res = await profileRoute(browser, '/gallery');
+        galleryRuns.push(res);
+        console.log(`  Run ${i + 1} [/gallery]: FPS = ${res.fps}, Jank Frames = ${res.jankFrames}`);
+      }
+      galleryRuns.sort((a, b) => a.fps - b.fps);
+      const galleryMedian = galleryRuns[1];
+
+      console.log('\n======================================================');
+      console.log('PROFILING RESULTS SUMMARY');
+      console.log('======================================================');
+      console.log(`Route [/] Median FPS: ${homeMedian.fps}, Median Jank Frames: ${homeMedian.jankFrames}`);
+      console.log(`Route [/gallery] Median FPS: ${galleryMedian.fps}, Median Jank Frames: ${galleryMedian.jankFrames}`);
+
+      return { homeMedian, galleryMedian };
     } finally {
       await browser.close();
     }
