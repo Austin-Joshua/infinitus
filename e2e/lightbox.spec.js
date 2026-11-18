@@ -378,4 +378,35 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
       expect(Math.abs(finalScroll - 1500)).toBeLessThanOrEqual(2);
     }
   });
+
+  test('focus fallback receives programmatic focus when trigger element is removed from DOM', async ({ page }) => {
+    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+    const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
+    await expect(firstCard).toBeVisible({ timeout: 10000 });
+
+    await firstCard.click();
+    const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+
+    // Remove the trigger card from the DOM while lightbox is open
+    await page.evaluate(() => {
+      const btn = document.querySelector('button[aria-haspopup="dialog"]');
+      if (btn) btn.remove();
+    });
+
+    // Close dialog with Escape
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+
+    // Verify focus landed on fallback container (main or region with tabIndex=-1), NOT body
+    const activeInfo = await page.evaluate(() => ({
+      tagName: document.activeElement?.tagName?.toLowerCase(),
+      id: document.activeElement?.id,
+      role: document.activeElement?.getAttribute('role'),
+      isBody: document.activeElement === document.body,
+    }));
+
+    expect(activeInfo.isBody).toBe(false);
+    expect(activeInfo.id === 'main' || activeInfo.tagName === 'main' || activeInfo.role === 'region').toBe(true);
+  });
 });

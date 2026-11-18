@@ -31,6 +31,23 @@ export default function LightboxModal({
 
   const dialogRef = useRef(null);
   const canvasRef = useRef(null);
+  const lastExternalActiveEl = useRef(null);
+
+  // Track the most recent element focused or clicked outside any modal dialog
+  useEffect(() => {
+    const handleActive = (e) => {
+      const target = e.target;
+      if (target && typeof target.closest === 'function' && !target.closest('[role="dialog"]')) {
+        lastExternalActiveEl.current = target;
+      }
+    };
+    document.addEventListener('focusin', handleActive, true);
+    document.addEventListener('pointerdown', handleActive, true);
+    return () => {
+      document.removeEventListener('focusin', handleActive, true);
+      document.removeEventListener('pointerdown', handleActive, true);
+    };
+  }, []);
 
   // Swipe & pointer drag gesture tracking
   const pointerStart = useRef({ x: 0, y: 0 });
@@ -78,8 +95,13 @@ export default function LightboxModal({
     if (!open) return undefined;
 
     const savedScrollY = window.scrollY;
-    // Save the opening element once upon opening
-    const triggerEl = document.activeElement;
+    // Save the opening element once upon opening (guaranteed to be the external trigger)
+    const triggerEl =
+      lastExternalActiveEl.current && typeof lastExternalActiveEl.current.closest === 'function' && !lastExternalActiveEl.current.closest('[role="dialog"]')
+        ? lastExternalActiveEl.current
+        : document.activeElement && typeof document.activeElement.closest === 'function' && !document.activeElement.closest('[role="dialog"]')
+        ? document.activeElement
+        : null;
 
     const prevBodyOverflow = document.body.style.overflow;
     const prevHtmlOverflow = document.documentElement.style.overflow;
@@ -95,15 +117,25 @@ export default function LightboxModal({
       document.documentElement.classList.remove('lightbox-open');
       window.scrollTo({ top: savedScrollY, behavior: 'instant' });
 
-      // Focus the saved opening trigger element
-      if (triggerEl && document.contains(triggerEl) && typeof triggerEl.focus === 'function') {
-        triggerEl.focus({ preventScroll: true });
-      } else {
-        const fallback = document.querySelector('[role="region"][aria-label*="Gallery"], main, #main');
-        if (fallback && typeof fallback.focus === 'function') {
-          fallback.focus({ preventScroll: true });
+      // Focus the saved opening trigger element or fallback container
+      const restoreFocus = () => {
+        if (triggerEl && document.contains(triggerEl) && typeof triggerEl.focus === 'function') {
+          triggerEl.focus({ preventScroll: true });
+        } else {
+          const fallback = document.querySelector('[role="region"][aria-label*="Gallery"], main, #main');
+          if (fallback) {
+            if (!fallback.hasAttribute('tabindex')) {
+              fallback.setAttribute('tabindex', '-1');
+            }
+            if (typeof fallback.focus === 'function') {
+              fallback.focus({ preventScroll: true });
+            }
+          }
         }
-      }
+      };
+
+      restoreFocus();
+      requestAnimationFrame(restoreFocus);
     };
   }, [open]);
 
@@ -295,7 +327,6 @@ export default function LightboxModal({
             {/* Frosted Close Button */}
             <button
               type="button"
-              autoFocus
               onClick={(e) => {
                 e.stopPropagation();
                 onClose?.();

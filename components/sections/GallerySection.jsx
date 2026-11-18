@@ -22,7 +22,12 @@ export default function GallerySection({ events }) {
   const photos = galleryPhotos(events);
 
   return (
-    <section className="section !pt-2 sm:!pt-3 pb-28 sm:pb-36 min-h-[2600px]">
+    <section
+      role="region"
+      aria-label="Photo Gallery"
+      tabIndex={-1}
+      className="section !pt-2 sm:!pt-3 pb-28 sm:pb-36 min-h-[2600px] focus:outline-none"
+    >
       <div className="container-x">
         <GalleryGrid photos={photos} />
       </div>

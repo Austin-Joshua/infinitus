@@ -24,6 +24,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Advisory audit check for production dependencies.
+      # Note: The current advisory stems exclusively from Next.js's internal bundled copy
+      # of postcss (GHSA-qx2v-qp2m-jg93, GHSA-6g55-p6wh-862q). Direct project dependencies
+      # (postcss@8.5.26, tailwindcss@3.4.19) are up to date. continue-on-error is kept active
+      # while awaiting upstream Next.js 15.5.x patch release. Re-check date: 2026-12-18.
       - name: Security audit dependencies
         run: npm audit --omit=dev --audit-level=high
         continue-on-error: true
@@ -39,6 +44,9 @@ jobs:
 
       - name: Check asset integrity
         run: npm run check:assets
+
+      - name: Verify backdrop blur performance budget
+        run: npm run check:blur
 
       - name: Build Next.js application
         run: npm run build

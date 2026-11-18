@@ -138,10 +138,5 @@ if (errors.length > 0) {
   process.exit(1);
 } else {
   console.log(`\n✓ All ${allPublicFiles.length} public assets verified successfully (casing, sizes, and references valid).\n`);
-
-  // 3. Verify backdrop blur performance budget
-  const { execSync } = await import('node:child_process');
-  execSync('node scripts/check-blur.mjs', { stdio: 'inherit', cwd: ROOT });
-
   process.exit(0);
 }
