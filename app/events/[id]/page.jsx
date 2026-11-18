@@ -67,7 +67,9 @@ export default async function EventPage({ params }) {
     src,
     width: 1080,
     height: 1350,
+    // TODO(owner): replace generic caption with short scene description for each event photograph
     caption: `${event.title} — Photo ${i + 1}`,
+    alt: `${event.title} event photograph ${i + 1}`,
     date: formattedDate,
   }));
   const allPhotos = [

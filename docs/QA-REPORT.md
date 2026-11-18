@@ -81,7 +81,12 @@ Below is the consolidated checklist of items requiring explicit owner confirmati
       Mathematics Club of Rajalakshmi Institute of Technology, Chennai.
       ```
     - **Website Link:** `https://infinitus-seven.vercel.app`
-- [ ] **6. GitHub Support Cache Purge Ticket (Optional):**
-  - Following the history purge, commit SHAs have been rewritten on `main`.
-  - While dangling commits are detached, GitHub retains them in internal caches for up to 90 days.
-  - *Action:* If you want all old commit URLs completely purged from GitHub immediately, submit a ticket to GitHub Support using the template in `docs/history-purge.md`.
+- [ ] **7. Event Photo Descriptions:**
+  - Event galleries currently use fallback descriptive captions (e.g., `Event Title — Photo N`).
+  - *Action:* When uploading event photograph archives to Supabase or `public/gallery/`, provide authentic scene captions for the following flagship events:
+    - `scilab-workshop` (SciLab Hands-on Workshop)
+    - `mathspire` (Mathspire '25 State Symposium)
+    - `shinka-2026` (SHINKA Strikers 2026 Championship)
+    - `matrix-reloaded` (Matrix Reloaded Web Development)
+    - `pidoku` (PiDoku Decoding Competition)
+    - `pop-patriotism` (Pop for Patriotism)

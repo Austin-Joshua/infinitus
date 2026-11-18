@@ -161,7 +161,7 @@ export default function FeaturedEventsSlider({
                 event={activeEvent}
                 sizes="(min-width: 1024px) 320px, (min-width: 768px) 280px, 100vw"
                 fit="cover"
-                priority
+                priority={current === 0}
                 className="h-full w-full object-cover object-top pointer-events-none"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 hover:opacity-100" />

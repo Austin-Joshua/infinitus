@@ -9,7 +9,9 @@ export function galleryPhotos(events) {
       src,
       width: 1080,
       height: 1350,
+      // TODO(owner): replace generic caption with short scene description for each event photograph
       caption: `${event.title} — photo ${i + 1}`,
+      alt: `${event.title} event photograph ${i + 1}`,
     }))
   );
   return [...GALLERY, ...eventPhotos];
