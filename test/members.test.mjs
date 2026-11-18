@@ -49,4 +49,19 @@ describe('getMembers', () => {
     assert.ok(first.team);
     assert.ok(first.responsibilities);
   });
+
+  it('hydrates official core member posters and ensures assets exist', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const members = await getMembers();
+
+    const withPosters = members.filter((m) => m.posterUrl);
+    assert.equal(withPosters.length, 23, 'Exactly 23 core members must have official posters');
+
+    for (const m of withPosters) {
+      assert.match(m.posterUrl, /^\/team\/posters\/[a-z0-9-]+\.webp$/);
+      const filePath = path.resolve('public', m.posterUrl.slice(1));
+      assert.ok(fs.existsSync(filePath), `Poster file missing for ${m.name}: ${filePath}`);
+    }
+  });
 });

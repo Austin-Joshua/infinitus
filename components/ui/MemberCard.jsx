@@ -147,7 +147,9 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.97 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="relative z-10 w-full max-w-lg rounded-2xl border border-sunset-orange/40 bg-card p-6 shadow-2xl shadow-sunset-orange/15 sm:p-8"
+            className={`relative z-10 w-full ${
+              member.posterUrl ? 'max-w-2xl' : 'max-w-lg'
+            } max-h-[90vh] overflow-y-auto rounded-2xl border border-sunset-orange/40 bg-card p-6 shadow-2xl shadow-sunset-orange/15 sm:p-8`}
           >
             {/* Close Button */}
             <button
@@ -155,90 +157,193 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/70 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/70 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <CloseIcon className="h-5 w-5" />
             </button>
 
-            {/* Member Header */}
-            <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left">
-              <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full ring-2 ring-accent/30 sm:h-24 sm:w-24">
-                <Avatar name={member.name} photoUrl={member.photoUrl} />
+            {member.posterUrl ? (
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-7">
+                {/* Official Member Poster */}
+                <div className="mx-auto w-full max-w-[220px] shrink-0 sm:max-w-[240px]">
+                  <div className="relative aspect-[240/309] w-full overflow-hidden rounded-xl border border-sunset-orange/30 bg-bg/60 shadow-lg shadow-sunset-orange/10">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={member.posterUrl}
+                      alt={`${member.name} official poster`}
+                      width={240}
+                      height={309}
+                      className="h-full w-full object-contain"
+                      loading="eager"
+                    />
+                  </div>
+                  <div className="mt-2.5 flex items-center justify-center gap-1.5 text-center font-mono text-[11px] font-medium uppercase tracking-wider text-muted">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+                    Official Core Member
+                  </div>
+                </div>
+
+                {/* Details Column */}
+                <div className="flex-1 min-w-0">
+                  <div className="pr-8 sm:pr-0">
+                    <h3 id={titleId} className="font-heading text-xl font-bold text-fg sm:text-2xl">
+                      {member.name}
+                    </h3>
+                    <p className="mt-1 text-sm font-semibold text-gold">
+                      {member.role}
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      {member.team && (
+                        <span className="inline-block rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-medium text-accent">
+                          {member.team}
+                        </span>
+                      )}
+                      {meta && <span className="text-xs font-mono text-muted">{meta}</span>}
+                    </div>
+                  </div>
+
+                  {/* Role Responsibilities */}
+                  <div className="mt-5 border-t border-fg/10 pt-4">
+                    <p className="font-mono text-xs uppercase tracking-wider text-muted">
+                      Role Responsibilities
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-fg/80">
+                      {member.responsibilities ||
+                        'Active coordinator contributing to INFINITUS club initiatives, event execution, and mathematical community engagement.'}
+                    </p>
+                  </div>
+
+                  {/* Social & Connect Links */}
+                  <div className="mt-6 flex items-center justify-between border-t border-fg/10 pt-4">
+                    <div className="flex items-center gap-2">
+                      {member.linkedinUrl ? (
+                        <a
+                          href={member.linkedinUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={`${member.name} on LinkedIn`}
+                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                        >
+                          <LinkedinIcon className="h-4 w-4" />
+                        </a>
+                      ) : null}
+                      {member.instagramUrl ? (
+                        <a
+                          href={member.instagramUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={`${member.name} on Instagram`}
+                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                        >
+                          <InstagramIcon className="h-4 w-4" />
+                        </a>
+                      ) : (
+                        <a
+                          href={SOCIAL.instagram}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label="INFINITUS on Instagram"
+                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                          title="Connect on Instagram"
+                        >
+                          <InstagramIcon className="h-4 w-4" />
+                        </a>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="btn-ghost !px-4 !py-2 text-xs"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
+            ) : (
+              <div>
+                {/* Member Header */}
+                <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left">
+                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full ring-2 ring-accent/30 sm:h-24 sm:w-24">
+                    <Avatar name={member.name} photoUrl={member.photoUrl} />
+                  </div>
 
-              <div className="mt-4 sm:ml-5 sm:mt-0 sm:flex-1">
-                <h3 id={titleId} className="font-heading text-xl font-bold text-fg sm:text-2xl">
-                  {member.name}
-                </h3>
-                <p className="mt-1 text-sm font-semibold text-gold">
-                  {member.role}
-                </p>
-                {member.team && (
-                  <span className="mt-1.5 inline-block rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-medium text-accent">
-                    {member.team}
-                  </span>
-                )}
-                {meta && <p className="mt-1.5 text-xs font-mono text-muted">{meta}</p>}
+                  <div className="mt-4 sm:ml-5 sm:mt-0 sm:flex-1">
+                    <h3 id={titleId} className="font-heading text-xl font-bold text-fg sm:text-2xl">
+                      {member.name}
+                    </h3>
+                    <p className="mt-1 text-sm font-semibold text-gold">
+                      {member.role}
+                    </p>
+                    {member.team && (
+                      <span className="mt-1.5 inline-block rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-medium text-accent">
+                        {member.team}
+                      </span>
+                    )}
+                    {meta && <p className="mt-1.5 text-xs font-mono text-muted">{meta}</p>}
+                  </div>
+                </div>
+
+                {/* Role Responsibilities */}
+                <div className="mt-6 border-t border-fg/10 pt-5">
+                  <p className="font-mono text-xs uppercase tracking-wider text-muted">
+                    Role Responsibilities
+                  </p>
+                  <p className="mt-2.5 text-sm leading-relaxed text-fg/80">
+                    {member.responsibilities ||
+                      'Active coordinator contributing to INFINITUS club initiatives, event execution, and mathematical community engagement.'}
+                  </p>
+                </div>
+
+                {/* Social & Connect Links */}
+                <div className="mt-6 flex items-center justify-between border-t border-fg/10 pt-4">
+                  <div className="flex items-center gap-2">
+                    {member.linkedinUrl ? (
+                      <a
+                        href={member.linkedinUrl}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        aria-label={`${member.name} on LinkedIn`}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                      >
+                        <LinkedinIcon className="h-4 w-4" />
+                      </a>
+                    ) : null}
+                    {member.instagramUrl ? (
+                      <a
+                        href={member.instagramUrl}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        aria-label={`${member.name} on Instagram`}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                      >
+                        <InstagramIcon className="h-4 w-4" />
+                      </a>
+                    ) : (
+                      <a
+                        href={SOCIAL.instagram}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        aria-label="INFINITUS on Instagram"
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                        title="Connect on Instagram"
+                      >
+                        <InstagramIcon className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="btn-ghost !px-4 !py-2 text-xs"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
-            </div>
-
-            {/* Role Responsibilities */}
-            <div className="mt-6 border-t border-fg/10 pt-5">
-              <p className="font-mono text-xs uppercase tracking-wider text-muted">
-                Role Responsibilities
-              </p>
-              <p className="mt-2.5 text-sm leading-relaxed text-fg/80">
-                {member.responsibilities ||
-                  'Active coordinator contributing to INFINITUS club initiatives, event execution, and mathematical community engagement.'}
-              </p>
-            </div>
-
-            {/* Social & Connect Links */}
-            <div className="mt-6 flex items-center justify-between border-t border-fg/10 pt-4">
-              <div className="flex items-center gap-2">
-                {member.linkedinUrl ? (
-                  <a
-                    href={member.linkedinUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={`${member.name} on LinkedIn`}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
-                  >
-                    <LinkedinIcon className="h-4 w-4" />
-                  </a>
-                ) : null}
-                {member.instagramUrl ? (
-                  <a
-                    href={member.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={`${member.name} on Instagram`}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
-                  >
-                    <InstagramIcon className="h-4 w-4" />
-                  </a>
-                ) : (
-                  <a
-                    href={SOCIAL.instagram}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label="INFINITUS on Instagram"
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
-                    title="Connect on Instagram"
-                  >
-                    <InstagramIcon className="h-4 w-4" />
-                  </a>
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={onClose}
-                className="btn-ghost !px-4 !py-2 text-xs"
-              >
-                Close
-              </button>
-            </div>
+            )}
           </motion.div>
         </motion.div>
       )}
@@ -292,7 +397,8 @@ export default function MemberCard({ member, onOpen }) {
         {/* Call-to-action prompt */}
         <div className="mt-auto pt-3 sm:pt-4">
           <span className="inline-flex items-center gap-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted transition-colors group-hover:text-accent">
-            Role details <span aria-hidden="true" className="nudge">→</span>
+            {member.posterUrl ? 'View poster & role' : 'Role details'}{' '}
+            <span aria-hidden="true" className="nudge">→</span>
           </span>
         </div>
       </motion.button>

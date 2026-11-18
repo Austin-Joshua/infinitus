@@ -30,11 +30,26 @@ const dataPath = path.join(ROOT, 'lib', 'data.js');
 const dataModule = await import(`file://${dataPath}`);
 const events = dataModule.EVENTS || [];
 const gallery = dataModule.GALLERY || [];
+const members = dataModule.MEMBERS || [];
 
 console.log('Checking asset references from lib/data.js…');
 
 const referencedEventImages = new Set();
 const referencedGalleryImages = new Set();
+const referencedMemberPosters = new Set();
+
+// Check Members
+for (const m of members) {
+  if (m.posterUrl) {
+    const relativePath = m.posterUrl.startsWith('/') ? m.posterUrl.slice(1) : m.posterUrl;
+    const fullPath = path.join(PUBLIC_DIR, relativePath);
+    referencedMemberPosters.add(path.basename(relativePath));
+
+    if (!fs.existsSync(fullPath)) {
+      recordError(`Referenced member poster missing on disk: ${m.posterUrl}`);
+    }
+  }
+}
 
 // Check Events
 for (const ev of events) {
@@ -129,6 +144,13 @@ for (const filePath of allPublicFiles) {
   if (isGallery) {
     if (!referencedGalleryImages.has(filename)) {
       recordError(`Unreferenced image in public/gallery/: ${filename}`);
+    }
+  }
+
+  const isTeamPoster = relative.startsWith('team/posters') || relative.startsWith('team\\posters');
+  if (isTeamPoster) {
+    if (!referencedMemberPosters.has(filename)) {
+      recordError(`Unreferenced poster in public/team/posters/: ${filename}`);
     }
   }
 }
