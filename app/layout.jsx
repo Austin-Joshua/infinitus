@@ -7,6 +7,8 @@ import JsonLd from '@/components/seo/JsonLd';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/styles/globals.css';
 
 // STIX is the typeface of mathematical publishing; it sets both headings and italic accents.
@@ -219,6 +221,8 @@ export default async function RootLayout({ children }) {
           <Footer />
           <ScrollToTop />
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

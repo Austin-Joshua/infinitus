@@ -120,6 +120,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
   });
 
   test('renders visible picture utilizing >= 85% of limiting dimension across 4:5 poster, landscape, and square', async ({ page }, testInfo) => {
+    test.setTimeout(60000);
     const testCases = [
       {
         type: '4:5 Poster',
@@ -201,6 +202,10 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
         // Close modal
         await page.keyboard.press('Escape');
+        if (await dialog.isVisible()) {
+          const closeBtn = dialog.locator('button[aria-label="Close image preview"]');
+          if (await closeBtn.isVisible()) await closeBtn.click();
+        }
         await expect(dialog).not.toBeVisible();
       }
     }

@@ -6,8 +6,14 @@ import Lemniscate from '@/components/ui/Lemniscate';
 
 export default function Error({ error, reset }) {
   useEffect(() => {
-    // Log the error for client diagnostics
-    console.error('App runtime error caught by error boundary:', error);
+    // Minimal structured error logging for runtime observability
+    const errorDetails = {
+      message: error?.message || 'Unknown error',
+      digest: error?.digest || null,
+      timestamp: new Date().toISOString(),
+      location: typeof window !== 'undefined' ? window.location.pathname : null,
+    };
+    console.error('[App Runtime Error Boundary]:', errorDetails, error);
   }, [error]);
 
   return (

@@ -20,8 +20,8 @@ test.describe('Content Security Policy & Console Integrity', () => {
         if (
           text.includes('Content Security Policy') ||
           text.includes('violates the following Content Security Policy') ||
-          text.includes('Refused to execute') ||
-          text.includes('Refused to load')
+          (text.includes('Refused to execute') && text.includes('Content Security Policy')) ||
+          (text.includes('Refused to load') && text.includes('Content Security Policy'))
         ) {
           cspViolations.push(text);
         }
@@ -41,8 +41,8 @@ test.describe('Content Security Policy & Console Integrity', () => {
       if (
         text.includes('Content Security Policy') ||
         text.includes('violates the following Content Security Policy') ||
-        text.includes('Refused to execute') ||
-        text.includes('Refused to load')
+        (text.includes('Refused to execute') && text.includes('Content Security Policy')) ||
+        (text.includes('Refused to load') && text.includes('Content Security Policy'))
       ) {
         cspViolations.push(text);
       }

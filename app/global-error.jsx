@@ -1,6 +1,19 @@
 'use client';
 
+import { useEffect } from 'react';
+
 export default function GlobalError({ error, reset }) {
+  useEffect(() => {
+    // Minimal structured error logging for root boundary failures
+    const errorDetails = {
+      message: error?.message || 'Unknown root error',
+      digest: error?.digest || null,
+      timestamp: new Date().toISOString(),
+      location: typeof window !== 'undefined' ? window.location.pathname : null,
+    };
+    console.error('[Global Error Boundary]:', errorDetails, error);
+  }, [error]);
+
   const handleReload = () => {
     try {
       if (typeof window !== 'undefined') {
