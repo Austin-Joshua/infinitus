@@ -107,14 +107,7 @@ export default async function EventPage({ params }) {
       : {
           '@type': 'Place',
           name: event.venue || 'Rajalakshmi Institute of Technology',
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: 'Rajalakshmi Nagar, Kuthambakkam, Poonamallee',
-            addressLocality: 'Chennai',
-            addressRegion: 'Tamil Nadu',
-            postalCode: '600124',
-            addressCountry: 'IN',
-          },
+          ...(SITE.address ? { address: SITE.address } : {}),
         },
     image: event.coverImageUrl ? absoluteUrl(event.coverImageUrl) : absoluteUrl('/opengraph-image'),
     url: absoluteUrl(`/events/${encodeURIComponent(event.id)}`),

@@ -11,7 +11,7 @@ export default function Marquee({ children, duration = 40, reverse = false, clas
     >
       <div className="marquee-track flex w-max shrink-0">
         <div className="flex shrink-0">{children}</div>
-        <div className="flex shrink-0" aria-hidden="true" tabIndex={-1} inert="">
+        <div className="flex shrink-0" aria-hidden="true" tabIndex={-1} inert={true} data-marquee-duplicate="true">
           {children}
         </div>
       </div>

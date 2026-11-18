@@ -90,3 +90,6 @@ Below is the consolidated checklist of items requiring explicit owner confirmati
     - `matrix-reloaded` (Matrix Reloaded Web Development)
     - `pidoku` (PiDoku Decoding Competition)
     - `pop-patriotism` (Pop for Patriotism)
+- [ ] **8. Campus Postal Address Confirmation:**
+  - Hard-coded street address and postalCode `600124` have been set to `null` (`TODO(owner)`) in `lib/site.js` and omitted from JSON-LD schema until confirmed.
+  - *Action:* Confirm official college campus postal address and postal code, then populate `SITE.address` in `lib/site.js`.

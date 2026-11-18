@@ -174,14 +174,7 @@ const organizationJsonLd = {
     'Competitive Programming',
     'Cryptography',
   ],
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Rajalakshmi Nagar, Kuthambakkam, Poonamallee',
-    addressLocality: 'Chennai',
-    addressRegion: 'Tamil Nadu',
-    postalCode: '600124',
-    addressCountry: 'IN',
-  },
+  ...(SITE.address ? { address: SITE.address } : {}),
 };
 
 export default async function RootLayout({ children }) {
