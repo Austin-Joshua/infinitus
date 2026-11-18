@@ -3,17 +3,18 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Lemniscate from '@/components/ui/Lemniscate';
+import { reportClientError } from '@/lib/reportError';
 
 export default function Error({ error, reset }) {
   useEffect(() => {
-    // Minimal structured error logging for runtime observability
-    const errorDetails = {
-      message: error?.message || 'Unknown error',
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[App Runtime Error Boundary]:', error);
+    }
+    reportClientError({
       digest: error?.digest || null,
-      timestamp: new Date().toISOString(),
-      location: typeof window !== 'undefined' ? window.location.pathname : null,
-    };
-    console.error('[App Runtime Error Boundary]:', errorDetails, error);
+      route: typeof window !== 'undefined' ? window.location.pathname : '/',
+      kind: 'route',
+    });
   }, [error]);
 
   return (

@@ -44,9 +44,25 @@ This document provides operational guidelines, deployment procedures, monitoring
 - **Metrics Collected:** Core Web Vitals (Largest Contentful Paint `LCP`, Interaction to Next Paint `INP`, Cumulative Layout Shift `CLS`, and Time to First Byte `TTFB`).
 - **Dashboard:** Available in the Vercel project console under the **Speed Insights** tab.
 
-### 3.3 Error Boundaries & Structured Logging
-- **Route Error Boundary:** `app/error.jsx` catches unexpected exceptions within page components, logs structured diagnostic payloads (`message`, `digest`, `timestamp`, `location`), and offers retry / home links.
-- **Global Error Boundary:** `app/global-error.jsx` catches root layout exceptions and logs structured diagnostic events before falling back to clean standalone recovery UI.
+### 3.3 Error Boundaries & Production Error Telemetry
+- **Telemetry Ingestion Endpoint:** `POST /api/report-error` (rate limited to 10 requests per minute per IP, with strict parameter validation).
+- **Client Instrumentation:** Both `app/error.jsx` (route-level boundary) and `app/global-error.jsx` (root-level boundary) automatically dispatch an asynchronous non-blocking report via `navigator.sendBeacon` (falling back to `fetch` with `keepalive: true`).
+- **Telemetry Schema:**
+  - `digest`: Unique Next.js cryptographic error digest hash.
+  - `route`: The application URL pathname where the error occurred.
+  - `kind`: Boundary level (`'route'` or `'global'`).
+  - `t`: Epoch timestamp in milliseconds.
+  > [!NOTE]
+  > No personal information, user agent strings, IP addresses, cookies, or stack traces are transmitted or logged.
+- **Where to View Error Reports:**
+  1. Open the **Vercel Project Dashboard** -> **Logs** tab.
+  2. In the search filter, enter: `[client-error]`.
+  3. You will see formatted JSON log lines matching incoming client errors:
+     ```json
+     [client-error] {"digest":"3721839482","route":"/events/scilab-workshop","kind":"route","t":1773998400000}
+     ```
+  4. The logged `digest` can be directly matched against server-side SSR execution error logs to inspect the corresponding server trace.
+- **Owner Note (Future Enhancement):** Sentry's free tier (up to 5,000 errors/month) is the recommended next step if full client-side stack traces and source-mapped breadcrumbs are desired in the future.
 
 ---
 

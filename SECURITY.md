@@ -43,7 +43,7 @@ The INFINITUS website incorporates the following defensive controls:
   - `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()`
 - **API Defense-in-Depth:**
   - Narrow route middleware (`/api/:path*`) providing `X-Robots-Tag: noindex, nofollow` on all endpoints
-  - Strict method enforcement (JSON 405 for non-GET/HEAD/OPTIONS methods via edge middleware)
+  - Strict method enforcement (JSON 405 for non-GET/HEAD/OPTIONS methods via edge middleware; POST is explicitly permitted exclusively on `/api/report-error` for client error reporting)
   - Query parameter allowlists and input sanitization
   - Sliding-window rate limiting: distributed cross-instance protection via Upstash Redis (`@upstash/ratelimit`) when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set. If Upstash is not configured, an in-memory sliding-window limiter is used as a best-effort fallback per serverless instance (not globally coordinated across isolated serverless functions).
   - Generic errors (no stack trace or database error leaking)

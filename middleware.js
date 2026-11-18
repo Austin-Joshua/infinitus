@@ -16,7 +16,9 @@ export function middleware(request) {
   // 1. API Route Protection
   if (pathname.startsWith('/api/')) {
     const method = request.method.toUpperCase();
-    const allowedMethods = ['GET', 'HEAD', 'OPTIONS'];
+    // /api/report-error allows POST telemetry; all other endpoints are strictly read-only GET/HEAD
+    const isReportError = pathname === '/api/report-error';
+    const allowedMethods = isReportError ? ['POST', 'OPTIONS'] : ['GET', 'HEAD', 'OPTIONS'];
 
     if (!allowedMethods.includes(method)) {
       return NextResponse.json(
@@ -24,7 +26,7 @@ export function middleware(request) {
         {
           status: 405,
           headers: {
-            'Allow': 'GET, HEAD, OPTIONS',
+            'Allow': allowedMethods.join(', '),
             'X-Robots-Tag': 'noindex, nofollow',
             'X-Content-Type-Options': 'nosniff',
           },
@@ -36,7 +38,7 @@ export function middleware(request) {
       return new NextResponse(null, {
         status: 204,
         headers: {
-          'Allow': 'GET, HEAD, OPTIONS',
+          'Allow': allowedMethods.join(', '),
           'X-Robots-Tag': 'noindex, nofollow',
           'X-Content-Type-Options': 'nosniff',
         },

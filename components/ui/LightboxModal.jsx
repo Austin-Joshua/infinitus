@@ -155,9 +155,14 @@ export default function LightboxModal({
     if (!open || !canvasRef.current) return;
     const updateSize = () => {
       if (canvasRef.current) {
+        const computed = window.getComputedStyle(canvasRef.current);
+        const padX = (parseFloat(computed.paddingLeft) || 0) + (parseFloat(computed.paddingRight) || 0);
+        const padY = (parseFloat(computed.paddingTop) || 0) + (parseFloat(computed.paddingBottom) || 0);
+        const availW = Math.max(0, canvasRef.current.clientWidth - padX);
+        const availH = Math.max(0, canvasRef.current.clientHeight - padY);
         setCanvasSize({
-          width: canvasRef.current.clientWidth,
-          height: canvasRef.current.clientHeight,
+          width: availW,
+          height: availH,
         });
       }
     };

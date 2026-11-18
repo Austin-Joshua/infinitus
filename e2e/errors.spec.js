@@ -27,4 +27,87 @@ test.describe('Error Handling & 404 Safeguards', () => {
     expect(res.status()).toBe(404);
     expect(res.headers()['x-robots-tag']).toBe('noindex, nofollow');
   });
+
+  test('/api/report-error endpoint validates payloads, enforces rate limits, and accepts valid telemetry', async ({ request }) => {
+    // 1. Valid payload returns 204
+    const validRes = await request.post('/api/report-error', {
+      data: {
+        digest: '1234567890',
+        route: '/events/scilab-workshop',
+        kind: 'route',
+      },
+      headers: {
+        'x-forwarded-for': '198.51.100.22',
+      },
+    });
+    expect(validRes.status()).toBe(204);
+
+    // 2. Malformed payload returns 400
+    const invalidRes1 = await request.post('/api/report-error', {
+      data: {
+        kind: 'unsupported-kind',
+        route: '/test',
+      },
+      headers: {
+        'x-forwarded-for': '198.51.100.23',
+      },
+    });
+    expect(invalidRes1.status()).toBe(400);
+
+    const invalidRes2 = await request.post('/api/report-error', {
+      data: 'not a json object',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-forwarded-for': '198.51.100.24',
+      },
+    });
+    expect(invalidRes2.status()).toBe(400);
+
+    // 3. Rate limiting: 10 per minute per IP, 11th request returns 429
+    const testIp = '203.0.113.88';
+    for (let i = 0; i < 9; i++) {
+      const res = await request.post('/api/report-error', {
+        data: { digest: `d-${i}`, route: '/test', kind: 'route' },
+        headers: { 'x-forwarded-for': testIp },
+      });
+      expect(res.status()).toBe(204);
+    }
+
+    // 10th request (at limit)
+    const res10 = await request.post('/api/report-error', {
+      data: { digest: 'd-10', route: '/test', kind: 'route' },
+      headers: { 'x-forwarded-for': testIp },
+    });
+    expect(res10.status()).toBe(204);
+
+    // 11th request returns 429
+    const res11 = await request.post('/api/report-error', {
+      data: { digest: 'd-11', route: '/test', kind: 'route' },
+      headers: { 'x-forwarded-for': testIp },
+    });
+    expect(res11.status()).toBe(429);
+  });
+
+  test('error boundary automatically reports client error on forced throw', async ({ page }) => {
+    let reportedData = null;
+    await page.route('/api/report-error', async (route) => {
+      const req = route.request();
+      if (req.method() === 'POST') {
+        try {
+          reportedData = JSON.parse(req.postData() || '{}');
+        } catch {}
+      }
+      await route.continue();
+    });
+
+    await page.goto('/test-error', { waitUntil: 'domcontentloaded' }).catch(() => {});
+
+    // Assert custom Error boundary renders
+    await expect(page.locator('h1')).toContainText(/Something went sideways/i);
+
+    // Verify report-error was called with expected route and kind
+    await expect.poll(() => reportedData, { timeout: 5000 }).not.toBeNull();
+    expect(reportedData.route).toBe('/test-error');
+    expect(reportedData.kind).toBe('route');
+  });
 });
