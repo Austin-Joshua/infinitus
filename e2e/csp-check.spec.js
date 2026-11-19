@@ -38,8 +38,8 @@ test.describe('Content Security Policy & Console Integrity', () => {
         }
       });
 
-      await page.goto(route, { waitUntil: 'domcontentloaded' });
-      await page.waitForLoadState('networkidle');
+      await page.goto(route, { waitUntil: 'load' });
+      await page.waitForTimeout(200);
 
       expect(cspViolations).toEqual([]);
     });
@@ -60,13 +60,14 @@ test.describe('Content Security Policy & Console Integrity', () => {
     });
 
     // 1. Initial load
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'load' });
+    await page.waitForTimeout(200);
 
     // 2. Client-side navigate to /gallery
     await page.getByRole('link', { name: 'Gallery' }).first().click();
     await page.waitForURL('**/gallery');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(200);
 
     // 3. Open lightbox
     const firstPhoto = page.locator('button[aria-haspopup="dialog"]').first();
@@ -83,12 +84,14 @@ test.describe('Content Security Policy & Console Integrity', () => {
     // 5. Navigate to /events
     await page.getByRole('link', { name: 'Events' }).first().click();
     await page.waitForURL('**/events');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(200);
 
     // 6. Navigate to /contact
     await page.getByRole('link', { name: 'Contact' }).first().click();
     await page.waitForURL('**/contact');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(200);
 
     expect(cspViolations).toEqual([]);
   });

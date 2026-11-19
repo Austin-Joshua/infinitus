@@ -140,12 +140,12 @@ test.describe('Error Handling & 404 Safeguards', () => {
       if (req.method() === 'POST') {
         try {
           reportedData = JSON.parse(req.postData() || '{}');
-        } catch {}
+        } catch { }
       }
       await route.continue();
     });
 
-    await page.goto('/test-error', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/test-error', { waitUntil: 'domcontentloaded' }).catch(() => { });
 
     // Assert custom Error boundary renders
     await expect(page.locator('h1')).toContainText(/Something went sideways/i);
@@ -163,11 +163,19 @@ test.describe('Error Handling & 404 Safeguards', () => {
     delete env.E2E;
     delete env.NEXT_PUBLIC_E2E;
 
-    const server = spawn('cmd.exe', ['/c', 'npx', 'next', 'start', '-p', String(port)], {
-      cwd: process.cwd(),
-      env,
-      stdio: 'ignore',
-    });
+    const isWin = process.platform === 'win32';
+    const server = isWin
+      ? spawn('cmd.exe', ['/c', 'npx', 'next', 'start', '-p', String(port)], {
+        cwd: process.cwd(),
+        env,
+        stdio: 'ignore',
+      })
+      : spawn('npx', ['next', 'start', '-p', String(port)], {
+        cwd: process.cwd(),
+        env,
+        stdio: 'ignore',
+        detached: true,
+      });
 
     try {
       // Poll until server is ready
@@ -189,7 +197,17 @@ test.describe('Error Handling & 404 Safeguards', () => {
       const res = await fetch(`http://localhost:${port}/test-error`);
       expect(res.status).toBe(404);
     } finally {
-      spawn('cmd.exe', ['/c', 'taskkill', '/F', '/T', '/PID', server.pid.toString()]);
+      if (server && server.pid) {
+        if (isWin) {
+          spawn('cmd.exe', ['/c', 'taskkill', '/F', '/T', '/PID', server.pid.toString()]);
+        } else {
+          try {
+            process.kill(-server.pid, 'SIGKILL');
+          } catch {
+            server.kill('SIGKILL');
+          }
+        }
+      }
     }
   });
 });

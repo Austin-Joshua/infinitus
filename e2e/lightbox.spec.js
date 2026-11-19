@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Fullscreen Gallery Lightbox Experience', () => {
   test('opens, traps focus, changes slides on arrows, hides header/nav, and returns focus on close', async ({ page }) => {
-    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
+    await page.goto('/gallery', { waitUntil: 'load' });
+    await page.waitForTimeout(200);
 
     // Locate the first gallery card button/trigger
     const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
@@ -73,8 +73,8 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
     for (const vp of viewports) {
       await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-      await page.waitForLoadState('networkidle');
+      await page.goto('/gallery', { waitUntil: 'load' });
+      await page.waitForTimeout(200);
       await expect(page.locator('button[aria-haspopup="dialog"]').first()).toBeVisible({ timeout: 10000 });
 
       // Scroll to Y=1500
@@ -146,8 +146,8 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
     for (const tc of testCases) {
       for (const vp of viewports) {
         await page.setViewportSize({ width: vp.width, height: vp.height });
-        await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-        await page.waitForLoadState('networkidle');
+        await page.goto('/gallery', { waitUntil: 'load' });
+        await page.waitForTimeout(200);
 
         const trigger = page.getByRole('button', { name: tc.buttonName });
         await expect(trigger).toBeVisible({ timeout: 10000 });
@@ -156,8 +156,8 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
         const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
         await expect(dialog).toBeVisible({ timeout: 10000 });
 
-        const img = dialog.locator('img');
-        await expect(img).toBeVisible();
+        const img = dialog.locator('[data-lightbox-picture="true"] img');
+        await expect(img).toBeVisible({ timeout: 10000 });
 
         // Wait for image to fully load
         await img.evaluate(
@@ -215,8 +215,8 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
   test('differentiates drag gesture from tap action', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
-    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
+    await page.goto('/gallery', { waitUntil: 'load' });
+    await page.waitForTimeout(200);
 
     const trigger = page.getByRole('button', { name: /View photo:/i }).first();
     await trigger.click();
@@ -338,8 +338,8 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
   test('scroll position survives open, navigation, and close at 390x844 and 1440x900', async ({ page }) => {
     for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
       await page.setViewportSize(vp);
-      await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-      await page.waitForLoadState('networkidle');
+      await page.goto('/gallery', { waitUntil: 'load' });
+      await page.waitForTimeout(200);
 
       await page.evaluate(() => {
         document.documentElement.style.scrollBehavior = 'auto';
@@ -384,8 +384,8 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
   });
 
   test('focus fallback receives programmatic focus when trigger element is removed from DOM', async ({ page }) => {
-    await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
+    await page.goto('/gallery', { waitUntil: 'load' });
+    await page.waitForTimeout(200);
     const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
     await expect(firstCard).toBeVisible({ timeout: 10000 });
 

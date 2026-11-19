@@ -82,6 +82,73 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
     await expect(dialog).not.toBeVisible();
   });
 
+  test('verifies Vijay Ragav card flips and renders official poster', async ({ page }) => {
+    await page.goto('/team', { waitUntil: 'domcontentloaded' });
+
+    // Locate Vijay Ragav card
+    const vijayContainer = page.locator('.perspective-1000', { hasText: 'Vijay Ragav' });
+    await expect(vijayContainer).toBeVisible();
+    await expect(vijayContainer).toContainText('View poster & role');
+
+    // Click card to flip
+    await vijayContainer.click();
+
+    // Verify back face has Vijay's poster
+    const backPoster = vijayContainer.locator('img[src="/team/posters/vijay-ragav.webp"]');
+    await expect(backPoster).toBeVisible();
+
+    // Open detail modal
+    const fullViewBtn = vijayContainer.locator('button[data-action="details"]');
+    await fullViewBtn.click();
+
+    const dialog = page.locator('div[role="dialog"]');
+    await expect(dialog).toBeVisible();
+
+    // Verify poster in modal
+    const modalPosterImg = dialog.locator('img[src="/team/posters/vijay-ragav.webp"]');
+    await expect(modalPosterImg).toBeVisible();
+    await expect(modalPosterImg).toHaveAttribute('alt', 'Vijay Ragav official poster');
+    await expect(dialog.locator('h3')).toHaveText('Vijay Ragav');
+    await expect(dialog).toContainText('Poster Designer');
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+  });
+
+  test('verifies Chris Alan card exists in Technical Team and flips to role details', async ({ page }) => {
+    await page.goto('/team', { waitUntil: 'domcontentloaded' });
+
+    // Locate Chris Alan card
+    const chrisContainer = page.locator('.perspective-1000', { hasText: 'Chris Alan' });
+    await expect(chrisContainer).toBeVisible();
+    await expect(chrisContainer).toContainText('Role details');
+
+    // Click to flip card
+    await chrisContainer.click();
+
+    // Verify revealed responsibilities on back face
+    await expect(chrisContainer).toContainText('Technical Coordinator');
+    await expect(chrisContainer).toContainText('Supports the technical team');
+
+    // Open full detail modal
+    const fullViewBtn = chrisContainer.locator('button[data-action="details"]');
+    await fullViewBtn.click();
+
+    const dialog = page.locator('div[role="dialog"]');
+    await expect(dialog).toBeVisible();
+
+    // Verify no poster image is rendered
+    await expect(dialog.locator('img[src*="/team/posters/"]')).toHaveCount(0);
+    await expect(dialog.locator('h3')).toHaveText('Chris Alan');
+    await expect(dialog).toContainText('Technical Coordinator');
+    await expect(dialog).toContainText('Technical Team');
+    await expect(dialog).toContainText('CSE');
+    await expect(dialog).not.toContainText('Official Core Member');
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+  });
+
   test('falls back gracefully to role icon and details for members without poster', async ({ page }) => {
     await page.goto('/team', { waitUntil: 'domcontentloaded' });
 
