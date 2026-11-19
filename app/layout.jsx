@@ -1,4 +1,4 @@
-import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import { headers } from 'next/headers';
 import { CLUB_NAME, COLLEGE_NAME, SITE, SOCIAL } from '@/lib/site';
 import { absoluteUrl } from '@/lib/seo';
@@ -12,24 +12,44 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/styles/globals.css';
 
 // STIX is the typeface of mathematical publishing; it sets both headings and italic accents.
-const serif = STIX_Two_Text({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
+const serif = localFont({
+  src: [
+    {
+      path: './fonts/stix-two-text-normal.woff2',
+      weight: '400 700',
+      style: 'normal',
+    },
+    {
+      path: './fonts/stix-two-text-italic.woff2',
+      weight: '400 700',
+      style: 'italic',
+    },
+  ],
   variable: '--font-serif',
   display: 'swap',
 });
 
-const body = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+const body = localFont({
+  src: './fonts/ibm-plex-sans.woff2',
+  weight: '100 700',
+  style: 'normal',
   variable: '--font-body',
   display: 'swap',
 });
 
-const mono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
+const mono = localFont({
+  src: [
+    {
+      path: './fonts/ibm-plex-mono-400.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/ibm-plex-mono-500.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
   variable: '--font-mono',
   display: 'swap',
 });
