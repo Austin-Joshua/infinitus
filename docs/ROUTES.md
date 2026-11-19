@@ -18,7 +18,7 @@ This document maintains the complete catalog of all public pages, API endpoints,
 | `/` | Landing page (Hero, Lemniscate, Highlights, Latest Events, Committee, Moments) | Server-rendered (with per-request CSP nonce) | None |
 | `/about` | Club mission, history, operational pillars, and 2023–2026 timeline | Server-rendered (with per-request CSP nonce) | None |
 | `/events` | All events archive with category filter (All, Upcoming, Conducted) | Server-rendered (with per-request CSP nonce) | None |
-| `/events/[id]` | Event detail page with poster, venue, date, schedule, registration form | Static SSG (31 paths) + Dynamic Fallback | `id` (e.g. `scilab-workshop`, `shinka-2026`) |
+| `/events/[id]` | Event detail page with poster, venue, date, schedule, registration form | Static SSG (42 paths) + Dynamic Fallback | `id` (e.g. `scilab-workshop`, `reverse-logic`, `birthday-lineup`) |
 | `/team` | Core Committee 2026–27 member profiles, department badges, role descriptions | Server-rendered (with per-request CSP nonce) | None |
 | `/gallery` | Photo highlights archive with keyboard-navigable fullscreen lightbox modal | Server-rendered (with per-request CSP nonce) | None |
 | `/contact` | Official query form, club email, Instagram handle, college postal address | Server-rendered (with per-request CSP nonce) | None |
@@ -43,7 +43,7 @@ All endpoints under `/api/*` are guarded by edge middleware:
 
 | Path | Format | Generator |
 | :--- | :--- | :--- |
-| `/sitemap.xml` | XML | [app/sitemap.js](file:///c:/Users/austi/OneDrive/Desktop/Infinitus%20Website/Infinitus/app/sitemap.js) (Auto-indexes static pages and all 31 individual event routes) |
+| `/sitemap.xml` | XML | [app/sitemap.js](file:///c:/Users/austi/OneDrive/Desktop/Infinitus%20Website/Infinitus/app/sitemap.js) (Auto-indexes static pages and all 42 individual event routes) |
 | `/robots.txt` | Text | [app/robots.js](file:///c:/Users/austi/OneDrive/Desktop/Infinitus%20Website/Infinitus/app/robots.js) (Allows all public routes, disallows `/api/*`, links sitemap) |
 | `/manifest.webmanifest` | JSON | [app/manifest.js](file:///c:/Users/austi/OneDrive/Desktop/Infinitus%20Website/Infinitus/app/manifest.js) (PWA web app manifest with 32, 192, 512, and maskable icons) |
 | `/opengraph-image` | PNG | [app/opengraph-image.jsx](file:///c:/Users/austi/OneDrive/Desktop/Infinitus%20Website/Infinitus/app/opengraph-image.jsx) (Dynamic 1200×630 OpenGraph card with `CORP: cross-origin`) |

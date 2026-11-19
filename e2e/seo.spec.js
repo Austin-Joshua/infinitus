@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const ROUTES = ['/', '/about', '/events', '/events/scilab-workshop', '/team', '/gallery', '/contact'];
+const ROUTES = ['/', '/about', '/events', '/events/scilab-workshop', '/events/reverse-logic', '/team', '/gallery', '/contact'];
 
 test.describe('SEO Quality & Semantic Structure', () => {
   const titles = new Set();

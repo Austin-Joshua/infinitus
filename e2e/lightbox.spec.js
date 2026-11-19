@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Fullscreen Gallery Lightbox Experience', () => {
   test('opens, traps focus, changes slides on arrows, hides header/nav, and returns focus on close', async ({ page }) => {
     await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
     // Locate the first gallery card button/trigger
     const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
@@ -146,6 +147,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
       for (const vp of viewports) {
         await page.setViewportSize({ width: vp.width, height: vp.height });
         await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+        await page.waitForLoadState('networkidle');
 
         const trigger = page.getByRole('button', { name: tc.buttonName });
         await expect(trigger).toBeVisible({ timeout: 10000 });
@@ -214,6 +216,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
   test('differentiates drag gesture from tap action', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
     await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
     const trigger = page.getByRole('button', { name: /View photo:/i }).first();
     await trigger.click();
@@ -336,6 +339,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
     for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
       await page.setViewportSize(vp);
       await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
 
       await page.evaluate(() => {
         document.documentElement.style.scrollBehavior = 'auto';
@@ -381,6 +385,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
   test('focus fallback receives programmatic focus when trigger element is removed from DOM', async ({ page }) => {
     await page.goto('/gallery', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
     const firstCard = page.getByRole('button', { name: /View photo:/i }).first();
     await expect(firstCard).toBeVisible({ timeout: 10000 });
 
