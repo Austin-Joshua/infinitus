@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { playAttractorSwitch, playClick } from '@/lib/soundEffects';
 
 /** Precomputed Discrete Fourier Transform of the Lemniscate of Bernoulli: (x² + y²)² = a²(x² - y²) */
 function computeLemniscateDFT(numSamples = 256, scale = 110) {
@@ -82,6 +83,7 @@ export default function HeroMathCanvas({ className = '' }) {
       const targetMode = e?.detail;
       if (targetMode && ['lorenz', 'fourier', 'aizawa'].includes(targetMode)) {
         setMode(targetMode);
+        playAttractorSwitch();
       }
     };
     window.addEventListener('infinitus:set-math-mode', handleSetMode);
@@ -578,6 +580,7 @@ export default function HeroMathCanvas({ className = '' }) {
                 onClick={() => {
                   setMode(m.id);
                   initSimulation();
+                  playAttractorSwitch();
                 }}
                 className={`px-2 py-1 sm:px-2.5 sm:py-1 text-[11px] sm:text-xs font-mono rounded-lg transition-all whitespace-nowrap ${
                   isActive
@@ -594,7 +597,10 @@ export default function HeroMathCanvas({ className = '' }) {
         {/* Action Controls */}
         <div className="flex items-center gap-1.5 shrink-0">
           <button
-            onClick={() => setIsRunning(!isRunning)}
+            onClick={() => {
+              setIsRunning(!isRunning);
+              playClick();
+            }}
             className="p-1 sm:p-1.5 text-xs font-mono rounded-md border border-fg/10 text-muted hover:text-fg hover:bg-fg/5 transition-colors"
             title={isRunning ? 'Pause animation' : 'Resume animation'}
             aria-label={isRunning ? 'Pause animation' : 'Resume animation'}
@@ -610,7 +616,10 @@ export default function HeroMathCanvas({ className = '' }) {
             )}
           </button>
           <button
-            onClick={handleReset}
+            onClick={() => {
+              handleReset();
+              playClick();
+            }}
             className="p-1 sm:p-1.5 text-xs font-mono rounded-md border border-fg/10 text-muted hover:text-fg hover:bg-fg/5 transition-colors"
             title="Reset simulation & orientation"
             aria-label="Reset simulation & orientation"

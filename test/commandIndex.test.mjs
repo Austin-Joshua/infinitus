@@ -102,6 +102,10 @@ describe('Command Palette Search Index & Algorithm (Feature 3A)', () => {
     const themeResults = searchIndex('theme', index);
     assert.ok(themeResults.length > 0, 'Should find Theme toggle action');
     assert.equal(themeResults[0].action, 'toggle-theme');
+
+    const soundResults = searchIndex('sound', index);
+    assert.ok(soundResults.length > 0, 'Should find Sound toggle action');
+    assert.equal(soundResults[0].action, 'toggle-sound');
   });
 
   test('groups results into structured category containers', () => {

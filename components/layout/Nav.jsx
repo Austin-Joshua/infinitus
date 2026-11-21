@@ -13,6 +13,8 @@ import {
 import InfinitusLogo from '@/components/brand/InfinitusLogo';
 import RitLogo from '@/components/brand/RitLogo';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import SoundToggle from '@/components/ui/SoundToggle';
+import { playClick, playThemeToggle } from '@/lib/soundEffects';
 import { EASE } from '@/lib/motion';
 import { COPY, NAV_LINKS, SOCIAL } from '@/lib/site';
 
@@ -245,9 +247,14 @@ export default function Nav() {
               <InstagramNavIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </a>
 
+            <SoundToggle />
+
             <button
               type="button"
-              onClick={toggleTheme}
+              onClick={() => {
+                toggleTheme();
+                playThemeToggle();
+              }}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={isDark ? 'Light mode' : 'Dark mode'}
               className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-sunset-orange/35 bg-card text-fg shadow-sm shadow-sunset-orange/10 transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { generateGoogleCalendarUrl, downloadIcsFile } from '@/lib/calendar';
+import { playSuccess } from '@/lib/soundEffects';
 
 function CalendarIcon(props) {
   return (
@@ -60,6 +61,7 @@ export default function AddToCalendarMenu({ event, className = '' }) {
     }
 
     setSynced(true);
+    playSuccess();
     setTimeout(() => {
       setSynced(false);
       setToast(null);

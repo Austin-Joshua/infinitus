@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { buildSearchIndex, searchIndex, groupResults } from '@/lib/commandIndex';
 import { generateGoogleCalendarUrl } from '@/lib/calendar';
+import { playOpenModal, playCloseModal, playClick, toggleSound } from '@/lib/soundEffects';
 import { EVENTS, MEMBERS } from '@/lib/data';
 
 // Icons
@@ -126,6 +127,15 @@ function CheckIcon(props) {
   );
 }
 
+function SpeakerSoundIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" />
+    </svg>
+  );
+}
+
 // Renders matching substrings in bold/color
 function HighlightMatch({ text, query }) {
   if (!text) return null;
@@ -192,11 +202,13 @@ export default function CommandPalette() {
     setIsOpen(true);
     setQuery('');
     setActiveIndex(0);
+    playOpenModal();
   }, []);
 
   const closePalette = useCallback(() => {
     setIsOpen(false);
     setQuery('');
+    playCloseModal();
   }, []);
 
   // Toast feedback helper
@@ -213,6 +225,8 @@ export default function CommandPalette() {
     (item) => {
       if (!item) return;
 
+      playClick();
+
       // Handle custom actions
       if (item.action) {
         switch (item.action) {
@@ -220,6 +234,11 @@ export default function CommandPalette() {
             toggleTheme();
             showToast('Theme switched!');
             break;
+          case 'toggle-sound': {
+            const next = toggleSound();
+            showToast(next ? 'Harmonic sound effects unmuted' : 'Harmonic sound effects muted');
+            break;
+          }
           case 'set-math-lorenz':
             window.dispatchEvent(new CustomEvent('infinitus:set-math-mode', { detail: 'lorenz' }));
             if (window.location.pathname !== '/') {
@@ -302,7 +321,11 @@ export default function CommandPalette() {
       // Cmd+K or Ctrl+K
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        setIsOpen((prev) => {
+          if (!prev) playOpenModal();
+          else playCloseModal();
+          return !prev;
+        });
         return;
       }
 
@@ -407,6 +430,8 @@ export default function CommandPalette() {
         return <UserIcon className="h-4 w-4" />;
       case 'theme':
         return <SunMoonIcon className="h-4 w-4" />;
+      case 'sound':
+        return <SpeakerSoundIcon className="h-4 w-4" />;
       case 'math':
         return <MathCurveIcon className="h-4 w-4" />;
       case 'copy':
@@ -424,6 +449,7 @@ export default function CommandPalette() {
       <AnimatePresence>
         {toastMessage && (
           <motion.div
+            data-testid="command-palette-toast"
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
