@@ -453,7 +453,7 @@ export default function CommandPalette() {
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            className="fixed bottom-6 right-6 z-[120] flex items-center gap-2 rounded-xl border border-sunset-orange/40 bg-card/95 px-4 py-2.5 shadow-xl backdrop-blur-md"
+            className="fixed bottom-6 right-6 z-[120] flex items-center gap-2 rounded-xl border border-sunset-orange/40 bg-card px-4 py-2.5 shadow-xl"
           >
             <CheckIcon className="h-4 w-4 text-sunset-orange" />
             <span className="font-mono text-xs font-semibold text-fg">{toastMessage}</span>

@@ -97,7 +97,7 @@ export default function AddToCalendarMenu({ event, className = '' }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.95 }}
             data-testid="calendar-sync-toast"
-            className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 z-50 whitespace-nowrap rounded-xl border border-sunset-orange/30 bg-[#FBF8F2] dark:bg-[#0D0F17] px-3.5 py-1.5 font-mono text-[11px] text-fg shadow-xl backdrop-blur-md"
+            className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 z-50 whitespace-nowrap rounded-xl border border-sunset-orange/30 bg-[#FBF8F2] dark:bg-[#0D0F17] px-3.5 py-1.5 font-mono text-[11px] text-fg shadow-xl"
           >
             <span className="text-sunset-orange font-bold mr-1.5">✓</span>
             {toast}

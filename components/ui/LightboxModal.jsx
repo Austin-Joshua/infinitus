@@ -331,7 +331,7 @@ export default function LightboxModal({
                 e.stopPropagation();
                 onClose?.();
               }}
-              className="pointer-events-auto flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white shadow-xl backdrop-blur-md transition-all duration-200 active:scale-95 hover:bg-white/20 hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
+              className="pointer-events-auto flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-black/60 text-white shadow-xl transition-all duration-200 active:scale-95 hover:bg-white/20 hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunset-orange"
               aria-label="Close image viewer"
             >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-5 w-5">
@@ -348,7 +348,7 @@ export default function LightboxModal({
                 e.stopPropagation();
                 step(-1);
               }}
-              className={`absolute left-3 sm:left-5 md:left-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/85 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+              className={`absolute left-3 sm:left-5 md:left-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/70 text-white shadow-2xl transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                 showUi ? 'opacity-100 scale-100 visible pointer-events-auto' : 'opacity-0 scale-90 invisible pointer-events-none'
               }`}
               aria-label="Previous image"
@@ -367,7 +367,7 @@ export default function LightboxModal({
                 e.stopPropagation();
                 step(1);
               }}
-              className={`absolute right-3 sm:right-5 md:right-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:bg-black/85 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+              className={`absolute right-3 sm:right-5 md:right-6 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/25 bg-black/70 text-white shadow-2xl transition-all duration-200 hover:bg-black/90 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                 showUi ? 'opacity-100 scale-100 visible pointer-events-auto' : 'opacity-0 scale-90 invisible pointer-events-none'
               }`}
               aria-label="Next image"

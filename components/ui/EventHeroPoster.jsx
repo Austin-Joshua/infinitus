@@ -215,7 +215,7 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
             style={{ transform: 'translateZ(44px)' }}
             className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           >
-            <span className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/90 px-3.5 py-1.5 font-mono text-[11px] font-semibold text-white shadow-2xl backdrop-blur-md">
+            <span className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/90 px-3.5 py-1.5 font-mono text-[11px] font-semibold text-white shadow-2xl">
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" className="h-3.5 w-3.5 text-sunset-orange">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
               </svg>

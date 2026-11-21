@@ -563,7 +563,7 @@ export default function HeroMathCanvas({ className = '' }) {
   return (
     <div
       ref={containerRef}
-      className={`card relative overflow-hidden rounded-2xl border border-fg/15 bg-card/75 backdrop-blur-md p-4 sm:p-5 shadow-xl transition-all ${className}`}
+      className={`card relative overflow-hidden rounded-2xl border border-fg/15 bg-card p-4 sm:p-5 shadow-xl transition-all ${className}`}
       role="region"
       aria-label="Interactive mathematical visualizer: 3D chaotic attractors and Fourier epicycles"
     >
@@ -659,12 +659,12 @@ export default function HeroMathCanvas({ className = '' }) {
 
         {/* Status / Drag Hint */}
         {!isRunning ? (
-          <div className="pointer-events-none absolute top-2 right-2 text-[10px] font-mono text-sunset bg-bg/85 backdrop-blur-sm px-2 py-0.5 rounded border border-sunset/30 select-none flex items-center gap-1.5 font-semibold">
+          <div className="pointer-events-none absolute top-2 right-2 text-[10px] font-mono text-sunset bg-bg/90 px-2 py-0.5 rounded border border-sunset/30 select-none flex items-center gap-1.5 font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-sunset" />
             <span>PAUSED</span>
           </div>
         ) : mode !== 'fourier' ? (
-          <div className="pointer-events-none absolute top-2 right-2 text-[10px] font-mono text-muted/75 bg-bg/70 backdrop-blur-sm px-2 py-0.5 rounded border border-fg/10 select-none flex items-center gap-1.5">
+          <div className="pointer-events-none absolute top-2 right-2 text-[10px] font-mono text-muted bg-bg/90 px-2 py-0.5 rounded border border-fg/10 select-none flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
             <span>Drag to rotate 3D</span>
           </div>

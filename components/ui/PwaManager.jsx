@@ -106,7 +106,7 @@ export default function PwaManager() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             data-testid="pwa-offline-banner"
-            className="fixed top-2.5 inset-x-4 max-w-md mx-auto z-[150] flex items-center justify-between gap-3 rounded-full border border-sunset-orange/50 bg-[#0D0F17]/95 px-4 py-2 text-xs text-fg shadow-2xl backdrop-blur-xl"
+            className="fixed top-2.5 inset-x-4 max-w-md mx-auto z-[150] flex items-center justify-between gap-3 rounded-full border border-sunset-orange/50 bg-[#0D0F17] px-4 py-2 text-xs text-fg shadow-2xl"
           >
             <div className="flex items-center gap-2.5">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sunset-orange/20 text-sunset-orange">
@@ -131,7 +131,7 @@ export default function PwaManager() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             data-testid="pwa-install-banner"
-            className="fixed bottom-20 left-4 z-[55] hidden sm:flex items-center gap-2 rounded-full border border-sunset-orange/40 bg-card/90 px-3.5 py-1.5 shadow-xl backdrop-blur-md transition-all hover:border-sunset-orange/80"
+            className="fixed bottom-20 left-4 z-[55] hidden sm:flex items-center gap-2 rounded-full border border-sunset-orange/40 bg-card px-3.5 py-1.5 shadow-xl transition-all hover:border-sunset-orange/80"
           >
             <DownloadAppIcon className="h-4 w-4 text-sunset-orange" />
             <span className="font-mono text-xs font-medium text-fg">Install Infinitus App</span>

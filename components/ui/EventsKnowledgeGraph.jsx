@@ -518,7 +518,7 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
   return (
     <div
       ref={containerRef}
-      className={`card relative overflow-hidden rounded-2xl border border-fg/15 bg-card/80 backdrop-blur-md p-4 sm:p-6 shadow-xl transition-all ${className}`}
+      className={`card relative overflow-hidden rounded-2xl border border-fg/15 bg-card p-4 sm:p-6 shadow-xl transition-all ${className}`}
       role="region"
       aria-label="Interactive Mathematical Knowledge Graph: 44 INFINITUS events mapped across mathematical domains"
     >
@@ -631,7 +631,7 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
         />
 
         {/* Floating Zoom & Pan Toolbar */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-bg/85 backdrop-blur-md p-1 rounded-lg border border-fg/15 shadow-md">
+        <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-bg/95 p-1 rounded-lg border border-fg/15 shadow-md">
           <button
             onClick={() => handleZoom(1.15)}
             className="p-1.5 text-xs font-mono rounded hover:bg-fg/10 text-muted hover:text-fg transition-colors"
@@ -668,7 +668,7 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
         {/* Hover Tooltip */}
         {hoveredNode && !activeEvent && (
           <div
-            className="pointer-events-none absolute z-20 max-w-xs rounded-lg border border-fg/15 bg-card/95 backdrop-blur-md p-2.5 shadow-xl text-xs transition-opacity duration-150"
+            className="pointer-events-none absolute z-20 max-w-xs rounded-lg border border-fg/15 bg-card p-2.5 shadow-xl text-xs transition-opacity duration-150"
             style={{
               left: Math.min(Math.max(12, stateRef.current.mousePos.x - 80), 300),
               top: Math.max(12, stateRef.current.mousePos.y - 80),
@@ -704,7 +704,7 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
 
         {/* Active Selected Event Preview Drawer */}
         {activeEvent && (
-          <div className="absolute inset-x-3 bottom-3 z-30 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-sunset-orange/40 bg-card/95 backdrop-blur-md p-4 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="absolute inset-x-3 bottom-3 z-30 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-sunset-orange/40 bg-card p-4 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-200">
             <div className="flex items-center gap-3.5 min-w-0 w-full sm:w-auto">
               {activeEvent.coverImageUrl && (
                 <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-md border border-fg/10 bg-bg">
