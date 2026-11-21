@@ -32,8 +32,8 @@ export async function generateMetadata({ params }) {
     title: event.title,
     description,
     path: `/events/${encodeURIComponent(event.id)}`,
-    image: event.coverImageUrl || '/opengraph-image',
-    imageAlt: `${event.title} poster`,
+    image: `/events/${encodeURIComponent(event.id)}/opengraph-image`,
+    imageAlt: `${event.title} official event card`,
   });
 }
 
