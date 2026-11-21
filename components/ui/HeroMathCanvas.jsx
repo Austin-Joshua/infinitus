@@ -70,6 +70,12 @@ export default function HeroMathCanvas({ className = '' }) {
   const [isInteracting, setIsInteracting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
+  // Ref to hold current running state so pausing doesn't trigger canvas recreation or wipe
+  const isRunningRef = useRef(isRunning);
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+
   // 3D rotation angles & physics state
   const stateRef = useRef({
     rotX: 0.35,
@@ -246,7 +252,8 @@ export default function HeroMathCanvas({ className = '' }) {
 
     // Render loop
     const render = () => {
-      if (isVisible && isRunning) {
+      if (isVisible) {
+        const isRunningNow = isRunningRef.current;
         const rect = canvas.getBoundingClientRect();
         const width = rect.width;
         const height = rect.height;
@@ -256,11 +263,17 @@ export default function HeroMathCanvas({ className = '' }) {
         const isDark = s.isDark;
 
         // Inertia & auto-spin
-        if (!s.isDragging && !prefersReducedMotion) {
+        if (!s.isDragging && !prefersReducedMotion && isRunningNow) {
           s.rotX += s.velX;
           s.rotY += s.velY;
           s.velX *= 0.96;
           s.velY = s.velY * 0.96 + 0.003 * 0.04; // Gentle return to smooth ambient spin
+        } else if (!s.isDragging && (Math.abs(s.velX) > 0.0001 || Math.abs(s.velY) > 0.0001)) {
+          // Coast drag velocity smoothly even when paused
+          s.rotX += s.velX;
+          s.rotY += s.velY;
+          s.velX *= 0.92;
+          s.velY *= 0.92;
         }
 
         // Clear canvas with subtle math grid overlay
@@ -291,19 +304,23 @@ export default function HeroMathCanvas({ className = '' }) {
           const scale = Math.min(width, height) * 0.024;
           const centerZ = 25;
 
-          // Integrate particles
+          // Integrate particles only when running
+          if (isRunningNow && !prefersReducedMotion) {
+            for (let p of s.lorenzParticles) {
+              const dx = sigma * (p.y - p.x);
+              const dy = p.x * (rho - p.z) - p.y;
+              const dz = p.x * p.y - beta * p.z;
+              p.x += dx * dt;
+              p.y += dy * dt;
+              p.z += dz * dt;
+
+              p.history.push({ x: p.x, y: p.y, z: p.z - centerZ });
+              if (p.history.length > 36) p.history.shift();
+            }
+          }
+
+          // Always draw trajectory ribbons and head dots (frozen in place when paused)
           for (let p of s.lorenzParticles) {
-            const dx = sigma * (p.y - p.x);
-            const dy = p.x * (rho - p.z) - p.y;
-            const dz = p.x * p.y - beta * p.z;
-            p.x += dx * dt;
-            p.y += dy * dt;
-            p.z += dz * dt;
-
-            p.history.push({ x: p.x, y: p.y, z: p.z - centerZ });
-            if (p.history.length > 36) p.history.shift();
-
-            // Draw trajectory ribbons
             if (p.history.length > 2) {
               ctx.beginPath();
               for (let i = 0; i < p.history.length; i++) {
@@ -333,8 +350,12 @@ export default function HeroMathCanvas({ className = '' }) {
         else if (mode === 'fourier') {
           const harmonics = s.dftHarmonics || [];
           const speed = prefersReducedMotion ? 0.005 : 0.015;
-          s.fourierTime += speed;
-          if (s.fourierTime > Math.PI * 2) s.fourierTime -= Math.PI * 2;
+
+          // Advance time only when running
+          if (isRunningNow) {
+            s.fourierTime += speed;
+            if (s.fourierTime > Math.PI * 2) s.fourierTime -= Math.PI * 2;
+          }
 
           // Draw faint background guide of the full Lemniscate of Bernoulli
           ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(20, 36, 56, 0.07)';
@@ -382,9 +403,11 @@ export default function HeroMathCanvas({ className = '' }) {
             ctx.stroke();
           }
 
-          // Append traced point
-          s.fourierPath.push({ x: epX, y: epY });
-          if (s.fourierPath.length > 320) s.fourierPath.shift();
+          // Append traced point only when running
+          if (isRunningNow) {
+            s.fourierPath.push({ x: epX, y: epY });
+            if (s.fourierPath.length > 320) s.fourierPath.shift();
+          }
 
           // Draw continuous traced infinity curve
           if (s.fourierPath.length > 2) {
@@ -422,23 +445,28 @@ export default function HeroMathCanvas({ className = '' }) {
           const f = 0.1;
           const scale = Math.min(width, height) * 0.22;
 
+          if (isRunningNow && !prefersReducedMotion) {
+            for (let p of s.aizawaParticles) {
+              const dx = (p.z - b) * p.x - d * p.y;
+              const dy = d * p.x + (p.z - b) * p.y;
+              const dz =
+                c +
+                a * p.z -
+                Math.pow(p.z, 3) / 3 -
+                (p.x * p.x + p.y * p.y) * (1 + e * p.z) +
+                f * p.z * Math.pow(p.x, 3);
+
+              p.x += dx * dt;
+              p.y += dy * dt;
+              p.z += dz * dt;
+
+              p.history.push({ x: p.x, y: p.y, z: p.z });
+              if (p.history.length > 28) p.history.shift();
+            }
+          }
+
+          // Always draw Aizawa trajectory and particles (frozen when paused)
           for (let p of s.aizawaParticles) {
-            const dx = (p.z - b) * p.x - d * p.y;
-            const dy = d * p.x + (p.z - b) * p.y;
-            const dz =
-              c +
-              a * p.z -
-              Math.pow(p.z, 3) / 3 -
-              (p.x * p.x + p.y * p.y) * (1 + e * p.z) +
-              f * p.z * Math.pow(p.x, 3);
-
-            p.x += dx * dt;
-            p.y += dy * dt;
-            p.z += dz * dt;
-
-            p.history.push({ x: p.x, y: p.y, z: p.z });
-            if (p.history.length > 28) p.history.shift();
-
             if (p.history.length > 2) {
               ctx.beginPath();
               for (let i = 0; i < p.history.length; i++) {
@@ -475,7 +503,7 @@ export default function HeroMathCanvas({ className = '' }) {
       resizeObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, [mode, isRunning, initSimulation, prefersReducedMotion]);
+  }, [mode, initSimulation, prefersReducedMotion]);
 
   // Pointer drag controls for 3D navigation
   const onPointerDown = (e) => {
@@ -583,7 +611,7 @@ export default function HeroMathCanvas({ className = '' }) {
       </div>
 
       {/* Main Interactive Canvas */}
-      <div className="relative mt-3 w-full h-[280px] sm:h-[320px] md:h-[360px] rounded-xl overflow-hidden bg-bg/50 border border-fg/5">
+      <div className="relative mt-3 w-full h-[260px] sm:h-[290px] md:h-[320px] rounded-xl overflow-hidden bg-bg/50 border border-fg/5">
         <canvas
           ref={canvasRef}
           onPointerDown={onPointerDown}
@@ -608,13 +636,18 @@ export default function HeroMathCanvas({ className = '' }) {
           Infinitus Math Engine
         </div>
 
-        {/* Drag Hint (only for 3D modes) */}
-        {mode !== 'fourier' && (
+        {/* Status / Drag Hint */}
+        {!isRunning ? (
+          <div className="pointer-events-none absolute top-2 right-2 text-[10px] font-mono text-sunset bg-bg/85 backdrop-blur-sm px-2 py-0.5 rounded border border-sunset/30 select-none flex items-center gap-1.5 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-sunset" />
+            <span>PAUSED</span>
+          </div>
+        ) : mode !== 'fourier' ? (
           <div className="pointer-events-none absolute top-2 right-2 text-[10px] font-mono text-muted/75 bg-bg/70 backdrop-blur-sm px-2 py-0.5 rounded border border-fg/10 select-none flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
             <span>Drag to rotate 3D</span>
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Mathematical Caption & Live Formula Bar */}

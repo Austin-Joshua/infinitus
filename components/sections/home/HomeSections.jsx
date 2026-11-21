@@ -405,34 +405,34 @@ export function HomeInstagram() {
           cta="Follow on Instagram"
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-7">
-          {INSTAGRAM_POSTS.map((post, idx) => (
-            <Reveal key={post.id} delay={idx * 0.04}>
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 sm:gap-4 lg:gap-5">
+          {INSTAGRAM_POSTS.slice(0, 8).map((post, idx) => (
+            <Reveal key={post.id} delay={idx * 0.03}>
               <a
                 href={post.permalink || SOCIAL.instagram}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl"
+                className="card card-hover group relative flex h-full max-w-sm sm:max-w-none mx-auto w-full flex-col overflow-hidden rounded-xl border border-fg/10 shadow-sm"
                 aria-label={`View Instagram post: ${post.caption}`}
               >
                 {/* Official Club Header: Official Infinitus Logo, Instagram Handle, and Tag Chip */}
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-fg/10 bg-bg-2/40">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full ring-1 ring-sunset-orange/40 shadow-xs bg-bg">
+                <div className="flex items-center justify-between px-3 py-2 border-b border-fg/10 bg-bg-2/30">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full ring-1 ring-sunset-orange/40 shadow-xs bg-bg">
                       <InfinitusLogo size="nav" className="h-full w-full object-cover" />
                     </div>
-                    <span className="font-mono text-xs font-semibold text-fg/90 truncate tracking-tight">
+                    <span className="font-mono text-[11px] font-semibold text-fg/90 truncate tracking-tight">
                       {SOCIAL.instagramHandle}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     {post.tag && (
-                      <span className="chip text-[10px] sm:text-[11px] py-0.5 px-2 border-sunset/40 text-sunset font-medium">
+                      <span className="chip text-[9px] py-0.5 px-1.5 border-sunset/40 text-sunset font-medium">
                         {post.tag}
                       </span>
                     )}
-                    <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center text-muted group-hover:text-sunset-orange transition-colors">
-                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-4 w-4">
+                    <span aria-hidden="true" className="flex h-4 w-4 items-center justify-center text-muted group-hover:text-sunset-orange transition-colors">
+                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" className="h-3.5 w-3.5">
                         <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" />
                         <circle cx="12" cy="12" r="3.3" stroke="currentColor" />
                         <path d="M16.2 7.8h.01" stroke="currentColor" strokeLinecap="round" />
@@ -441,33 +441,44 @@ export function HomeInstagram() {
                   </div>
                 </div>
 
-                {/* Poster Frame: 100% unobstructed edge-to-edge 4:5 frame */}
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-bg-2/20">
+                {/* Poster Frame: Compact, tailored aspect ratio */}
+                <div className="relative aspect-square sm:aspect-[4/4.5] w-full overflow-hidden bg-bg-2/20 max-h-[250px] sm:max-h-[270px]">
                   <Image
                     src={post.image}
                     alt={post.caption}
                     fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </div>
 
                 {/* Caption & Metadata Footer */}
-                <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
-                  <p className="line-clamp-3 text-xs sm:text-sm leading-relaxed text-fg/90 font-sans">
+                <div className="flex flex-1 flex-col justify-between p-3 sm:p-3.5">
+                  <p className="line-clamp-2 text-xs leading-snug text-fg/90 font-sans">
                     {post.caption}
                   </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-3 text-xs">
+                  <div className="mt-3 flex items-center justify-between border-t border-fg/10 pt-2 text-[11px]">
                     <span className="font-mono text-muted">{post.date}</span>
                     <span className="font-mono font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
-                      View on Instagram <span aria-hidden="true">↗</span>
+                      Instagram <span aria-hidden="true">↗</span>
                     </span>
                   </div>
                 </div>
               </a>
             </Reveal>
           ))}
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <a
+            href={SOCIAL.instagram}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="btn-ghost text-xs sm:text-sm inline-flex items-center gap-2"
+          >
+            View more on Instagram <span aria-hidden="true" className="nudge-ne">↗</span>
+          </a>
         </div>
       </div>
     </section>

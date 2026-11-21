@@ -49,14 +49,20 @@ test.describe('Hero Interactive Mathematical Canvas (Feature 1A)', () => {
     await expect(aizawaTab).toHaveAttribute('aria-selected', 'true');
     await expect(visualizer).toContainText('Dynamical Systems');
 
-    // Test Play / Pause toggle
+    // Test Play / Pause toggle & visibility retention
     const pauseBtn = visualizer.getByRole('button', { name: /pause/i });
     await expect(pauseBtn).toBeVisible();
     await pauseBtn.click();
 
+    // Verify PAUSED badge appears and canvas remains completely visible
+    const pausedBadge = visualizer.getByText('PAUSED');
+    await expect(pausedBadge).toBeVisible();
+    await expect(canvas).toBeVisible();
+
     const resumeBtn = visualizer.getByRole('button', { name: /resume/i });
     await expect(resumeBtn).toBeVisible();
     await resumeBtn.click();
+    await expect(pausedBadge).not.toBeVisible();
 
     // Test drag interaction on canvas
     const box = await canvas.boundingBox();
@@ -83,10 +89,22 @@ test.describe('Hero Interactive Mathematical Canvas (Feature 1A)', () => {
       await page.screenshot({ path: `${artifactDir}/hero-math-canvas-desktop-dark.png` });
     }
 
-    // 3. Switch to Fourier mode and capture in dark mode
+    // 3. Pause simulation in dark mode and capture (verify it stays 100% visible)
+    await pauseBtn.click();
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: `${artifactDir}/hero-math-canvas-paused.png` });
+    await resumeBtn.click();
+
+    // 4. Switch to Fourier mode and capture in dark mode
     await fourierTab.click();
     await page.waitForTimeout(1000);
     await page.screenshot({ path: `${artifactDir}/hero-math-canvas-fourier-dark.png` });
+
+    // 5. Scroll to Instagram section and capture the compact cards
+    const instagramSection = page.locator('section', { hasText: 'From our feed' });
+    await instagramSection.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600);
+    await page.screenshot({ path: `${artifactDir}/instagram-feed-cards-compact.png` });
 
     // Filter benign / expected warnings
     const realErrors = consoleErrors.filter(
