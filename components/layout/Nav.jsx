@@ -13,7 +13,6 @@ import {
 import InfinitusLogo from '@/components/brand/InfinitusLogo';
 import RitLogo from '@/components/brand/RitLogo';
 import { useTheme } from '@/components/ui/ThemeProvider';
-import SoundToggle from '@/components/ui/SoundToggle';
 import { playClick, playThemeToggle } from '@/lib/soundEffects';
 import { EASE } from '@/lib/motion';
 import { COPY, NAV_LINKS, SOCIAL } from '@/lib/site';
@@ -246,8 +245,6 @@ export default function Nav() {
             >
               <InstagramNavIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </a>
-
-            <SoundToggle />
 
             <button
               type="button"
