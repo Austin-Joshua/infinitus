@@ -166,7 +166,7 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
           }}
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
-          className="group relative flex h-full w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card/40 border border-sunset-orange/40 shadow-xl shadow-sunset-orange/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="group relative flex h-full w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-transparent border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
@@ -181,7 +181,7 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
           {/* Depth Layer 1: Poster Artwork Image (translateZ: 14px) */}
           <div
             style={{ transform: 'translateZ(14px)' }}
-            className="relative h-full w-full overflow-hidden rounded-lg"
+            className="relative h-full w-full overflow-hidden rounded-lg shadow-2xl shadow-black/40"
           >
             <Image
               src={event.coverImageUrl}
