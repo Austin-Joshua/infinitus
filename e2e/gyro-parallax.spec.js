@@ -50,5 +50,13 @@ test.describe('3D Gyro-Parallax Poster Viewer (Feature 4B)', () => {
     // 6. Dismiss lightbox with Escape
     await page.keyboard.press('Escape');
     await expect(lightbox).not.toBeVisible({ timeout: 4000 });
+
+    // 7. Visit Number Hunt event page and capture screenshot of clean single-element poster
+    await page.goto('/events/number-hunt', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('[data-testid="gyro-parallax-container"]', { timeout: 10000 });
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/gyro-parallax-number-hunt.png',
+    });
   });
 });

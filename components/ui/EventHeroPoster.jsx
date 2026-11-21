@@ -166,7 +166,7 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
           }}
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
-          className="group relative flex h-full w-full cursor-pointer items-center justify-center overflow-hidden rounded-2xl bg-bg border border-sunset-orange/30 shadow-2xl shadow-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="group relative flex h-full w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card/40 border border-sunset-orange/40 shadow-xl shadow-sunset-orange/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
@@ -181,7 +181,7 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
           {/* Depth Layer 1: Poster Artwork Image (translateZ: 14px) */}
           <div
             style={{ transform: 'translateZ(14px)' }}
-            className="relative h-full w-full overflow-hidden rounded-xl"
+            className="relative h-full w-full overflow-hidden rounded-lg"
           >
             <Image
               src={event.coverImageUrl}
@@ -210,26 +210,9 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
             className="pointer-events-none absolute inset-0 z-20 mix-blend-screen transition-opacity duration-300"
           />
 
-          {/* Depth Layer 3: Interactive 3D Status Badges (translateZ: 44px) */}
+          {/* Depth Layer 3: Hover Prompt Overlay (translateZ: 44px) */}
           <div
             style={{ transform: 'translateZ(44px)' }}
-            className="pointer-events-none absolute inset-x-3 top-3 z-30 flex items-center justify-between"
-          >
-            <span className="flex items-center gap-1.5 rounded-full border border-sunset-orange/50 bg-[#0D0F17]/85 px-2.5 py-1 font-mono text-[10px] font-semibold text-sunset-orange shadow-lg backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-sunset-orange animate-pulse" />
-              <span>3D Parallax</span>
-            </span>
-
-            {gyroActive && (
-              <span className="flex items-center gap-1 rounded-full border border-emerald-500/50 bg-[#0D0F17]/85 px-2.5 py-1 font-mono text-[10px] font-semibold text-emerald-400 shadow-lg backdrop-blur-md">
-                <span>Gyro Live</span>
-              </span>
-            )}
-          </div>
-
-          {/* Depth Layer 4: Hover Prompt Overlay (translateZ: 50px) */}
-          <div
-            style={{ transform: 'translateZ(50px)' }}
             className="pointer-events-none absolute inset-x-0 bottom-4 z-30 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           >
             <span className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/90 px-3.5 py-1.5 font-mono text-[11px] font-semibold text-white shadow-2xl backdrop-blur-md">
