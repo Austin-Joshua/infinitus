@@ -1,6 +1,7 @@
 import { COPY, SOCIAL } from '@/lib/site';
 import Reveal, { Stagger, StaggerItem } from '@/components/ui/Reveal';
 import SplitText from '@/components/ui/SplitText';
+import MathHistoryTimeline from '@/components/sections/MathHistoryTimeline';
 import Journey from '@/components/sections/Journey';
 
 /** Body of the About page: mission statement, what we do, and the timeline. */
@@ -60,6 +61,9 @@ export default function AboutUs() {
           </Stagger>
         </div>
       </section>
+
+      {/* Interactive Mathematical History & Heritage Timeline */}
+      <MathHistoryTimeline />
 
       <Journey heading={about.journeyHeading} steps={about.journey} />
     </>
