@@ -34,7 +34,7 @@ test.describe('Global Command Palette (Feature 3A)', () => {
     await input.fill('Ramanujan');
 
     // Wait for filtered option to be visible
-    const ramanujanOption = page.locator('[role="option"]', { hasText: 'Ramanujan Reimagined' });
+    const ramanujanOption = page.locator('[role="option"]', { hasText: 'Ramanujan Reimagined' }).first();
     await expect(ramanujanOption).toBeVisible();
 
     // Take screenshot of search results state
