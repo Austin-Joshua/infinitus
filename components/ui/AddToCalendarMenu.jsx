@@ -1,13 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  generateGoogleCalendarUrl,
-  generateOutlookCalendarUrl,
-  generateYahooCalendarUrl,
-  downloadIcsFile,
-} from '@/lib/calendar';
+import { generateGoogleCalendarUrl, downloadIcsFile } from '@/lib/calendar';
 
 function CalendarIcon(props) {
   return (
@@ -18,168 +13,92 @@ function CalendarIcon(props) {
   );
 }
 
-function ChevronDownIcon(props) {
+function CheckIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" {...props}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   );
 }
 
-function DownloadIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-    </svg>
-  );
-}
-
-function ExternalIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" stroke="currentColor" {...props}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-    </svg>
-  );
-}
-
+/**
+ * Smart 1-Click Calendar Sync Button.
+ * Automatically identifies device and network status:
+ *  - Apple devices (iPhone, iPad, macOS) -> Triggers native Apple Calendar (.ics) download & launch
+ *  - Android, Windows & Web -> Directly launches Google Calendar template
+ *  - Offline sessions -> Automatically saves native offline .ics iCalendar file
+ */
 export default function AddToCalendarMenu({ event, className = '' }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  // Close when clicking outside
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    }
-
-    function handleKeyDown(e) {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
+  const [synced, setSynced] = useState(false);
+  const [toast, setToast] = useState(null);
 
   if (!event) return null;
 
-  const handleAppleIcal = () => {
-    downloadIcsFile(event);
-    setIsOpen(false);
+  const handleSmartSync = () => {
+    if (typeof window === 'undefined') return;
+
+    const ua = navigator.userAgent || '';
+    const isApple = /iPhone|iPad|iPod|Macintosh/i.test(ua) && !/Windows/i.test(ua);
+    const isOffline = typeof navigator.onLine !== 'undefined' && !navigator.onLine;
+
+    if (isOffline) {
+      downloadIcsFile(event);
+      setToast('Offline: Saved calendar file (.ics)');
+    } else if (isApple) {
+      // Apple devices (iOS, macOS) use native .ics iCalendar which system opens directly
+      downloadIcsFile(event);
+      setToast('Synced to Apple Calendar (.ics)');
+    } else {
+      // Android, Windows, and Linux open Google Calendar directly
+      try {
+        window.open(generateGoogleCalendarUrl(event), '_blank', 'noopener,noreferrer');
+      } catch (err) {
+        // Fallback to .ics if popup blocked
+        downloadIcsFile(event);
+      }
+      setToast('Opening Google Calendar...');
+    }
+
+    setSynced(true);
+    setTimeout(() => {
+      setSynced(false);
+      setToast(null);
+    }, 2800);
   };
 
-  const calendarOptions = [
-    {
-      id: 'google',
-      label: 'Google Calendar',
-      icon: ExternalIcon,
-      action: () => {
-        window.open(generateGoogleCalendarUrl(event), '_blank', 'noopener,noreferrer');
-        setIsOpen(false);
-      },
-    },
-    {
-      id: 'apple',
-      label: 'Apple Calendar / iCal (.ics)',
-      icon: DownloadIcon,
-      action: handleAppleIcal,
-    },
-    {
-      id: 'outlook',
-      label: 'Outlook Calendar',
-      icon: ExternalIcon,
-      action: () => {
-        window.open(generateOutlookCalendarUrl(event), '_blank', 'noopener,noreferrer');
-        setIsOpen(false);
-      },
-    },
-    {
-      id: 'yahoo',
-      label: 'Yahoo Calendar',
-      icon: ExternalIcon,
-      action: () => {
-        window.open(generateYahooCalendarUrl(event), '_blank', 'noopener,noreferrer');
-        setIsOpen(false);
-      },
-    },
-  ];
-
   return (
-    <div ref={menuRef} className={`relative inline-block text-left ${className}`}>
+    <div className={`relative inline-block ${className}`}>
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-haspopup="true"
-        aria-expanded={isOpen}
+        onClick={handleSmartSync}
         data-testid="add-to-calendar-button"
-        className="btn-ghost inline-flex items-center gap-2 !px-4 !py-2.5 text-xs sm:text-sm font-semibold rounded-full border border-sunset-orange/40 bg-card hover:bg-sunset-orange/15 hover:border-sunset-orange/70 text-fg transition-all shadow-sm"
+        aria-label={`Add ${event.title} to calendar`}
+        className="btn-ghost inline-flex items-center gap-2 !px-4 !py-2.5 text-xs sm:text-sm font-semibold rounded-full border border-sunset-orange/40 bg-card hover:bg-sunset-orange/15 hover:border-sunset-orange/70 text-fg transition-all shadow-sm active:scale-95"
       >
-        <CalendarIcon className="h-4 w-4 text-sunset-orange" />
-        <span>Add to Calendar</span>
-        <ChevronDownIcon
-          className={`h-3.5 w-3.5 text-muted transition-transform duration-200 ${isOpen ? 'rotate-180 text-sunset-orange' : ''}`}
-        />
+        {synced ? (
+          <>
+            <CheckIcon className="h-4 w-4 text-emerald-500 shrink-0" />
+            <span className="text-emerald-500 font-bold">Synced!</span>
+          </>
+        ) : (
+          <>
+            <CalendarIcon className="h-4 w-4 text-sunset-orange shrink-0" />
+            <span>Add to Calendar</span>
+          </>
+        )}
       </button>
 
       <AnimatePresence>
-        {isOpen && (
+        {toast && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -4 }}
-            transition={{ duration: 0.16, ease: 'easeOut' }}
-            role="menu"
-            aria-orientation="vertical"
-            data-testid="calendar-dropdown-menu"
-            className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-64 origin-top-left sm:origin-top-right rounded-2xl border border-sunset-orange/30 bg-[#FBF8F2] dark:bg-[#0D0F17] p-1.5 shadow-2xl shadow-black/40 backdrop-blur-xl z-50 divide-y divide-border/40"
+            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.95 }}
+            data-testid="calendar-sync-toast"
+            className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 z-50 whitespace-nowrap rounded-xl border border-sunset-orange/30 bg-[#FBF8F2] dark:bg-[#0D0F17] px-3.5 py-1.5 font-mono text-[11px] text-fg shadow-xl backdrop-blur-md"
           >
-            <div className="px-3 py-2">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-muted font-semibold">
-                Sync Event Schedule
-              </p>
-              <p className="font-sans text-xs font-semibold text-fg truncate mt-0.5">
-                {event.title}
-              </p>
-            </div>
-
-            <div className="py-1">
-              {calendarOptions.map((opt) => {
-                const Icon = opt.icon;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    role="menuitem"
-                    data-testid={`calendar-opt-${opt.id}`}
-                    onClick={opt.action}
-                    className="group flex w-full items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-fg hover:bg-sunset-orange/15 hover:text-sunset-orange transition-colors"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-md bg-sunset-orange/10 text-sunset-orange group-hover:bg-sunset-orange/20">
-                        <CalendarIcon className="h-3 w-3" />
-                      </span>
-                      <span>{opt.label}</span>
-                    </span>
-                    <Icon className="h-3.5 w-3.5 text-muted group-hover:text-sunset-orange shrink-0" />
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="px-3 py-2 bg-card/40 rounded-b-xl flex items-center justify-between font-mono text-[10px] text-muted">
-              <span>Automatic Timezone</span>
-              <span className="text-sunset-orange font-semibold">IST (UTC+5:30)</span>
-            </div>
+            <span className="text-sunset-orange font-bold mr-1.5">✓</span>
+            {toast}
           </motion.div>
         )}
       </AnimatePresence>
