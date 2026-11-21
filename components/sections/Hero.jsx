@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { COPY, SOCIAL } from '@/lib/site';
 import { EASE, introDelay } from '@/lib/motion';
-import Lemniscate from '@/components/ui/Lemniscate';
+import HeroMathCanvas from '@/components/ui/HeroMathCanvas';
 import SplitText from '@/components/ui/SplitText';
 import Counter from '@/components/ui/Counter';
 
@@ -14,7 +14,6 @@ export default function Hero({ stats = [] }) {
   const [start] = useState(introDelay);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const figureY = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
-  const figureRotate = useTransform(scrollYProgress, [0, 1], [0, -4]);
 
   const rise = (delay) => ({
     initial: { opacity: 0, y: 12 },
@@ -71,13 +70,11 @@ export default function Hero({ stats = [] }) {
           <motion.div
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: start + 0.35, ease: EASE.out }}
-            style={{ y: figureY, rotate: figureRotate }}
-            className="flex items-center justify-center max-w-md mx-auto lg:max-w-none w-full"
-            role="img"
-            aria-label="Animated graph of the lemniscate of Bernoulli, the infinity-shaped curve behind the INFINITUS name"
+            transition={{ duration: 0.8, delay: start + 0.35, ease: EASE.out }}
+            style={{ y: figureY }}
+            className="flex items-center justify-center max-w-xl mx-auto lg:max-w-none w-full"
           >
-            <Lemniscate axes dot draw drawDelay={start + 0.4} className="w-full max-w-lg mx-auto" />
+            <HeroMathCanvas className="w-full" />
           </motion.div>
         </div>
 
