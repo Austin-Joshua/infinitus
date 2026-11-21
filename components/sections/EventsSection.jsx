@@ -81,6 +81,29 @@ export default function EventsSection({ events }) {
   return (
     <section className="section !pt-2 sm:!pt-3 pb-12 sm:pb-16">
       <div className="container-x">
+        {/* Live Event Day Hub Banner */}
+        <div className="mb-10 rounded-2xl border border-sunset-orange/30 bg-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-3 w-3 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+            </span>
+            <div>
+              <p className="font-heading font-bold text-sm sm:text-base text-fg">
+                Live Symposium Mode Active: Round 2 Decryption Duel
+              </p>
+              <p className="font-mono text-xs text-muted">
+                Wozniak Auditorium & Green Building 4th Floor · Live Round Telemetry & Finalist Standings
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/live"
+            className="btn-primary text-xs shrink-0 self-start sm:self-center"
+          >
+            Open Live Hub →
+          </Link>
+        </div>
         {/* Real upcoming events when scheduled */}
         {upcoming.length > 0 && (
           <div className="mb-14">
