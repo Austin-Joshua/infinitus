@@ -200,9 +200,6 @@ export default function Nav() {
                     />
                   )}
                   {item.navLabel}
-                  {item.id === 'live' && (
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse ml-1.5 -translate-y-0.5" />
-                  )}
                 </Link>
               );
             })}
@@ -314,9 +311,6 @@ export default function Nav() {
                 </span>
                 <span className={`text-[9.5px] sm:text-[10px] tracking-tight transition-colors ${active ? 'font-bold text-sunset-orange' : 'font-medium'}`}>
                   {item.navLabel}
-                  {item.id === 'live' && (
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse ml-1.5 -translate-y-0.5" />
-                  )}
                 </span>
                 {active && (
                   <motion.span
