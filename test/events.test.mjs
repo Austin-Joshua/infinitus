@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mapEvent } from '../lib/events.js';
+import { mapEvent, isEventDuePast, resolveEventStatus } from '../lib/events.js';
 import { eventHref } from '../lib/format.js';
 
 describe('mapEvent', () => {
@@ -82,17 +82,35 @@ describe('eventHref', () => {
   });
 });
 
+describe('time-aware event status transitions', () => {
+  it('correctly detects past and future event dates', () => {
+    assert.equal(isEventDuePast('2025-01-01'), true);
+    assert.equal(isEventDuePast('2030-12-31'), false);
+  });
+
+  it('automatically transitions upcoming events to conducted once date has passed', () => {
+    assert.equal(resolveEventStatus('upcoming', '2025-01-01'), 'conducted');
+    assert.equal(resolveEventStatus('upcoming', '2030-12-31'), 'upcoming');
+    assert.equal(resolveEventStatus('conducted', '2030-12-31'), 'conducted');
+  });
+});
+
 describe('bundled static events & gallery data integrity', () => {
-  it('ensures all 42 conducted events exist and have valid assets', async () => {
+  it('ensures all 44 bundled events exist and have valid assets', async () => {
     const fs = await import('node:fs');
     const path = await import('node:path');
     const { EVENTS } = await import('../lib/data.js');
 
-    assert.equal(EVENTS.length, 42, 'Exactly 42 events must be bundled');
+    assert.equal(EVENTS.length, 44, 'Exactly 44 events must be bundled (42 conducted + 2 upcoming)');
+    const upcoming = EVENTS.filter((e) => e.status === 'upcoming');
+    const conducted = EVENTS.filter((e) => e.status === 'conducted');
+    assert.equal(upcoming.length, 2, 'Exactly 2 upcoming events scheduled');
+    assert.equal(conducted.length, 42, 'Exactly 42 conducted events archived');
+
     for (const ev of EVENTS) {
       assert.ok(ev.id, 'Event must have an ID');
       assert.ok(ev.title, `Event ${ev.id} must have a title`);
-      assert.equal(ev.status, 'conducted', `Event ${ev.id} must be conducted`);
+      assert.ok(['conducted', 'upcoming'].includes(ev.status), `Event ${ev.id} must have valid status`);
       assert.match(ev.eventDate, /^\d{4}-\d{2}-\d{2}$/, `Event ${ev.id} must have valid YYYY-MM-DD date`);
 
       if (ev.coverImageUrl) {
