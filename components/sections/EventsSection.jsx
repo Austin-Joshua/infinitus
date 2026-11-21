@@ -5,6 +5,7 @@ import Link from 'next/link';
 import EventCard, { EventPoster, ExternalArrow, eventHref } from '@/components/ui/EventCard';
 import EventsBrowser from '@/components/ui/EventsBrowser';
 import FeaturedEventsSlider from '@/components/ui/FeaturedEventsSlider';
+import EventsKnowledgeGraph from '@/components/ui/EventsKnowledgeGraph';
 
 export function FeaturedEvent({ event }) {
   return (
@@ -101,8 +102,15 @@ export default function EventsSection({ events }) {
           </Reveal>
         )}
 
+        {/* Interactive Mathematical Knowledge Graph (Feature 1C) */}
+        {events.length > 0 && (
+          <Reveal className="mt-14 sm:mt-16 scroll-mt-24">
+            <EventsKnowledgeGraph events={events} />
+          </Reveal>
+        )}
+
         {past.length > 0 && (
-          <Reveal className="mt-16">
+          <Reveal className="mt-14 sm:mt-16">
             <EventsBrowser events={past} />
           </Reveal>
         )}
