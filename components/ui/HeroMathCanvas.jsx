@@ -76,6 +76,18 @@ export default function HeroMathCanvas({ className = '' }) {
     isRunningRef.current = isRunning;
   }, [isRunning]);
 
+  // Listen for external simulation mode switch (e.g. from Command Palette)
+  useEffect(() => {
+    const handleSetMode = (e) => {
+      const targetMode = e?.detail;
+      if (targetMode && ['lorenz', 'fourier', 'aizawa'].includes(targetMode)) {
+        setMode(targetMode);
+      }
+    };
+    window.addEventListener('infinitus:set-math-mode', handleSetMode);
+    return () => window.removeEventListener('infinitus:set-math-mode', handleSetMode);
+  }, []);
+
   // 3D rotation angles & physics state
   const stateRef = useRef({
     rotX: 0.35,

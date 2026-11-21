@@ -113,6 +113,15 @@ function ContactNavIcon(props) {
   );
 }
 
+function SearchNavIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" {...props}>
+      <circle cx="11" cy="11" r="7" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
+    </svg>
+  );
+}
+
 // Mobile Bottom Navigation tabs for fast, 1-tap mobile navigation
 const MOBILE_BOTTOM_NAV = [
   { id: 'home', href: '/', navLabel: 'Home', icon: HomeNavIcon },
@@ -127,6 +136,10 @@ export default function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+
+  const openCommandPalette = () => {
+    window.dispatchEvent(new CustomEvent('infinitus:open-command-palette'));
+  };
 
   const { scrollY, scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
@@ -191,8 +204,36 @@ export default function Nav() {
             })}
           </nav>
 
-          {/* Header Action Buttons (Instagram + Theme Toggle + Contact CTA) */}
+          {/* Header Action Buttons (Search + Instagram + Theme Toggle + Contact CTA) */}
           <div className="flex items-center gap-2">
+            {/* Command Palette Trigger (Desktop Pill) */}
+            <button
+              type="button"
+              onClick={openCommandPalette}
+              aria-label="Open search and command palette (Ctrl+K)"
+              title="Search events, team and actions (Ctrl+K)"
+              data-testid="nav-search-button"
+              className="hidden lg:flex items-center gap-2 rounded-full border border-sunset-orange/35 bg-card/75 px-3 py-1.5 text-xs text-muted transition-all duration-200 hover:border-sunset-orange/80 hover:text-fg hover:bg-card hover:shadow-sm hover:shadow-sunset-orange/20"
+            >
+              <SearchNavIcon className="h-3.5 w-3.5 text-sunset-orange" />
+              <span className="font-sans">Search...</span>
+              <kbd className="rounded border border-sunset-orange/30 bg-bg/70 px-1.5 py-0.5 font-mono text-[10px] text-muted">
+                ⌘K
+              </kbd>
+            </button>
+
+            {/* Command Palette Trigger (Mobile/Tablet Icon Button) */}
+            <button
+              type="button"
+              onClick={openCommandPalette}
+              aria-label="Open search and command palette"
+              title="Search (Ctrl+K)"
+              data-testid="mobile-search-button"
+              className="relative flex h-9 w-9 sm:h-10 sm:w-10 lg:hidden items-center justify-center rounded-full border border-sunset-orange/35 bg-card text-fg shadow-sm shadow-sunset-orange/10 transition-all duration-200 hover:border-sunset-orange/80 hover:bg-card hover:shadow-md hover:shadow-sunset-orange/25 hover:scale-105 hover:text-sunset-orange active:scale-95"
+            >
+              <SearchNavIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
             <a
               href={SOCIAL.instagram}
               target="_blank"
