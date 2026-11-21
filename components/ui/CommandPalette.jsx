@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { buildSearchIndex, searchIndex, groupResults } from '@/lib/commandIndex';
+import { generateGoogleCalendarUrl } from '@/lib/calendar';
 import { EVENTS, MEMBERS } from '@/lib/data';
 
 // Icons
@@ -251,6 +252,26 @@ export default function CommandPalette() {
               navigator.clipboard.writeText(window.location.href);
               showToast('Link copied to clipboard!');
             }
+            break;
+          case 'sync-cal-ramanujan': {
+            const ev = EVENTS.find((e) => e.id === 'ramanujan-reimagined');
+            if (ev) {
+              window.open(generateGoogleCalendarUrl(ev), '_blank', 'noopener,noreferrer');
+              showToast('Opening Google Calendar sync...');
+            }
+            break;
+          }
+          case 'sync-cal-number-hunt': {
+            const ev = EVENTS.find((e) => e.id === 'number-hunt');
+            if (ev) {
+              window.open(generateGoogleCalendarUrl(ev), '_blank', 'noopener,noreferrer');
+              showToast('Opening Google Calendar sync...');
+            }
+            break;
+          }
+          case 'install-pwa':
+            window.dispatchEvent(new CustomEvent('infinitus:trigger-pwa-install'));
+            showToast('Prompting PWA installation...');
             break;
           case 'scroll-top':
             window.scrollTo({ top: 0, behavior: 'smooth' });

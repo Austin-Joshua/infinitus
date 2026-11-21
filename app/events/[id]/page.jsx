@@ -6,6 +6,7 @@ import GalleryGrid from '@/components/ui/GalleryGrid';
 import Reveal, { ClipReveal } from '@/components/ui/Reveal';
 import SplitText from '@/components/ui/SplitText';
 import JsonLd from '@/components/seo/JsonLd';
+import AddToCalendarMenu from '@/components/ui/AddToCalendarMenu';
 import { EVENTS } from '@/lib/data';
 import { getEvent } from '@/lib/events';
 import { formatEventDate } from '@/lib/format';
@@ -182,7 +183,7 @@ export default async function EventPage({ params }) {
                   </ul>
                 )}
 
-                <div className="mt-10 flex flex-wrap gap-3">
+                <div className="mt-10 flex flex-wrap items-center gap-3">
                   {isUpcoming && event.registrationFormUrl && (
                     <a href={event.registrationFormUrl} target="_blank" rel="noreferrer noopener" className="btn-primary">
                       {COPY.events.registerCta} <ExternalArrow />
@@ -198,6 +199,7 @@ export default async function EventPage({ params }) {
                       {COPY.events.viewPost} <ExternalArrow />
                     </a>
                   )}
+                  <AddToCalendarMenu event={event} />
                   <Link href="/events" className="btn-ghost">
                     <span aria-hidden="true">←</span> {COPY.events.backToEvents}
                   </Link>

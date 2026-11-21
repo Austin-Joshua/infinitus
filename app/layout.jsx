@@ -8,6 +8,7 @@ import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import CommandPalette from '@/components/ui/CommandPalette';
+import PwaManager from '@/components/ui/PwaManager';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/styles/globals.css';
@@ -242,6 +243,7 @@ export default async function RootLayout({ children }) {
           <Footer />
           <ScrollToTop />
           <CommandPalette />
+          <PwaManager />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
