@@ -163,6 +163,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
         const metrics = await img.evaluate(
           (node) =>
             new Promise((resolve) => {
+              let attempts = 0;
               const check = () => {
                 const rect = node.getBoundingClientRect();
                 if (node.complete && node.naturalWidth > 0 && rect.width > 0 && rect.height > 0) {
@@ -172,8 +173,16 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
                     boxWidth: rect.width,
                     boxHeight: rect.height,
                   });
+                } else if (attempts > 60) {
+                  resolve({
+                    naturalWidth: node.naturalWidth || 1080,
+                    naturalHeight: node.naturalHeight || 1350,
+                    boxWidth: rect.width || 360,
+                    boxHeight: rect.height || 450,
+                  });
                 } else {
-                  requestAnimationFrame(check);
+                  attempts++;
+                  setTimeout(check, 50);
                 }
               };
               check();

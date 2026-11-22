@@ -20,7 +20,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const found = await getEvent(decodeURIComponent(id));
-  if (!found) return {};
+  if (!found) notFound();
   const { event } = found;
   const description =
     event.description && event.description.length > 155

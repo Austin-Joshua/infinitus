@@ -6,7 +6,7 @@ test.describe('Error Handling & 404 Safeguards', () => {
     expect(res?.status()).toBe(404);
 
     // Assert custom 404 UI heading is rendered
-    await expect(page.locator('h1')).toContainText(/This page tends to infinity/i);
+    await expect(page.locator('h1').first()).toContainText(/This page tends to infinity/i);
     await expect(page.locator('text=/404/i').first()).toBeVisible();
 
     // Verify robots directive or meta tag

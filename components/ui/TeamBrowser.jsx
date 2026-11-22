@@ -67,26 +67,23 @@ export default function TeamBrowser({ members }) {
                 type="button"
                 aria-pressed={active}
                 onClick={() => handleSelectTeam(team)}
-                className={`shrink-0 sm:shrink rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold transition-all duration-150 active:scale-95 cursor-pointer ${
-                  active
+                className={`shrink-0 sm:shrink rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold transition-all duration-150 active:scale-95 cursor-pointer ${active
                     ? 'bg-sunset-orange text-white border border-sunset-orange shadow-lg shadow-sunset-orange/35 scale-[1.02]'
                     : 'bg-card border border-sunset-orange/35 text-fg/85 shadow-sm shadow-sunset-orange/5 hover:border-sunset-orange/70 hover:text-fg hover:shadow-md hover:-translate-y-0.5'
-                }`}
+                  }`}
               >
                 {team}
                 {team === 'All' ? (
                   <span
-                    className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-mono transition-colors ${
-                      active ? 'bg-white/25 text-white' : 'bg-fg/10 text-muted'
-                    }`}
+                    className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-mono transition-colors ${active ? 'bg-white/25 text-white' : 'bg-fg/10 text-muted'
+                      }`}
                   >
                     {members.length}
                   </span>
                 ) : (
                   <span
-                    className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-mono transition-colors ${
-                      active ? 'bg-white/25 text-white' : 'bg-fg/10 text-muted'
-                    }`}
+                    className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-mono transition-colors ${active ? 'bg-white/25 text-white' : 'bg-fg/10 text-muted'
+                      }`}
                   >
                     {members.filter((m) => m.team === team).length}
                   </span>

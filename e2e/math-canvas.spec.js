@@ -23,7 +23,7 @@ test.describe('Hero Interactive Mathematical Canvas (Feature 1A)', () => {
 
     await page.goto('/');
 
-    const visualizer = page.locator('div[role="region"][aria-label*="mathematical visualizer"]');
+    const visualizer = page.locator('div[role="region"][aria-label*="mathematical visualizer"]').first();
     await expect(visualizer).toBeVisible();
 
     // Check canvas exists
