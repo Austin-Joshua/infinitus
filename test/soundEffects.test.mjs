@@ -11,6 +11,7 @@ import {
   playThemeToggle,
   playAttractorSwitch,
   playSuccess,
+  triggerHaptic,
 } from '../lib/soundEffects.js';
 
 describe('Web Audio Harmonic Micro-Sounds (Feature 4A)', () => {
@@ -71,5 +72,38 @@ describe('Web Audio Harmonic Micro-Sounds (Feature 4A)', () => {
     assert.doesNotThrow(() => playThemeToggle());
     assert.doesNotThrow(() => playAttractorSwitch());
     assert.doesNotThrow(() => playSuccess());
+  });
+
+  test('triggerHaptic invokes navigator.vibrate with appropriate vibration patterns when available', () => {
+    let vibrateCalls = [];
+    const originalVibrate = globalThis.navigator?.vibrate;
+
+    Object.defineProperty(globalThis.navigator, 'vibrate', {
+      value: (pattern) => {
+        vibrateCalls.push(pattern);
+        return true;
+      },
+      configurable: true,
+      writable: true,
+    });
+
+    triggerHaptic('light');
+    triggerHaptic('medium');
+    triggerHaptic('success');
+    triggerHaptic('warning');
+
+    assert.deepEqual(vibrateCalls, [10, 20, [12, 35, 18], [24, 40, 24]]);
+
+    // Gracefully handles missing vibrate method (e.g. iOS Safari)
+    delete globalThis.navigator.vibrate;
+    assert.doesNotThrow(() => triggerHaptic('light'));
+
+    if (originalVibrate) {
+      Object.defineProperty(globalThis.navigator, 'vibrate', {
+        value: originalVibrate,
+        configurable: true,
+        writable: true,
+      });
+    }
   });
 });

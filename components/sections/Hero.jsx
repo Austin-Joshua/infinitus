@@ -41,13 +41,15 @@ export default function Hero({ stats = [] }) {
               {COPY.hero.support}
             </motion.p>
             <motion.div {...rise(0.65)} className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
-              {/* Primary CTA: Contact / Join */}
-              <Link
+              {/* Primary CTA: Join Club (Direct Google Form Link) */}
+              <a
                 href={SOCIAL.recruitmentForm || '/contact'}
+                target={SOCIAL.recruitmentForm ? '_blank' : undefined}
+                rel={SOCIAL.recruitmentForm ? 'noreferrer noopener' : undefined}
                 className="btn-primary text-xs sm:text-sm"
               >
                 Join the Club <span aria-hidden="true" className="nudge">→</span>
-              </Link>
+              </a>
               {/* Secondary CTA: Official Instagram Handle */}
               <a
                 href={SOCIAL.instagram}

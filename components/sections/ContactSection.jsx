@@ -1,26 +1,56 @@
 import { COPY, SITE, SOCIAL } from '@/lib/site';
 import Reveal from '@/components/ui/Reveal';
 
-function ContactRow({ href, label, value, external = false }) {
+/**
+ * Reusable full-format action card with title, description, and direct action button.
+ */
+function ContactActionCard({
+  badge,
+  title,
+  value,
+  description,
+  buttonLabel,
+  href,
+  external = false,
+  primary = false,
+}) {
   return (
-    <a
-      href={href}
-      {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-      className="card card-hover group relative flex items-center justify-between gap-4 overflow-hidden rounded-2xl p-5 sm:p-6 mb-3.5"
-    >
+    <div className="card card-hover group relative flex flex-col justify-between overflow-hidden rounded-2xl p-6 sm:p-8 transition-all duration-300">
       <div>
-        <span className="block font-mono text-xs uppercase tracking-widest text-muted">{label}</span>
-        <span className="mt-1 block break-all font-heading text-lg font-bold text-fg transition-colors group-hover:text-accent sm:text-2xl">
-          {value}
-        </span>
+        {badge && (
+          <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
+            {badge}
+          </span>
+        )}
+        <h2 className="mt-1 font-heading text-xl sm:text-2xl font-bold text-fg">
+          {title}
+        </h2>
+        {value && (
+          <p className="mt-1 font-mono text-sm sm:text-base font-semibold text-sunset-orange break-all">
+            {value}
+          </p>
+        )}
+        {description && (
+          <p className="mt-2.5 text-sm leading-relaxed text-muted">
+            {description}
+          </p>
+        )}
       </div>
-      <span
-        aria-hidden="true"
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-fg/5 text-muted transition-all duration-300 group-hover:bg-accent group-hover:text-white"
-      >
-        ↗
-      </span>
-    </a>
+
+      <div className="mt-6 pt-2">
+        <a
+          href={href}
+          {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+          className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-95 ${
+            primary
+              ? 'btn-primary w-full sm:w-auto'
+              : 'border border-fg/15 bg-fg/5 text-fg hover:bg-fg/10 hover:border-fg/30 w-full sm:w-auto'
+          }`}
+        >
+          {buttonLabel} <span aria-hidden="true" className="nudge">→</span>
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -29,30 +59,68 @@ export default function ContactSection() {
   const { contact } = COPY;
 
   return (
-    <section className="section !pt-2 sm:!pt-3 pb-12 sm:pb-16">
-      <div className="container-x grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
+    <section className="section !pt-2 sm:!pt-3 pb-16 sm:pb-24">
+      <div className="container-x max-w-5xl">
+        {/* Top Section: Recruitment & Query Forms */}
         <Reveal>
-          <ContactRow href={`mailto:${SITE.contactEmail}`} label="Email" value={SITE.contactEmail} />
-          <ContactRow href={SOCIAL.instagram} label="Instagram" value={SOCIAL.instagramHandle} external />
-          <ContactRow href={SOCIAL.queriesForm} label="Google Form" value={contact.formTitle} external />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {/* 1. Core Member Recruitment Form */}
+            <ContactActionCard
+              badge={contact.recruitmentBadge || 'Recruitment 2026–27'}
+              title={contact.recruitmentTitle || 'Core Member Recruitment 2026–27'}
+              description={contact.recruitmentBody}
+              buttonLabel={contact.recruitmentCta || 'Apply for Core Team'}
+              href={SOCIAL.recruitmentForm}
+              external
+              primary
+            />
+
+            {/* 2. Website & Club Queries Form */}
+            <ContactActionCard
+              badge={contact.queriesBadge || 'General Queries'}
+              title={contact.formTitle}
+              description={contact.formBody}
+              buttonLabel={contact.formCta}
+              href={SOCIAL.queriesForm}
+              external
+              primary
+            />
+          </div>
         </Reveal>
 
-        <Reveal delay={0.15} className="flex flex-col gap-8">
-          <div className="card p-7 sm:p-8">
-            <p className="font-heading text-xl font-semibold text-fg">{contact.formTitle}</p>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{contact.formBody}</p>
-            <a href={SOCIAL.queriesForm} target="_blank" rel="noreferrer noopener" className="btn-primary mt-6 w-full">
-              {contact.formCta} <span aria-hidden="true" className="nudge">→</span>
-            </a>
-          </div>
-          <address className="not-italic text-sm leading-relaxed text-muted">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted">Find us</p>
-            <p className="mt-3 font-medium text-fg">{contact.orgLine}</p>
-            {contact.addressLines.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-          </address>
-        </Reveal>
+        {/* Find Us Section: Social & Direct Reachout Cards */}
+        <div className="mt-12 sm:mt-16">
+          <Reveal delay={0.1}>
+            <p className="font-mono text-xs uppercase tracking-widest text-muted">
+              {contact.findUsHeading || 'Find Us'}
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="mt-4 sm:mt-5 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+              {/* 3. Email Card */}
+              <ContactActionCard
+                badge={contact.emailBadge || 'Email'}
+                title={contact.emailTitle || 'Email Us'}
+                value={SITE.contactEmail}
+                description={contact.emailBody}
+                buttonLabel={contact.emailCta || 'Send Email'}
+                href={`mailto:${SITE.contactEmail}`}
+              />
+
+              {/* 4. Instagram Card */}
+              <ContactActionCard
+                badge={contact.instagramBadge || 'Instagram'}
+                title={contact.instagramTitle || 'Instagram'}
+                value={SOCIAL.instagramHandle}
+                description={contact.instagramBody}
+                buttonLabel={contact.instagramCta || 'Follow on Instagram'}
+                href={SOCIAL.instagram}
+                external
+              />
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

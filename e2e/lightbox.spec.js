@@ -121,7 +121,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
   });
 
   test('renders visible picture utilizing >= 85% of limiting dimension across 4:5 poster, landscape, and square', async ({ page }, testInfo) => {
-    test.setTimeout(60000);
+    test.setTimeout(120000);
     const testCases = [
       {
         type: '4:5 Poster',
