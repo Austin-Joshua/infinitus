@@ -1,10 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useId, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { EASE } from '@/lib/motion';
+import { playClick } from '@/lib/soundEffects';
 
-const DRAW = 1.6;
-const inView = { once: true, margin: '0px 0px -15% 0px' };
+const DRAW = 1.4;
+const inView = { once: true, margin: '0px 0px -10% 0px' };
 
 const AMBIENT_SYMBOLS = [
   { char: '∞', top: '10%', left: '8%', delay: 0 },
@@ -14,14 +16,405 @@ const AMBIENT_SYMBOLS = [
   { char: '√', top: '45%', right: '35%', delay: 1 },
 ];
 
+function CloseIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  );
+}
+
+/** Detailed Modal showing the full retrospective and enlarged view for that academic year */
+function YearDetailModal({ step, open, onClose }) {
+  const dialogRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const timer = setTimeout(() => {
+      if (closeBtnRef.current) closeBtnRef.current.focus();
+    }, 50);
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        playClick();
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose]);
+
+  if (!open || !step) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {/* Backdrop */}
+        <button
+          type="button"
+          aria-label="Close year retrospective"
+          onClick={() => {
+            playClick();
+            onClose();
+          }}
+          className="absolute inset-0 bg-black/80 cursor-pointer"
+        />
+
+        {/* Modal Window */}
+        <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 14, scale: 0.96 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="relative z-10 w-full max-w-2xl max-h-[88vh] overflow-y-auto no-scrollbar rounded-2xl border border-sunset-orange/40 bg-card p-6 sm:p-8 shadow-2xl shadow-sunset-orange/15"
+        >
+          {/* Close Button */}
+          <button
+            ref={closeBtnRef}
+            type="button"
+            onClick={() => {
+              playClick();
+              onClose();
+            }}
+            aria-label="Close"
+            className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/70 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
+          >
+            <CloseIcon className="h-4 w-4" />
+          </button>
+
+          {/* Modal Header */}
+          <div className="flex items-start justify-between gap-4 border-b border-fg/10 pb-5 pr-8">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="font-heading text-3xl sm:text-4xl font-extrabold text-sunset-orange">
+                  {step.year}
+                </span>
+                {step.tag && (
+                  <span className="chip border-sunset/40 bg-sunset/10 text-xs font-mono text-sunset font-semibold">
+                    {step.tag}
+                  </span>
+                )}
+                {step.theme && (
+                  <span className="chip border-fg/15 text-xs font-mono text-muted hidden sm:inline-block">
+                    {step.theme}
+                  </span>
+                )}
+              </div>
+              <h3 id={titleId} className="font-heading text-xl sm:text-2xl font-bold text-fg">
+                {step.title}
+              </h3>
+            </div>
+            {step.symbol && (
+              <span className="font-serif text-4xl sm:text-5xl font-light text-sunset-orange/30 select-none">
+                {step.symbol}
+              </span>
+            )}
+          </div>
+
+          {/* Key Stats Grid */}
+          {step.stats && step.stats.length > 0 && (
+            <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3.5">
+              {step.stats.map((stat, sIdx) => (
+                <div
+                  key={sIdx}
+                  className="rounded-xl border border-fg/10 bg-bg/60 p-3 sm:p-4 text-center"
+                >
+                  <p className="font-heading text-lg sm:text-2xl font-extrabold text-sunset-orange">
+                    {stat.value}
+                  </p>
+                  <p className="mt-0.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted font-medium">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Full Narrative Story */}
+          <div className="mt-6">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-sunset-orange font-semibold">
+              The Year’s Retrospective
+            </h4>
+            <p className="mt-2 text-xs sm:text-sm leading-relaxed text-fg/85">
+              {step.fullStory || step.body}
+            </p>
+          </div>
+
+          {/* Chronological Event Breakdown */}
+          {step.chronicle && step.chronicle.length > 0 && (
+            <div className="mt-6 border-t border-fg/10 pt-5">
+              <h4 className="font-mono text-xs uppercase tracking-wider text-muted font-semibold mb-3">
+                Key Milestones & Landmark Events
+              </h4>
+              <div className="space-y-3">
+                {step.chronicle.map((item, cIdx) => (
+                  <div
+                    key={cIdx}
+                    className="rounded-xl border border-fg/10 bg-card/60 p-3.5 sm:p-4 transition-all hover:border-sunset-orange/30"
+                  >
+                    <h5 className="font-heading text-xs sm:text-sm font-bold text-fg">
+                      {item.title}
+                    </h5>
+                    <p className="mt-1 text-xs text-muted leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Legacy Summary */}
+          {step.legacy && (
+            <div className="mt-6 rounded-xl border border-sunset-orange/30 bg-sunset-orange/5 p-4 text-xs leading-relaxed text-fg/90">
+              <span className="font-bold text-sunset-orange">Legacy & Impact: </span>
+              {step.legacy}
+            </div>
+          )}
+
+          {/* Close CTA */}
+          <div className="mt-6 flex justify-end border-t border-fg/10 pt-4">
+            <button
+              type="button"
+              onClick={() => {
+                playClick();
+                onClose();
+              }}
+              className="btn-primary !px-5 !py-2 text-xs"
+            >
+              Done Reading
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+/** Individual 3D Flip Card for each academic year */
+function JourneyCard({ step, onEnlarge }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  const handleCardClick = (e) => {
+    // If click originated from a button, don't trigger flip
+    if (e.target.closest('button')) return;
+    playClick();
+    setIsFlipped((prev) => !prev);
+  };
+
+  const handleFlipToggle = (e) => {
+    e.stopPropagation();
+    playClick();
+    setIsFlipped((prev) => !prev);
+  };
+
+  const handleEnlargeClick = (e) => {
+    e.stopPropagation();
+    playClick();
+    onEnlarge(step);
+  };
+
+  return (
+    <div
+      className="perspective-1000 group relative h-full w-full min-h-[300px] sm:min-h-[320px] select-none"
+      onClick={handleCardClick}
+    >
+      <motion.div
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{
+          duration: prefersReducedMotion ? 0.01 : 0.55,
+          ease: [0.23, 1, 0.32, 1],
+        }}
+        style={{ transformStyle: 'preserve-3d' }}
+        className="relative h-full w-full cursor-pointer"
+      >
+        {/* FRONT FACE */}
+        <div
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
+          className="card card-hover flex h-full w-full flex-col justify-between overflow-hidden rounded-xl p-5 sm:p-6 border border-fg/15 bg-card shadow-md transition-shadow hover:shadow-xl hover:border-sunset-orange/40"
+          role="button"
+          tabIndex={0}
+          aria-label={`${step.year}: ${step.title}. Click to flip card.`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsFlipped(true);
+            }
+          }}
+        >
+          <div>
+            {/* Header Row: Year & Tag */}
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-heading text-3xl font-extrabold tracking-tight text-accent transition-colors duration-300 group-hover:text-sunset-orange sm:text-4xl">
+                {step.year}
+              </p>
+              {step.tag && (
+                <span className="chip border-sunset/40 bg-sunset/10 text-[11px] font-mono text-sunset font-medium">
+                  {step.tag}
+                </span>
+              )}
+            </div>
+
+            <h3 className="mt-3 font-heading text-base sm:text-lg font-bold text-fg">
+              {step.title}
+            </h3>
+            <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted">
+              {step.body}
+            </p>
+          </div>
+
+          <div>
+            {/* Key Events & Highlights */}
+            {step.events && step.events.length > 0 && (
+              <div className="mt-4 border-t border-fg/10 pt-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-muted font-medium mb-1.5">
+                  Key Events & Highlights
+                </p>
+                <ul className="flex flex-wrap gap-1.5">
+                  {step.events.slice(0, 3).map((ev, eIdx) => (
+                    <li
+                      key={eIdx}
+                      className="rounded-md border border-fg/10 bg-bg-2/60 px-2 py-0.5 text-[10px] sm:text-[11px] font-sans text-fg/80"
+                    >
+                      {ev}
+                    </li>
+                  ))}
+                  {step.events.length > 3 && (
+                    <li className="rounded-md border border-sunset-orange/20 bg-sunset-orange/10 px-1.5 py-0.5 text-[10px] font-mono text-sunset-orange font-semibold">
+                      +{step.events.length - 3} more
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {/* Bottom Actions Bar */}
+            <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-2.5 text-[10px] sm:text-[11px] font-mono">
+              <button
+                type="button"
+                onClick={handleFlipToggle}
+                className="text-muted hover:text-fg transition-colors flex items-center gap-1 cursor-pointer py-1"
+              >
+                <span>↺</span> Flip stats
+              </button>
+              <button
+                type="button"
+                onClick={handleEnlargeClick}
+                className="font-semibold text-sunset-orange hover:text-accent transition-colors flex items-center gap-1 cursor-pointer py-1"
+              >
+                Full story ↗
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* BACK FACE */}
+        <div
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+          }}
+          className="absolute inset-0 card flex h-full w-full flex-col justify-between overflow-hidden rounded-xl p-4 sm:p-5 border-sunset-orange/40 bg-card shadow-xl"
+          role="button"
+          tabIndex={isFlipped ? 0 : -1}
+          aria-label={`${step.year} retrospective stats. Click to flip back.`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsFlipped(false);
+            }
+          }}
+        >
+          <div>
+            <div className="flex items-center justify-between border-b border-fg/10 pb-2">
+              <span className="font-heading text-xl font-bold text-sunset-orange">
+                {step.year} Archive
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                {step.theme || 'Milestone Focus'}
+              </span>
+            </div>
+
+            {/* Mini Stats Grid on Back Face */}
+            {step.stats && step.stats.length > 0 && (
+              <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
+                {step.stats.map((stat, sIdx) => (
+                  <div key={sIdx} className="rounded-lg border border-fg/10 bg-bg/60 p-2">
+                    <p className="font-heading text-sm sm:text-base font-extrabold text-sunset-orange">
+                      {stat.value}
+                    </p>
+                    <p className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-muted truncate">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Legacy Excerpt */}
+            <p className="mt-3 text-[11px] leading-relaxed text-fg/80 line-clamp-3">
+              {step.legacy || step.body}
+            </p>
+          </div>
+
+          {/* Bottom Actions Bar on Back */}
+          <div className="mt-3 flex items-center justify-between border-t border-fg/10 pt-2 text-[10px] sm:text-[11px] font-mono">
+            <button
+              type="button"
+              onClick={handleFlipToggle}
+              className="text-muted hover:text-fg transition-colors flex items-center gap-1 cursor-pointer py-1"
+            >
+              <span>↺</span> Front
+            </button>
+            <button
+              type="button"
+              onClick={handleEnlargeClick}
+              className="font-semibold text-sunset-orange hover:text-accent transition-colors flex items-center gap-1 cursor-pointer py-1"
+            >
+              Enlarge details ↗
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 /**
  * Animated Timeline Journey:
  * - Ambient floating mathematical glyphs.
  * - Dynamic glowing progress line that draws as user scrolls into view.
- * - Pulsing interactive milestone nodes with spring-loaded entrance.
- * - Interactive milestone cards with complimentary events and tags.
+ * - Interactive 3D flip cards for each year (2023, 2024, 2025, 2026).
+ * - Clicking or choosing "Enlarge details" opens an extensive retrospective modal showing the complete history of that year.
  */
 export default function Journey({ heading, steps }) {
+  const [activeStep, setActiveStep] = useState(null);
   const at = (i) => 0.2 + (DRAW * i) / steps.length;
 
   return (
@@ -67,7 +460,7 @@ export default function Journey({ heading, steps }) {
             {heading}
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-muted">
-            The growth of INFINITUS from our foundational campus celebrations to hosting inter-school championships.
+            The growth of INFINITUS from our foundational campus celebrations to hosting inter-school championships. Click any card to flip or enlarge details.
           </p>
         </motion.div>
 
@@ -135,53 +528,20 @@ export default function Journey({ heading, steps }) {
                   </motion.span>
                 </div>
 
-                {/* Milestone Interactive Card */}
-                <div className="card card-hover relative flex h-full flex-col justify-between overflow-hidden rounded-xl p-5 sm:p-6">
-                  <div>
-                    {/* Header Row: Year & Tag */}
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="font-heading text-3xl font-extrabold tracking-tight text-accent transition-colors duration-300 group-hover:text-accent-2 sm:text-4xl">
-                        {step.year}
-                      </p>
-                      {step.tag && (
-                        <span className="chip border-sunset/40 bg-sunset/10 text-[11px] font-mono text-sunset font-medium">
-                          {step.tag}
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="mt-3 font-heading text-base sm:text-lg font-bold text-fg">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted">
-                      {step.body}
-                    </p>
-                  </div>
-
-                  {/* Complimentary Events for this Year */}
-                  {step.events && step.events.length > 0 && (
-                    <div className="mt-5 border-t border-fg/10 pt-3.5">
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-muted font-medium mb-2">
-                        Key Events & Highlights
-                      </p>
-                      <ul className="flex flex-wrap gap-1.5">
-                        {step.events.map((ev, eIdx) => (
-                          <li
-                            key={eIdx}
-                            className="rounded-md border border-fg/10 bg-bg-2/60 px-2 py-0.5 text-[11px] font-sans text-fg/80 transition-colors group-hover:border-accent/30 group-hover:text-fg"
-                          >
-                            {ev}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
+                {/* Milestone Interactive 3D Flip Card */}
+                <JourneyCard step={step} onEnlarge={(s) => setActiveStep(s)} />
               </motion.li>
             ))}
           </ol>
         </div>
       </div>
+
+      {/* Enlarged Year Retrospective Modal Dialog */}
+      <YearDetailModal
+        step={activeStep}
+        open={Boolean(activeStep)}
+        onClose={() => setActiveStep(null)}
+      />
     </section>
   );
 }
