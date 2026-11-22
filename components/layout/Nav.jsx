@@ -170,13 +170,18 @@ export default function Nav() {
       >
         <div className="container-x flex h-14 sm:h-16 items-center justify-between gap-2.5 sm:gap-4">
           {/* Dual Branding: Infinitus Logo + College Logo */}
-          <Link href="/" prefetch={true} className="group flex items-center gap-2 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
-            <span className="transition-transform duration-700 ease-out group-hover:rotate-[360deg] shrink-0">
+          <Link
+            href="/"
+            prefetch={true}
+            className="group flex items-center gap-2 sm:gap-2.5 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
+            aria-label={COPY.brand.homeAriaLabel}
+          >
+            <span className="flex items-center justify-center transition-transform duration-700 ease-out group-hover:rotate-[360deg] shrink-0">
               <InfinitusLogo size="nav" priority className="h-8 w-8 sm:h-9 sm:w-9" />
             </span>
-            <span className="h-4 sm:h-5 w-px bg-fg/20 shrink-0" aria-hidden="true" />
-            <span className="shrink-0">
-              <RitLogo size="xs" className="opacity-95 transition-opacity group-hover:opacity-100" />
+            <span className="h-5 sm:h-6 w-px bg-fg/25 shrink-0 self-center" aria-hidden="true" />
+            <span className="flex items-center shrink-0">
+              <RitLogo size="nav" priority className="opacity-95 transition-opacity group-hover:opacity-100" />
             </span>
           </Link>
 
