@@ -85,7 +85,7 @@ export default function EventsSection({ events }) {
         {upcoming.length > 0 && (
           <div className="mb-14">
             <h2 className="font-heading text-xl font-semibold text-fg">{COPY.events.upcomingHeading}</h2>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 sm:gap-5">
               {upcoming.map((event) => (
                 <Reveal key={event.id}>
                   <EventCard event={event} />

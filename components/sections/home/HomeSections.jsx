@@ -145,33 +145,33 @@ export function HomeExplore() {
           </div>
         </Reveal>
 
-        <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
           {pages.map((page) => {
             const meta = EXPLORE_METADATA[page.id];
             return (
               <StaggerItem key={page.id}>
                 <Link
                   href={page.href}
-                  className="card card-hover group relative flex h-full min-h-[14rem] flex-col justify-between p-6 sm:p-7"
+                  className="card card-hover group relative flex h-full min-h-[9.5rem] sm:min-h-[12rem] lg:min-h-[14rem] flex-col justify-between p-3.5 sm:p-5 lg:p-7 rounded-xl sm:rounded-2xl"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 font-mono text-xs font-semibold text-accent">
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="flex items-center gap-1.5 font-mono text-[11px] sm:text-xs font-semibold text-accent truncate">
                       {meta?.icon}
-                      <span>{meta?.tag}</span>
+                      <span className="truncate">{meta?.tag}</span>
                     </span>
                     <span
                       aria-hidden="true"
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-fg/5 text-muted transition-all duration-300 group-hover:bg-accent group-hover:text-white"
+                      className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-fg/5 text-muted transition-all duration-300 group-hover:bg-accent group-hover:text-white shrink-0 text-xs sm:text-sm"
                     >
                       →
                     </span>
                   </div>
 
-                  <div className="mt-6">
-                    <h3 className="font-heading text-xl font-bold text-fg transition-colors group-hover:text-accent sm:text-2xl">
+                  <div className="mt-3 sm:mt-6">
+                    <h3 className="font-heading text-base sm:text-xl lg:text-2xl font-bold text-fg transition-colors group-hover:text-accent">
                       {page.navLabel}
                     </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-muted line-clamp-2">
+                    <p className="mt-1 sm:mt-2 text-[11px] sm:text-xs leading-snug sm:leading-relaxed text-muted line-clamp-2">
                       {COPY.home.explore[page.id]}
                     </p>
                   </div>
@@ -251,7 +251,7 @@ export function HomeEvents({ events }) {
         )}
 
         {/* 4-Card Responsive Grid with Last Poster Card Blurred for "Show More Events" */}
-        <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
           {displayEvents.slice(0, 3).map((event) => (
             <StaggerItem key={event.id}>
               <EventCard event={event} />
@@ -260,7 +260,7 @@ export function HomeEvents({ events }) {
 
           {/* 4th Card: Blurred poster background with "Show More Events" leading to /events */}
           <StaggerItem>
-            <article className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-sunset-orange/35 shadow-lg shadow-sunset-orange/10 min-h-[320px] sm:min-h-[380px]">
+            <article className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border border-sunset-orange/35 shadow-lg shadow-sunset-orange/10 min-h-[260px] sm:min-h-[320px] md:min-h-[380px]">
               {/* Blurred Poster Background */}
               <div className="absolute inset-0 z-0 overflow-hidden bg-bg-2">
                 {fourthPosterUrl && (
@@ -277,29 +277,29 @@ export function HomeEvents({ events }) {
               </div>
 
               {/* Centered CTA Content */}
-              <div className="relative z-10 flex flex-1 flex-col items-center justify-center p-6 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-sunset-orange/50 bg-sunset-orange/20 text-sunset-orange shadow-lg shadow-sunset-orange/25 transition-transform duration-300 group-hover:scale-110">
-                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" className="h-7 w-7">
+              <div className="relative z-10 flex flex-1 flex-col items-center justify-center p-3.5 sm:p-6 text-center">
+                <div className="flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl border border-sunset-orange/50 bg-sunset-orange/20 text-sunset-orange shadow-lg shadow-sunset-orange/25 transition-transform duration-300 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" className="h-5 w-5 sm:h-7 sm:w-7">
                     <rect x="3" y="4" width="18" height="18" rx="3" />
                     <path d="M16 2v4M8 2v4M3 10h18" />
                   </svg>
                 </div>
 
-                <span className="chip mt-4 border-sunset/40 text-sunset font-semibold text-xs py-0.5 px-3">
-                  {past.length} Events Hosted
+                <span className="chip mt-3 sm:mt-4 border-sunset/40 text-sunset font-semibold text-[10px] sm:text-xs py-0.5 px-2 sm:px-3">
+                  {past.length} Events
                 </span>
 
-                <h3 className="mt-3 font-heading text-xl sm:text-2xl font-bold text-fg">
-                  Show More Events
+                <h3 className="mt-2 sm:mt-3 font-heading text-sm sm:text-xl md:text-2xl font-bold text-fg">
+                  Show More
                 </h3>
 
-                <p className="mt-2 max-w-[220px] text-xs text-muted leading-relaxed">
-                  Explore our complete collection of workshops, competitions, talks, and team challenges.
+                <p className="mt-1 sm:mt-2 max-w-[220px] text-[11px] sm:text-xs text-muted leading-snug sm:leading-relaxed hidden xs:block">
+                  Explore all workshops, competitions, talks, and challenges.
                 </p>
 
-                <div className="mt-6">
-                  <span className="btn-primary text-xs inline-flex items-center gap-1.5 shadow-md shadow-sunset-orange/25 group-hover:shadow-lg group-hover:shadow-sunset-orange/40">
-                    View All Events <span aria-hidden="true" className="nudge">→</span>
+                <div className="mt-3 sm:mt-6">
+                  <span className="btn-primary text-[11px] sm:text-xs inline-flex items-center gap-1 shadow-md shadow-sunset-orange/25 group-hover:shadow-lg group-hover:shadow-sunset-orange/40 py-1.5 px-2.5 sm:py-2 sm:px-3.5">
+                    View All <span aria-hidden="true" className="nudge">→</span>
                   </span>
                 </div>
 

@@ -34,18 +34,18 @@ export default function AboutUs() {
             <span className="font-mono text-xs text-muted">{about.pillars.length} programmes</span>
           </Reveal>
 
-          <Stagger as="ol" className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger as="ol" className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
             {about.pillars.map((pillar) => (
-              <StaggerItem as="li" key={pillar.title} className="card card-hover group relative p-6 sm:p-7">
+              <StaggerItem as="li" key={pillar.title} className="card card-hover group relative p-3.5 sm:p-6 lg:p-7 rounded-xl sm:rounded-2xl">
                 <span
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <span className="inline-flex h-2 w-2 rounded-full bg-accent" aria-hidden="true" />
-                <h3 className="mt-4 font-heading text-xl font-bold text-fg transition-colors group-hover:text-accent">
+                <h3 className="mt-2.5 sm:mt-4 font-heading text-sm sm:text-xl font-bold text-fg transition-colors group-hover:text-accent">
                   {pillar.title}
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted">{pillar.body}</p>
+                <p className="mt-1 sm:mt-2 text-[11px] sm:text-sm leading-snug sm:leading-relaxed text-muted">{pillar.body}</p>
                 {pillar.title.includes('Podcast') && (
                   <a
                     href={SOCIAL.instagram}

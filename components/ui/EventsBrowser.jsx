@@ -44,7 +44,7 @@ export default function EventsBrowser({ events }) {
         })}
       </div>
 
-      <motion.div layout className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+      <motion.div layout className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 sm:gap-5">
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((event) => (
             <motion.div

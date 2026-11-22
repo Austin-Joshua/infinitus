@@ -26,8 +26,8 @@ export default function Hero({ stats = [] }) {
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
 
       <div className="container-x relative">
-        <div className="grid gap-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16">
-          <div>
+        <div className="grid gap-8 sm:gap-10 pt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16">
+          <div className="text-center lg:text-left mx-auto lg:mx-0 max-w-xl lg:max-w-none">
             <motion.h1
               {...rise(0.3)}
               className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-fg leading-[1.15]"
@@ -37,10 +37,10 @@ export default function Hero({ stats = [] }) {
               </span>
               <SplitText text={COPY.hero.tagline} by="word" stagger={0.04} />
             </motion.h1>
-            <motion.p {...rise(0.5)} className="lede mt-5 max-w-lg text-sm sm:text-base leading-relaxed">
+            <motion.p {...rise(0.5)} className="lede mt-4 sm:mt-5 max-w-lg mx-auto lg:mx-0 text-sm sm:text-base leading-relaxed">
               {COPY.hero.support}
             </motion.p>
-            <motion.div {...rise(0.65)} className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
+            <motion.div {...rise(0.65)} className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
               {/* Primary CTA: Join Club (Direct Google Form Link) */}
               <a
                 href={SOCIAL.recruitmentForm || '/contact'}

@@ -51,22 +51,22 @@ export default function EventCard({ event }) {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
-      <div className="flex flex-1 flex-col p-4 sm:p-4.5">
-        <div className="flex items-center justify-between gap-2 mb-1.5">
-          <span className="font-mono text-[11px] sm:text-xs text-accent font-semibold">
+      <div className="flex flex-1 flex-col p-3 sm:p-4.5">
+        <div className="flex items-center justify-between gap-1 mb-1 sm:mb-1.5 flex-wrap">
+          <span className="font-mono text-[10px] sm:text-xs text-accent font-semibold">
             {formatEventDate(event.eventDate, event.endDate)}
           </span>
           {isUpcoming ? (
-            <span className="chip border-sunset/40 text-sunset text-[10px] font-semibold py-0.5 px-2">
+            <span className="chip border-sunset/40 text-sunset text-[9px] sm:text-[10px] font-semibold py-0.5 px-1.5 sm:px-2">
               Upcoming
             </span>
           ) : event.eventType ? (
-            <span className="chip text-[10px] py-0.5 px-2 text-muted font-medium">
+            <span className="chip text-[9px] sm:text-[10px] py-0.5 px-1.5 sm:px-2 text-muted font-medium">
               {event.eventType}
             </span>
           ) : null}
         </div>
-        <h3 className="font-heading text-sm sm:text-base font-bold leading-snug text-fg line-clamp-2">
+        <h3 className="font-heading text-xs sm:text-base font-bold leading-snug text-fg line-clamp-2">
           <Link
             href={eventHref(event)}
             className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-md focus-visible:after:ring-2 focus-visible:after:ring-accent hover:text-accent transition-colors"
@@ -74,13 +74,13 @@ export default function EventCard({ event }) {
             {event.title}
           </Link>
         </h3>
-        {event.venue && <p className="mt-1 text-[11px] text-muted line-clamp-1">{event.venue}</p>}
+        {event.venue && <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-[11px] text-muted line-clamp-1">{event.venue}</p>}
         {event.description && (
-          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted">{event.description}</p>
+          <p className="mt-1.5 sm:mt-2 line-clamp-2 text-[11px] sm:text-xs leading-relaxed text-muted hidden xs:block">{event.description}</p>
         )}
 
-        <div className="relative z-10 mt-auto pt-3 border-t border-fg/10 flex items-center justify-between text-xs">
-          <span className="font-mono text-[11px] font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
+        <div className="relative z-10 mt-auto pt-2 sm:pt-3 border-t border-fg/10 flex items-center justify-between text-xs">
+          <span className="font-mono text-[10px] sm:text-[11px] font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
             {isUpcoming ? 'Register now' : 'Details'} <span aria-hidden="true" className="nudge">→</span>
           </span>
           {event.externalLink ? (
