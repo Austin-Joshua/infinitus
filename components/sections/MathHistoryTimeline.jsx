@@ -1,13 +1,23 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useMemo, useRef } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { MATH_ERAS, MATH_MILESTONES } from '@/lib/mathHistory';
 import { playClick } from '@/lib/soundEffects';
+
+const ERA_DETAILS = {
+  all: { span: '499 CE – Present', desc: 'Complete mathematical progression' },
+  classical: { span: '5th–7th Century CE', desc: 'Place-value decimal & zero arithmetic' },
+  calculus: { span: '14th Century CE', desc: 'Infinite series & mathematical analysis' },
+  topology: { span: '18th–20th Century', desc: 'Graph theory, modular forms & partitions' },
+  modern: { span: '1963–Present', desc: 'Deterministic chaos & computational math' },
+};
 
 export default function MathHistoryTimeline() {
   const [activeEra, setActiveEra] = useState('all');
   const [selectedMilestone, setSelectedMilestone] = useState(MATH_MILESTONES[0].id);
+  const containerRef = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const filteredMilestones = useMemo(() => {
     if (activeEra === 'all') return MATH_MILESTONES;
@@ -19,6 +29,7 @@ export default function MathHistoryTimeline() {
 
   return (
     <section
+      ref={containerRef}
       id="math-history-timeline"
       className="section relative overflow-hidden !py-12 sm:!py-16 border-t border-fg/10"
       aria-label="Interactive Mathematical History & Heritage Timeline"
@@ -27,85 +38,134 @@ export default function MathHistoryTimeline() {
 
       <div className="container-x relative">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-8">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-sunset-orange animate-pulse" />
-              <p className="font-mono text-xs uppercase tracking-widest text-sunset-orange font-semibold">
-                Mathematical Heritage
-              </p>
-            </div>
-            <h2 className="font-heading text-2xl font-bold tracking-tight text-fg sm:text-3xl lg:text-4xl mt-2">
-              Chronicles of Mathematical Discovery
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-muted max-w-2xl">
-              From Aryabhata and Madhava to Euler, Ramanujan, and modern neural manifolds—the centuries of mathematical insight that inspire INFINITUS.
+        <div className="pb-6 sm:pb-8">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-sunset-orange animate-pulse" />
+            <p className="font-mono text-xs uppercase tracking-widest text-sunset-orange font-semibold">
+              Mathematical Heritage
             </p>
           </div>
-
-          {/* Era Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" role="tablist" aria-label="Filter eras">
-            {MATH_ERAS.map((era) => {
-              const active = activeEra === era.id;
-              return (
-                <button
-                  key={era.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => {
-                    playClick();
-                    setActiveEra(era.id);
-                  }}
-                  className={`rounded-full px-3.5 py-1 text-xs font-mono font-medium transition-all whitespace-nowrap active:scale-95 ${
-                    active
-                      ? 'bg-sunset-orange text-white font-semibold shadow-sm shadow-sunset-orange/30'
-                      : 'border border-border/60 text-muted hover:text-fg hover:border-sunset-orange/40 bg-card/60'
-                  }`}
-                >
-                  {era.label}
-                </button>
-              );
-            })}
-          </div>
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-fg sm:text-3xl lg:text-4xl mt-2">
+            Chronicles of Mathematical Discovery
+          </h2>
+          <p className="mt-2 text-xs sm:text-sm text-muted max-w-2xl leading-relaxed">
+            From Aryabhata and Madhava to Euler, Ramanujan, and modern neural manifolds—the centuries of mathematical insight that inspire INFINITUS.
+          </p>
         </div>
 
-        {/* Timeline Horizontal / Desktop Stepper */}
-        <div className="relative mt-2 mb-8 overflow-x-auto no-scrollbar pb-3">
-          <div className="flex items-center min-w-[680px] justify-between relative px-4">
-            {/* Background Track Line */}
-            <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 h-0.5 bg-gradient-to-r from-sunset-orange/20 via-sunset-orange/50 to-sunset-orange/20 -z-0" />
+        {/* Era Overview Grid: All 5 Eras Visible At A Glance Without Scrolling (Requirement 3) */}
+        <div
+          role="tablist"
+          aria-label="Historical eras overview"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-8"
+        >
+          {MATH_ERAS.map((era) => {
+            const active = activeEra === era.id;
+            const meta = ERA_DETAILS[era.id] || { span: '', desc: '' };
+            return (
+              <button
+                key={era.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => {
+                  playClick();
+                  setActiveEra(era.id);
+                }}
+                className={`flex flex-col items-start p-3 sm:p-3.5 rounded-xl border text-left transition-all duration-200 active:scale-[0.98] cursor-pointer ${
+                  active
+                    ? 'border-sunset-orange bg-sunset-orange/10 shadow-md shadow-sunset-orange/10 text-fg ring-1 ring-sunset-orange/40'
+                    : 'border-border/60 bg-card/75 text-fg/80 hover:border-sunset-orange/50 hover:bg-card'
+                }`}
+              >
+                <div className="flex w-full items-center justify-between gap-1">
+                  <span
+                    className={`font-mono text-xs sm:text-sm font-semibold transition-colors ${
+                      active ? 'text-sunset-orange' : 'text-fg'
+                    }`}
+                  >
+                    {era.label}
+                  </span>
+                  {active && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-sunset-orange shrink-0 animate-ping" />
+                  )}
+                </div>
+                <span className="mt-1 font-mono text-[10px] text-muted line-clamp-1">
+                  {meta.span}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Timeline Horizontal Stepper with Centered Track Line & Progressive Scroll Animation (Requirements 3 & 6) */}
+        <div className="relative mt-2 mb-8 overflow-x-auto no-scrollbar pt-4 pb-4 px-2 sm:px-4">
+          <div className="flex items-start min-w-[640px] justify-between relative px-6">
+            {/* Background Track Line (precisely centered at top-4 = 16px, circle radius) */}
+            <div
+              aria-hidden="true"
+              className="absolute left-10 right-10 top-4 -translate-y-1/2 h-0.5 bg-fg/10 z-0"
+            />
+
+            {/* Scroll-Triggered Progressive Progress Line (Requirement 6) */}
+            <motion.div
+              aria-hidden="true"
+              initial={{ scaleX: prefersReducedMotion ? 1 : 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              style={{ originX: 0 }}
+              className="absolute left-10 right-10 top-4 -translate-y-1/2 h-0.5 bg-gradient-to-r from-sunset-orange via-gold to-sunset-orange shadow-[0_0_8px_rgba(255,107,0,0.4)] z-0"
+            />
 
             {filteredMilestones.map((item, idx) => {
               const isSelected = item.id === activeItem.id;
               return (
-                <button
+                <motion.div
                   key={item.id}
-                  type="button"
-                  onClick={() => {
-                    playClick();
-                    setSelectedMilestone(item.id);
+                  initial={{ scale: prefersReducedMotion ? 1 : 0.7, opacity: prefersReducedMotion ? 1 : 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.35,
+                    delay: prefersReducedMotion ? 0 : idx * 0.06,
+                    ease: 'easeOut',
                   }}
-                  className="group relative z-10 flex flex-col items-center focus-visible:outline-none"
-                  aria-label={`Select ${item.title}`}
+                  className="relative z-10 flex flex-col items-center"
                 >
-                  <span
-                    className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-mono font-bold transition-all duration-300 ${
-                      isSelected
-                        ? 'bg-sunset-orange text-white scale-110 shadow-lg shadow-sunset-orange/40 ring-4 ring-sunset-orange/20'
-                        : 'border border-border bg-card text-muted group-hover:border-sunset-orange/60 group-hover:text-fg'
-                    }`}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playClick();
+                      setSelectedMilestone(item.id);
+                    }}
+                    className="group relative flex flex-col items-center focus-visible:outline-none cursor-pointer"
+                    aria-label={`Select ${item.title}`}
                   >
-                    {idx + 1}
-                  </span>
-                  <span
-                    className={`mt-2 font-mono text-[11px] whitespace-nowrap transition-colors ${
-                      isSelected ? 'font-bold text-sunset-orange' : 'text-muted group-hover:text-fg'
-                    }`}
-                  >
-                    {item.year}
-                  </span>
-                </button>
+                    {/* Stepper Circle: h-8 w-8 = 32px, center is at 16px aligning with line */}
+                    <span
+                      className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-mono font-bold transition-all duration-300 ${
+                        isSelected
+                          ? 'bg-sunset-orange text-white scale-110 shadow-lg shadow-sunset-orange/40 ring-4 ring-sunset-orange/25'
+                          : 'border border-border bg-card text-muted group-hover:border-sunset-orange/60 group-hover:text-fg group-hover:scale-105'
+                      }`}
+                    >
+                      {idx + 1}
+                    </span>
+                    <span
+                      className={`mt-2 font-mono text-[11px] whitespace-nowrap transition-colors ${
+                        isSelected
+                          ? 'font-bold text-sunset-orange'
+                          : 'text-muted group-hover:text-fg'
+                      }`}
+                    >
+                      {item.year}
+                    </span>
+                    <span className="text-[10px] text-muted/80 max-w-[90px] text-center truncate hidden sm:block mt-0.5">
+                      {item.title.split('—')[0].trim()}
+                    </span>
+                  </button>
+                </motion.div>
               );
             })}
           </div>

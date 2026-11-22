@@ -402,9 +402,21 @@ export default function FeaturedEventsSlider({
                   {/* Header Badges & Slide Counter */}
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div className="flex flex-wrap gap-2">
-                      <span className="chip border-sunset/40 text-sunset font-semibold">
-                        {COPY.events.featuredLabel}
-                      </span>
+                      {ev.status === 'upcoming' ? (
+                        ev.registrationFormUrl ? (
+                          <span className="chip border-emerald-500/40 text-emerald-600 dark:text-emerald-400 font-semibold">
+                            Online Reg
+                          </span>
+                        ) : (
+                          <span className="chip border-sunset/40 text-sunset font-semibold">
+                            On-Spot Reg
+                          </span>
+                        )
+                      ) : (
+                        <span className="chip border-sunset/40 text-sunset font-semibold">
+                          {COPY.events.featuredLabel}
+                        </span>
+                      )}
                       {ev.eventType && (
                         <span className="chip font-medium">{ev.eventType}</span>
                       )}
@@ -453,8 +465,15 @@ export default function FeaturedEventsSlider({
                   {/* Action Buttons */}
                   <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3">
                     <Link href={eventHref(ev)} className="btn-primary text-xs sm:text-sm">
-                      {COPY.events.details} <span aria-hidden="true" className="nudge">→</span>
+                      {ev.status === 'upcoming' && ev.registrationFormUrl ? 'Register online' : COPY.events.details}{' '}
+                      <span aria-hidden="true" className="nudge">→</span>
                     </Link>
+                    {ev.status === 'upcoming' && !ev.registrationFormUrl && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-sunset-orange/30 bg-sunset-orange/10 px-3 py-1.5 text-xs font-mono font-medium text-sunset-orange">
+                        <span className="h-1.5 w-1.5 rounded-full bg-sunset-orange animate-pulse" />
+                        On-Spot Registration
+                      </span>
+                    )}
                     {ev.externalLink && (
                       <a
                         href={ev.externalLink}

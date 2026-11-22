@@ -19,7 +19,7 @@ function LinkedinIcon(props) {
   );
 }
 
-function InstagramIcon(props) {
+export function InstagramIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.75" {...props}>
       <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" />
@@ -439,18 +439,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                         >
                           <InstagramIcon className="h-4 w-4" />
                         </a>
-                      ) : (
-                        <a
-                          href={SOCIAL.instagram}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          aria-label="INFINITUS on Instagram"
-                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
-                          title="Connect on Instagram"
-                        >
-                          <InstagramIcon className="h-4 w-4" />
-                        </a>
-                      )}
+                      ) : null}
                     </div>
 
                     <button
@@ -522,18 +511,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                       >
                         <InstagramIcon className="h-4 w-4" />
                       </a>
-                    ) : (
-                      <a
-                        href={SOCIAL.instagram}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label="INFINITUS on Instagram"
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
-                        title="Connect on Instagram"
-                      >
-                        <InstagramIcon className="h-4 w-4" />
-                      </a>
-                    )}
+                    ) : null}
                   </div>
 
                   <button

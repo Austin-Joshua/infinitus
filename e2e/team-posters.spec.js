@@ -180,4 +180,44 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
     await page.keyboard.press('Escape');
     await expect(dialog).not.toBeVisible();
   });
+
+  test('switches committee categories smoothly without manual page reload (Fixes Bug #2)', async ({ page }) => {
+    await page.goto('/team', { waitUntil: 'domcontentloaded' });
+
+    // 1. Initial state: All members visible
+    const allCards = page.locator('.perspective-1000');
+    await expect(allCards.first()).toBeVisible({ timeout: 5000 });
+    const initialCount = await allCards.count();
+    expect(initialCount).toBeGreaterThan(15);
+
+    // 2. Switch to "Leadership"
+    const leadershipBtn = page.locator('button[type="button"]:has-text("Leadership")');
+    await leadershipBtn.click();
+
+    // Verify Leadership members load immediately without refresh
+    const austinCard = page.locator('.perspective-1000', { hasText: 'Austin Joshua M' });
+    await expect(austinCard).toBeVisible({ timeout: 3000 });
+    await expect(page.locator('.perspective-1000', { hasText: 'Sanjay Yuvaraj' })).toBeVisible();
+
+    // 3. Switch to "Technical Team"
+    const technicalBtn = page.locator('button[type="button"]:has-text("Technical Team")');
+    await technicalBtn.click();
+
+    // Verify Technical Team members load immediately
+    const technicalCards = page.locator('.perspective-1000');
+    await expect(technicalCards.first()).toBeVisible({ timeout: 3000 });
+    await expect(page.locator('.perspective-1000', { hasText: 'Chris Alan' })).toBeVisible();
+    await expect(austinCard).not.toBeVisible();
+
+    // 4. Switch to "Photography"
+    const photoBtn = page.locator('button[type="button"]:has-text("Photography")');
+    await photoBtn.click();
+    await expect(page.locator('.perspective-1000', { hasText: 'Sam Jebaraj J' })).toBeVisible({ timeout: 3000 });
+    await expect(page.locator('.perspective-1000', { hasText: 'Balachandar' })).toBeVisible();
+
+    // 5. Switch back to "All"
+    const allBtn = page.locator('button[type="button"]:has-text("All")');
+    await allBtn.click();
+    await expect(austinCard).toBeVisible({ timeout: 3000 });
+  });
 });

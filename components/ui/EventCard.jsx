@@ -57,9 +57,15 @@ export default function EventCard({ event }) {
             {formatEventDate(event.eventDate, event.endDate)}
           </span>
           {isUpcoming ? (
-            <span className="chip border-sunset/40 text-sunset text-[9px] sm:text-[10px] font-semibold py-0.5 px-1.5 sm:px-2">
-              Upcoming
-            </span>
+            event.registrationFormUrl ? (
+              <span className="chip border-emerald-500/40 text-emerald-600 dark:text-emerald-400 text-[9px] sm:text-[10px] font-semibold py-0.5 px-1.5 sm:px-2">
+                Online Reg
+              </span>
+            ) : (
+              <span className="chip border-sunset/40 text-sunset text-[9px] sm:text-[10px] font-semibold py-0.5 px-1.5 sm:px-2">
+                On-Spot Reg
+              </span>
+            )
           ) : event.eventType ? (
             <span className="chip text-[9px] sm:text-[10px] py-0.5 px-1.5 sm:px-2 text-muted font-medium">
               {event.eventType}
@@ -81,7 +87,7 @@ export default function EventCard({ event }) {
 
         <div className="relative z-10 mt-auto pt-2 sm:pt-3 border-t border-fg/10 flex items-center justify-between text-xs">
           <span className="font-mono text-[10px] sm:text-[11px] font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
-            {isUpcoming ? 'Register now' : 'Details'} <span aria-hidden="true" className="nudge">→</span>
+            {isUpcoming ? (event.registrationFormUrl ? 'Register online' : 'Offline details') : 'Details'} <span aria-hidden="true" className="nudge">→</span>
           </span>
           {event.externalLink ? (
             <a

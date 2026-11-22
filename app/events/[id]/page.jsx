@@ -63,12 +63,12 @@ export default async function EventPage({ params }) {
   if (!found) notFound();
   const { event, newer, older } = found;
   const isUpcoming = event.status === 'upcoming';
+  const hasOnlineForm = Boolean(event.registrationFormUrl);
   const formattedDate = formatEventDate(event.eventDate, event.endDate);
   const photos = (event.images || []).map((src, i) => ({
     src,
     width: 1080,
     height: 1350,
-    // TODO(owner): replace generic caption with short scene description for each event photograph
     caption: `${event.title} — Photo ${i + 1}`,
     alt: `${event.title} event photograph ${i + 1}`,
     date: formattedDate,
@@ -88,7 +88,11 @@ export default async function EventPage({ params }) {
     ...photos,
   ];
 
-  const isOnline = Boolean(event.venue && event.venue.toLowerCase().includes('online'));
+  const isOnline = Boolean(
+    event.venue &&
+      (event.venue.toLowerCase().includes('online') || event.venue.toLowerCase().includes('virtual'))
+  );
+
   const eventJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Event',
@@ -146,10 +150,29 @@ export default async function EventPage({ params }) {
             </div>
 
             <div className="lg:pt-4">
-              <Reveal className="flex flex-wrap gap-2">
-                {isUpcoming && <span className="chip border-gold/40 text-gold">Upcoming</span>}
+              {/* Badges: Clear distinction between Online and Offline Registration (Requirement 4) */}
+              <Reveal className="flex flex-wrap items-center gap-2">
+                {isUpcoming ? (
+                  hasOnlineForm ? (
+                    <span className="chip border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold">
+                      Online Registration Open
+                    </span>
+                  ) : (
+                    <span className="chip border-sunset-orange/50 bg-sunset-orange/10 text-sunset-orange font-semibold">
+                      Offline / On-Spot Registration
+                    </span>
+                  )
+                ) : (
+                  <span className="chip border-fg/20 text-muted">Completed Event</span>
+                )}
+                {isOnline ? (
+                  <span className="chip border-sky-500/40 text-sky-500 font-medium">Virtual / Online</span>
+                ) : (
+                  <span className="chip border-fg/15 text-fg/80 font-medium">In-Person Campus</span>
+                )}
                 {event.eventType && <span className="chip">{event.eventType}</span>}
               </Reveal>
+
               <SplitText
                 as="h1"
                 text={event.title}
@@ -160,8 +183,8 @@ export default async function EventPage({ params }) {
               <Reveal delay={0.3}>
                 <dl className="card mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl p-4 sm:p-5">
                   <div>
-                    <dt className="font-mono text-xs uppercase tracking-widest text-muted">Date</dt>
-                    <dd className="mt-1 font-heading text-lg font-bold text-fg sm:text-xl">{formatEventDate(event.eventDate, event.endDate)}</dd>
+                    <dt className="font-mono text-xs uppercase tracking-widest text-muted">Date & Time</dt>
+                    <dd className="mt-1 font-heading text-lg font-bold text-fg sm:text-xl">{formattedDate}</dd>
                   </div>
                   {event.venue && (
                     <div className="border-t border-fg/10 pt-3 sm:border-t-0 sm:border-l sm:pl-4 sm:pt-0">
@@ -183,23 +206,71 @@ export default async function EventPage({ params }) {
                   </ul>
                 )}
 
-                <div className="mt-10 flex flex-wrap items-center gap-3">
-                  {isUpcoming && event.registrationFormUrl && (
+                {/* Registration & Attendance Instructions Box (Requirement 4) */}
+                {isUpcoming && (
+                  <div className="mt-8 rounded-2xl border border-sunset-orange/30 bg-card/80 p-5 sm:p-6 shadow-lg shadow-sunset-orange/5">
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-2.5 w-2.5 rounded-full bg-sunset-orange animate-pulse" />
+                      <h2 className="font-heading text-base sm:text-lg font-bold text-fg">
+                        {hasOnlineForm ? 'Online Registration & Entry Details' : 'Offline Registration & On-Spot Entry'}
+                      </h2>
+                    </div>
+
+                    {hasOnlineForm ? (
+                      <div className="mt-3 space-y-2 text-xs sm:text-sm text-fg/80 leading-relaxed">
+                        <p>
+                          Registration is currently live online. Complete the official Google Form before registration closes.
+                        </p>
+                        {!isOnline && event.venue && (
+                          <div className="mt-2 rounded-xl border border-fg/10 bg-bg/60 p-3 font-mono text-xs text-muted">
+                            <span className="font-bold text-fg">Venue Check-In:</span> Present your registration confirmation at {event.venue} on {formattedDate}.
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="mt-3 space-y-2 text-xs sm:text-sm text-fg/80 leading-relaxed">
+                        <p>
+                          Registration for this event is conducted <strong className="text-fg font-semibold">physically on-spot</strong>. Attendees and teams can register directly at the entrance desk before the event begins.
+                        </p>
+                        <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl border border-fg/10 bg-bg/60 p-3.5 font-mono text-xs text-muted">
+                          <div>
+                            <span className="block text-[10px] uppercase tracking-wider text-sunset-orange font-bold">Registration Desk</span>
+                            <span className="text-fg font-semibold">{event.venue || 'RIT Campus'}</span>
+                          </div>
+                          <div>
+                            <span className="block text-[10px] uppercase tracking-wider text-sunset-orange font-bold">Eligibility & Entry</span>
+                            <span className="text-fg font-semibold">Open to all students with College ID</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Primary Action Buttons */}
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  {isUpcoming && hasOnlineForm && (
                     <a href={event.registrationFormUrl} target="_blank" rel="noreferrer noopener" className="btn-primary">
                       {COPY.events.registerCta} <ExternalArrow />
                     </a>
                   )}
+                  {isUpcoming && !hasOnlineForm && (
+                    <div className="inline-flex items-center gap-2 rounded-full border border-sunset-orange/40 bg-sunset-orange/10 px-4 py-2.5 text-xs font-semibold text-sunset-orange shadow-sm">
+                      <span className="h-2 w-2 rounded-full bg-sunset-orange animate-ping" />
+                      <span>On-Spot Registration at Venue</span>
+                    </div>
+                  )}
+                  <AddToCalendarMenu event={event} />
                   {event.externalLink && (
                     <a
                       href={event.externalLink}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className={isUpcoming && event.registrationFormUrl ? 'btn-ghost' : 'btn-primary'}
+                      className="btn-ghost"
                     >
                       {COPY.events.viewPost} <ExternalArrow />
                     </a>
                   )}
-                  <AddToCalendarMenu event={event} />
                   <Link href="/events" className="btn-ghost">
                     <span aria-hidden="true">←</span> {COPY.events.backToEvents}
                   </Link>
@@ -216,17 +287,13 @@ export default async function EventPage({ params }) {
               <GalleryGrid photos={photos} />
             </div>
           )}
+
+          <nav aria-label="Adjacent events" className="mt-16 grid grid-cols-1 border-t border-fg/15 sm:grid-cols-2">
+            <NeighbourLink event={older} label="Previous Event" align="left" />
+            <NeighbourLink event={newer} label="Next Event" align="right" />
+          </nav>
         </div>
       </article>
-
-      {(newer || older) && (
-        <nav aria-label="More events" className="border-t border-fg/15">
-          <div className="container-x grid divide-y divide-fg/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            <NeighbourLink event={newer} label={COPY.events.prevEvent} />
-            <NeighbourLink event={older} label={COPY.events.nextEvent} align="right" />
-          </div>
-        </nav>
-      )}
     </>
   );
 }
