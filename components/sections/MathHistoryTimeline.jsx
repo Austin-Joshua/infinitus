@@ -24,8 +24,22 @@ export default function MathHistoryTimeline() {
     return MATH_MILESTONES.filter((m) => m.era === activeEra);
   }, [activeEra]);
 
-  const activeItem =
-    MATH_MILESTONES.find((m) => m.id === selectedMilestone) || filteredMilestones[0];
+  // Always resolve activeItem from current filteredMilestones so mathematician card adapts immediately on era switch
+  const activeItem = useMemo(() => {
+    const found = filteredMilestones.find((m) => m.id === selectedMilestone);
+    return found || filteredMilestones[0] || MATH_MILESTONES[0];
+  }, [filteredMilestones, selectedMilestone]);
+
+  const handleSelectEra = (eraId) => {
+    playClick();
+    setActiveEra(eraId);
+    const milestones = eraId === 'all'
+      ? MATH_MILESTONES
+      : MATH_MILESTONES.filter((m) => m.era === eraId);
+    if (milestones.length > 0) {
+      setSelectedMilestone(milestones[0].id);
+    }
+  };
 
   return (
     <section
@@ -68,10 +82,7 @@ export default function MathHistoryTimeline() {
                 type="button"
                 role="tab"
                 aria-selected={active}
-                onClick={() => {
-                  playClick();
-                  setActiveEra(era.id);
-                }}
+                onClick={() => handleSelectEra(era.id)}
                 className={`flex flex-col items-start p-3 sm:p-3.5 rounded-xl border text-left transition-all duration-200 active:scale-[0.98] cursor-pointer ${
                   active
                     ? 'border-sunset-orange bg-sunset-orange/10 shadow-md shadow-sunset-orange/10 text-fg ring-1 ring-sunset-orange/40'
