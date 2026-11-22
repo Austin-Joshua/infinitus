@@ -83,16 +83,16 @@ function YearDetailModal({ step, open, onClose }) {
           className="absolute inset-0 bg-black/80 cursor-pointer"
         />
 
-        {/* Modal Window */}
+        {/* Modal Window with 3D Flip & Expand entrance */}
         <motion.div
           ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          initial={{ opacity: 0, rotateY: -35, scale: 0.88, y: 16 }}
+          initial={{ opacity: 0, rotateY: -80, scale: 0.8, y: 16 }}
           animate={{ opacity: 1, rotateY: 0, scale: 1, y: 0 }}
-          exit={{ opacity: 0, rotateY: 35, scale: 0.9, y: 12 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, rotateY: 80, scale: 0.8, y: 12 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           style={{ transformStyle: 'preserve-3d' }}
           className="relative z-10 w-full max-w-2xl max-h-[88vh] overflow-y-auto no-scrollbar rounded-2xl border border-sunset-orange/40 bg-card p-6 sm:p-8 shadow-2xl shadow-sunset-orange/15"
         >
@@ -113,17 +113,22 @@ function YearDetailModal({ step, open, onClose }) {
           {/* Modal Header */}
           <div className="flex items-start justify-between gap-4 border-b border-fg/10 pb-5 pr-8">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
                 <span className="font-heading text-3xl sm:text-4xl font-extrabold text-sunset-orange">
                   {step.year}
                 </span>
+                {step.symbol && (
+                  <span className="font-serif text-3xl sm:text-4xl font-black text-sunset-orange select-none leading-none drop-shadow-sm">
+                    {step.symbol}
+                  </span>
+                )}
                 {step.tag && (
-                  <span className="chip border-sunset/40 bg-sunset/10 text-xs font-mono text-sunset font-semibold">
+                  <span className="chip border-sunset/40 bg-sunset/10 text-xs font-mono text-sunset font-bold">
                     {step.tag}
                   </span>
                 )}
                 {step.theme && (
-                  <span className="chip border-fg/15 text-xs font-mono text-muted hidden sm:inline-block">
+                  <span className="chip border-fg/15 text-xs font-mono text-muted hidden sm:inline-block font-semibold">
                     {step.theme}
                   </span>
                 )}
@@ -133,7 +138,7 @@ function YearDetailModal({ step, open, onClose }) {
               </h3>
             </div>
             {step.symbol && (
-              <span className="font-serif text-4xl sm:text-5xl font-light text-sunset-orange/30 select-none">
+              <span className="font-serif text-6xl sm:text-7xl font-black text-sunset-orange/30 select-none shrink-0 drop-shadow-sm">
                 {step.symbol}
               </span>
             )}
@@ -150,7 +155,7 @@ function YearDetailModal({ step, open, onClose }) {
                   <p className="font-heading text-xl sm:text-3xl font-extrabold text-sunset-orange">
                     {stat.value}
                   </p>
-                  <p className="mt-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted font-medium leading-snug">
+                  <p className="mt-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted font-bold leading-snug">
                     {stat.label}
                   </p>
                 </div>
@@ -160,7 +165,7 @@ function YearDetailModal({ step, open, onClose }) {
 
           {/* Full Narrative Story */}
           <div className="mt-6">
-            <h4 className="font-mono text-xs uppercase tracking-wider text-sunset-orange font-semibold">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-sunset-orange font-bold">
               The Year’s Retrospective
             </h4>
             <p className="mt-2 text-xs sm:text-sm leading-relaxed text-fg/85">
@@ -171,7 +176,7 @@ function YearDetailModal({ step, open, onClose }) {
           {/* Chronological Event Breakdown */}
           {step.chronicle && step.chronicle.length > 0 && (
             <div className="mt-6 border-t border-fg/10 pt-5">
-              <h4 className="font-mono text-xs uppercase tracking-wider text-muted font-semibold mb-3">
+              <h4 className="font-mono text-xs uppercase tracking-wider text-muted font-bold mb-3">
                 Key Milestones & Landmark Events
               </h4>
               <div className="space-y-3">
@@ -208,7 +213,7 @@ function YearDetailModal({ step, open, onClose }) {
                 playClick();
                 onClose();
               }}
-              className="btn-primary !px-5 !py-2 text-xs"
+              className="btn-primary !px-6 !py-2.5 text-xs font-bold cursor-pointer"
             >
               Done Reading
             </button>
@@ -222,26 +227,18 @@ function YearDetailModal({ step, open, onClose }) {
 }
 
 /** Individual 3D Flip Card for each academic year */
-function JourneyCard({ step, onEnlarge }) {
+function JourneyCard({ step, isEnlarged, onEnlarge }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
-  const handleCardClick = (e) => {
-    // If click originated from the flip-only toggle button, only flip in-place
-    if (e.target.closest('button[data-action="flip"]')) return;
-    playClick();
-    setIsFlipped((prev) => !prev);
-    onEnlarge(step);
-  };
+  // Guarantee that when the enlarged modal closes, the card resets to the clean initial front position
+  useEffect(() => {
+    if (!isEnlarged) {
+      setIsFlipped(false);
+    }
+  }, [isEnlarged]);
 
-  const handleFlipToggle = (e) => {
-    e.stopPropagation();
-    playClick();
-    setIsFlipped((prev) => !prev);
-  };
-
-  const handleEnlargeClick = (e) => {
-    e.stopPropagation();
+  const handleCardClick = () => {
     playClick();
     setIsFlipped(true);
     onEnlarge(step);
@@ -249,43 +246,54 @@ function JourneyCard({ step, onEnlarge }) {
 
   return (
     <div
+      data-year={step.year}
       className="perspective-1000 group relative h-full w-full min-h-[300px] sm:min-h-[320px] select-none"
       onClick={handleCardClick}
     >
       <motion.div
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{
-          duration: prefersReducedMotion ? 0.01 : 0.22,
+          duration: prefersReducedMotion ? 0.01 : 0.32,
           ease: [0.16, 1, 0.3, 1],
         }}
         style={{ transformStyle: 'preserve-3d' }}
         className="relative h-full w-full cursor-pointer"
       >
-        {/* FRONT FACE */}
+        {/* FRONT FACE - Matches pristine earlier initial position */}
         <div
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
           }}
-          className="card card-hover flex h-full w-full flex-col justify-between overflow-hidden rounded-xl p-5 sm:p-6 border border-fg/15 bg-card shadow-md transition-shadow hover:shadow-xl hover:border-sunset-orange/40"
+          className="card card-hover flex h-full w-full flex-col justify-between overflow-hidden rounded-xl p-5 sm:p-6 border border-fg/15 bg-card shadow-md transition-all duration-300 hover:shadow-xl hover:border-sunset-orange/50 hover:-translate-y-1"
           role="button"
           tabIndex={0}
-          aria-label={`${step.year}: ${step.title}. Click to flip card.`}
+          aria-label={`${step.year}: ${step.title}. Click to flip card and view details.`}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              setIsFlipped(true);
+              handleCardClick();
             }
           }}
         >
           <div>
-            {/* Header Row: Year & Tag */}
+            {/* Header Row: Year + Bold Math Symbol + Tag */}
             <div className="flex items-center justify-between gap-2">
-              <p className="font-heading text-3xl font-extrabold tracking-tight text-accent transition-colors duration-300 group-hover:text-sunset-orange sm:text-4xl">
-                {step.year}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="font-heading text-3xl font-extrabold tracking-tight text-accent transition-colors duration-300 group-hover:text-sunset-orange sm:text-4xl">
+                  {step.year}
+                </p>
+                {step.symbol && (
+                  <span
+                    className="font-serif text-2xl sm:text-3xl font-black text-sunset-orange select-none leading-none drop-shadow-sm"
+                    title={`Mathematical Symbol: ${step.symbol}`}
+                  >
+                    {step.symbol}
+                  </span>
+                )}
+              </div>
               {step.tag && (
-                <span className="chip border-sunset/40 bg-sunset/10 text-[11px] font-mono text-sunset font-medium">
+                <span className="chip border-sunset/40 bg-sunset/10 text-[11px] font-mono text-sunset font-bold">
                   {step.tag}
                 </span>
               )}
@@ -299,93 +307,67 @@ function JourneyCard({ step, onEnlarge }) {
             </p>
           </div>
 
-          <div>
-            {/* Key Events & Highlights */}
-            {step.events && step.events.length > 0 && (
-              <div className="mt-4 border-t border-fg/10 pt-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-muted font-medium mb-1.5">
-                  Key Events & Highlights
-                </p>
-                <ul className="flex flex-wrap gap-1.5">
-                  {step.events.slice(0, 3).map((ev, eIdx) => (
-                    <li
-                      key={eIdx}
-                      className="rounded-md border border-fg/10 bg-bg-2/60 px-2 py-0.5 text-[10px] sm:text-[11px] font-sans text-fg/80"
-                    >
-                      {ev}
-                    </li>
-                  ))}
-                  {step.events.length > 3 && (
-                    <li className="rounded-md border border-sunset-orange/20 bg-sunset-orange/10 px-1.5 py-0.5 text-[10px] font-mono text-sunset-orange font-semibold">
-                      +{step.events.length - 3} more
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )}
-
-            {/* Bottom Actions Bar */}
-            <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-2.5 text-[10px] sm:text-[11px] font-mono">
-              <button
-                type="button"
-                data-action="flip"
-                onClick={handleFlipToggle}
-                className="text-muted hover:text-fg transition-colors flex items-center gap-1 cursor-pointer py-1"
-              >
-                <span>↺</span> Flip stats
-              </button>
-              <button
-                type="button"
-                data-action="enlarge"
-                onClick={handleEnlargeClick}
-                className="font-semibold text-sunset-orange hover:text-accent transition-colors flex items-center gap-1 cursor-pointer py-1"
-              >
-                Full story ↗
-              </button>
+          {/* Key Events & Highlights - Displaying all items cleanly as in initial state */}
+          {step.events && step.events.length > 0 && (
+            <div className="mt-4 border-t border-fg/10 pt-3">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-muted font-bold mb-1.5">
+                Key Events & Highlights
+              </p>
+              <ul className="flex flex-wrap gap-1.5">
+                {step.events.map((ev, eIdx) => (
+                  <li
+                    key={eIdx}
+                    className="rounded-md border border-fg/10 bg-bg-2/60 px-2 py-0.5 text-[10px] sm:text-[11px] font-sans text-fg/80"
+                  >
+                    {ev}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* BACK FACE */}
+        {/* BACK FACE - Visible during 3D flip animation */}
         <div
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
-          className="absolute inset-0 card flex h-full w-full flex-col justify-between overflow-hidden rounded-xl p-4 sm:p-5 border-sunset-orange/40 bg-card shadow-xl"
+          className="absolute inset-0 card flex h-full w-full flex-col justify-between overflow-hidden rounded-xl p-5 border border-sunset-orange/40 bg-card shadow-xl"
           role="button"
           tabIndex={isFlipped ? 0 : -1}
-          aria-label={`${step.year} retrospective stats. Click to flip back.`}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              setIsFlipped(false);
-            }
-          }}
+          aria-label={`${step.year} retrospective stats.`}
         >
           <div>
             <div className="flex items-center justify-between gap-2 border-b border-fg/10 pb-2">
-              <span className="font-heading text-lg sm:text-xl font-bold text-sunset-orange shrink-0">
-                {step.year} Archive
-              </span>
-              <span className="chip border-sunset/30 bg-sunset/10 font-mono text-[9px] sm:text-[10px] text-sunset font-semibold">
+              <div className="flex items-center gap-2">
+                <span className="font-heading text-lg sm:text-xl font-bold text-sunset-orange shrink-0">
+                  {step.year} Archive
+                </span>
+                {step.symbol && (
+                  <span className="font-serif text-xl font-black text-sunset-orange select-none">
+                    {step.symbol}
+                  </span>
+                )}
+              </div>
+              <span className="chip border-sunset/40 bg-sunset/10 font-mono text-[10px] text-sunset font-bold">
                 {step.tag || 'Archive'}
               </span>
             </div>
 
-            {/* Mini Stats Grid on Back Face - Perfect Equal Heights & Baseline Alignment */}
+            {/* Stats Grid on Back Face */}
             {step.stats && step.stats.length > 0 && (
-              <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2 text-center items-stretch">
+              <div className="mt-3.5 grid grid-cols-3 gap-2 text-center items-stretch">
                 {step.stats.map((stat, sIdx) => (
                   <div
                     key={sIdx}
-                    className="flex flex-col justify-between rounded-lg border border-fg/10 bg-bg-2/60 p-1.5 sm:p-2 min-h-[68px] sm:min-h-[72px]"
+                    className="flex flex-col justify-between rounded-lg border border-fg/10 bg-bg-2/60 p-2 min-h-[68px] sm:min-h-[72px]"
                   >
                     <p className="font-heading text-sm sm:text-base font-extrabold text-sunset-orange leading-none pt-0.5">
                       {stat.value}
                     </p>
-                    <p className="mt-1 font-mono text-[8px] sm:text-[9px] uppercase tracking-tight text-muted leading-tight">
+                    <p className="mt-1 font-mono text-[8px] sm:text-[9px] uppercase tracking-tight text-muted font-bold leading-tight">
                       {stat.label}
                     </p>
                   </div>
@@ -394,29 +376,9 @@ function JourneyCard({ step, onEnlarge }) {
             )}
 
             {/* Legacy Excerpt */}
-            <p className="mt-3 text-[11px] leading-relaxed text-muted line-clamp-3">
+            <p className="mt-3 text-xs leading-relaxed text-muted line-clamp-3">
               {step.legacy || step.body}
             </p>
-          </div>
-
-          {/* Bottom Actions Bar on Back */}
-          <div className="mt-auto flex items-center justify-between border-t border-fg/10 pt-2.5 text-[10px] sm:text-[11px] font-mono">
-            <button
-              type="button"
-              data-action="flip"
-              onClick={handleFlipToggle}
-              className="text-muted hover:text-fg transition-colors flex items-center gap-1 cursor-pointer py-1"
-            >
-              <span>↺</span> Front
-            </button>
-            <button
-              type="button"
-              data-action="enlarge"
-              onClick={handleEnlargeClick}
-              className="font-semibold text-sunset-orange hover:text-accent transition-colors flex items-center gap-1 cursor-pointer py-1"
-            >
-              Enlarge details ↗
-            </button>
           </div>
         </div>
       </motion.div>
@@ -426,17 +388,18 @@ function JourneyCard({ step, onEnlarge }) {
 
 /**
  * Animated Timeline Journey:
- * - Ambient floating mathematical glyphs.
+ * - Ambient floating mathematical glyphs with bold styling.
  * - Dynamic glowing progress line that draws as user scrolls into view.
- * - Interactive 3D flip cards for each year (2023, 2024, 2025, 2026).
- * - Clicking or choosing "Enlarge details" opens an extensive retrospective modal showing the complete history of that year.
+ * - Initial state displays all cards in their clean, upright earlier front position.
+ * - On clicking any card, it executes a 3D perspective flip and enlarges into the comprehensive retrospective modal.
+ * - Closing the modal resets the card to its clean initial position.
  */
 export default function Journey({ heading, steps }) {
   const [activeStep, setActiveStep] = useState(null);
   const at = (i) => 0.05 + (DRAW * i) / steps.length;
 
   return (
-    <section className="section relative overflow-hidden !py-8 sm:!py-14">
+    <section id="journey-timeline" className="section relative overflow-hidden !py-8 sm:!py-14">
       {/* Subtle graph paper and floating mathematical symbols */}
       <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0 opacity-40" />
 
@@ -446,7 +409,7 @@ export default function Journey({ heading, steps }) {
           aria-hidden="true"
           initial={{ opacity: 0, y: 15 }}
           animate={{
-            opacity: [0.15, 0.35, 0.15],
+            opacity: [0.2, 0.45, 0.2],
             y: [0, -12, 0],
           }}
           transition={{
@@ -455,7 +418,7 @@ export default function Journey({ heading, steps }) {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          className="pointer-events-none absolute select-none font-serif text-3xl sm:text-5xl font-light text-accent/20"
+          className="pointer-events-none absolute select-none font-serif text-4xl sm:text-6xl font-black text-accent/30 dark:text-sunset-orange/30 drop-shadow-sm"
           style={{ top: s.top, left: s.left, right: s.right, bottom: s.bottom }}
         >
           {s.char}
@@ -478,7 +441,7 @@ export default function Journey({ heading, steps }) {
             {heading}
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-muted">
-            The growth of INFINITUS from our foundational campus celebrations to hosting inter-school championships. Click any card to flip or enlarge details.
+            The growth of INFINITUS from our foundational campus celebrations to hosting inter-school championships.
           </p>
         </motion.div>
 
@@ -521,7 +484,6 @@ export default function Journey({ heading, steps }) {
               >
                 {/* Node with Pulsing Halo Ring */}
                 <div className="absolute left-0 top-1.5 lg:top-0 flex items-center justify-center">
-                  {/* Subtle pulsing background halo */}
                   <motion.span
                     initial={{ scale: 0 }}
                     whileInView={{ scale: [1, 1.8, 1] }}
@@ -534,7 +496,6 @@ export default function Journey({ heading, steps }) {
                     }}
                     className="absolute h-5 w-5 rounded-full bg-accent/20"
                   />
-                  {/* Outer spring marker */}
                   <motion.span
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
@@ -547,14 +508,18 @@ export default function Journey({ heading, steps }) {
                 </div>
 
                 {/* Milestone Interactive 3D Flip Card */}
-                <JourneyCard step={step} onEnlarge={(s) => setActiveStep(s)} />
+                <JourneyCard
+                  step={step}
+                  isEnlarged={activeStep?.year === step.year}
+                  onEnlarge={(s) => setActiveStep(s)}
+                />
               </motion.li>
             ))}
           </ol>
         </div>
       </div>
 
-      {/* Enlarged Year Retrospective Modal Dialog */}
+      {/* Enlarged Year Retrospective Modal Dialog with 3D Flip & Scale */}
       <YearDetailModal
         step={activeStep}
         open={Boolean(activeStep)}
