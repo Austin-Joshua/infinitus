@@ -156,28 +156,29 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
         const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
         await expect(dialog).toBeVisible({ timeout: 10000 });
 
-        const img = dialog.locator('[data-lightbox-picture="true"] img');
+        const img = dialog.locator('[data-lightbox-picture="true"] img').last();
         await expect(img).toBeVisible({ timeout: 10000 });
 
-        // Wait for image to fully load
-        await img.evaluate(
+        // Wait for image to fully load and return verified layout metrics atomically
+        const metrics = await img.evaluate(
           (node) =>
             new Promise((resolve) => {
-              if (node.complete && node.naturalWidth > 0) resolve(true);
-              else node.onload = () => resolve(true);
+              const check = () => {
+                const rect = node.getBoundingClientRect();
+                if (node.complete && node.naturalWidth > 0 && rect.width > 0 && rect.height > 0) {
+                  resolve({
+                    naturalWidth: node.naturalWidth,
+                    naturalHeight: node.naturalHeight,
+                    boxWidth: rect.width,
+                    boxHeight: rect.height,
+                  });
+                } else {
+                  requestAnimationFrame(check);
+                }
+              };
+              check();
             })
         );
-
-        // Compute visible picture dimensions via object-fit containment
-        const metrics = await img.evaluate((node) => {
-          const rect = node.getBoundingClientRect();
-          return {
-            naturalWidth: node.naturalWidth,
-            naturalHeight: node.naturalHeight,
-            boxWidth: rect.width,
-            boxHeight: rect.height,
-          };
-        });
 
         expect(metrics.naturalWidth).toBeGreaterThan(0);
         expect(metrics.naturalHeight).toBeGreaterThan(0);
@@ -205,7 +206,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
         // Close modal
         await page.keyboard.press('Escape');
         if (await dialog.isVisible()) {
-          const closeBtn = dialog.locator('button[aria-label="Close image preview"]');
+          const closeBtn = dialog.locator('button[aria-label="Close image viewer"]');
           if (await closeBtn.isVisible()) await closeBtn.click();
         }
         await expect(dialog).not.toBeVisible();
@@ -413,5 +414,58 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
     expect(activeInfo.isBody).toBe(false);
     expect(activeInfo.id === 'main' || activeInfo.tagName === 'main' || activeInfo.role === 'region').toBe(true);
+  });
+
+  test('interactive zoom toolbar scales the image visually, updates percentage, and resets', async ({ page }) => {
+    await page.goto('/events/number-hunt', { waitUntil: 'load' });
+    await page.waitForTimeout(200);
+
+    const posterBtn = page.getByRole('button', { name: /3D Gyro-Parallax official poster/i }).first();
+    await expect(posterBtn).toBeVisible({ timeout: 10000 });
+    await posterBtn.click();
+
+    const dialog = page.locator('div[role="dialog"][aria-modal="true"]');
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+
+    const picture = dialog.locator('[data-lightbox-picture="true"]');
+    await expect(picture).toBeVisible({ timeout: 10000 });
+
+    // Verify initial zoom is 100%
+    const zoomText = dialog.getByTitle('Reset zoom to 100%');
+    await expect(zoomText).toHaveText('100%');
+
+    const getScale = async () => {
+      const transform = await picture.evaluate((el) => el.style.transform);
+      const match = transform.match(/scale\(([^)]+)\)/);
+      return match ? parseFloat(match[1]) : 1;
+    };
+
+    expect(await getScale()).toBe(1);
+
+    // Click Zoom In (+)
+    const zoomInBtn = dialog.getByRole('button', { name: 'Zoom in' });
+    await zoomInBtn.click();
+    await expect(zoomText).toHaveText('150%');
+    expect(await getScale()).toBe(1.5);
+
+    // Click Zoom In again (+)
+    await zoomInBtn.click();
+    await expect(zoomText).toHaveText('200%');
+    expect(await getScale()).toBe(2);
+
+    // Verify reset button appears and clicking it resets to 100%
+    const resetBtn = dialog.getByRole('button', { name: 'Reset zoom' });
+    await expect(resetBtn).toBeVisible();
+    await resetBtn.click();
+    await expect(zoomText).toHaveText('100%');
+    expect(await getScale()).toBe(1);
+
+    // Ensure image is contained and unclipped
+    const img = picture.locator('img');
+    const objectFit = await img.evaluate((el) => window.getComputedStyle(el).objectFit);
+    expect(objectFit).toBe('contain');
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
   });
 });

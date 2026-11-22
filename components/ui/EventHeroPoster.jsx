@@ -138,8 +138,6 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
             src: event.coverImageUrl,
             caption: `${event.title} — Official Poster`,
             date: event.eventDate,
-            width: 1080,
-            height: 1350,
           },
         ];
 

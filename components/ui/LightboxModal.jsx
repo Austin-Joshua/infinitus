@@ -26,7 +26,15 @@ export default function LightboxModal({
   const [internalIndex, setInternalIndex] = useState(index ?? 0);
   const [showUi, setShowUi] = useState(true);
   const [direction, setDirection] = useState(1);
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [canvasSize, setCanvasSize] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return {
+        width: Math.max(0, window.innerWidth - 32),
+        height: Math.max(0, window.innerHeight - 88),
+      };
+    }
+    return { width: 0, height: 0 };
+  });
   const [loadedDim, setLoadedDim] = useState(null);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -39,6 +47,7 @@ export default function LightboxModal({
   const panStart = useRef({ x: 0, y: 0 });
   const activePointersRef = useRef(new Map());
   const pinchDistRef = useRef(null);
+  const pinchZoomStartRef = useRef(1);
   const lastTapTimeRef = useRef(0);
 
   // Track the most recent element focused or clicked outside any modal dialog
@@ -287,6 +296,7 @@ export default function LightboxModal({
     } else if (activePointersRef.current.size === 2) {
       const [p1, p2] = Array.from(activePointersRef.current.values());
       pinchDistRef.current = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+      pinchZoomStartRef.current = zoom;
     }
   };
 
@@ -309,9 +319,11 @@ export default function LightboxModal({
       const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
       if (pinchDistRef.current && pinchDistRef.current > 10) {
         const factor = dist / pinchDistRef.current;
-        if (Math.abs(factor - 1) > 0.01) {
-          setZoom((z) => Math.max(1, Math.min(4, Math.round(z * factor * 100) / 100)));
-          pinchDistRef.current = dist;
+        const nextZoom = Math.max(1, Math.min(4, Math.round(pinchZoomStartRef.current * factor * 100) / 100));
+        setZoom(nextZoom);
+        if (nextZoom === 1) {
+          setPan({ x: 0, y: 0 });
+          lastPanRef.current = { x: 0, y: 0 };
         }
       }
     } else if (zoom > 1 && isPanning) {
@@ -354,9 +366,9 @@ export default function LightboxModal({
     return null;
   }
 
-  // Compute contained photo wrapper dimensions
-  const photoWidth = current?.width || loadedDim?.width;
-  const photoHeight = current?.height || loadedDim?.height;
+  // Compute contained photo wrapper dimensions (natural loaded image dimensions take priority)
+  const photoWidth = loadedDim?.width || current?.width;
+  const photoHeight = loadedDim?.height || current?.height;
   const hasKnownDims = Boolean(photoWidth && photoHeight);
 
   let wrapperStyle = undefined;
@@ -492,7 +504,7 @@ export default function LightboxModal({
           <div
             ref={canvasRef}
             onWheel={handleWheel}
-            className="w-full h-full flex items-center justify-center overflow-hidden transition-all duration-200"
+            className="w-full h-full flex items-center justify-center overflow-hidden transition-[padding] duration-200"
             style={{
               paddingTop: showUi
                 ? 'max(4.25rem, calc(env(safe-area-inset-top, 0px) + 3.75rem))'
@@ -507,52 +519,52 @@ export default function LightboxModal({
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={current.src}
-                data-lightbox-picture="true"
                 custom={direction}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  ...wrapperStyle,
-                  transform: `translate3d(${pan.x}px, ${pan.y}px, 0px) scale(${zoom})`,
-                  transformOrigin: 'center center',
-                  transition: isPanning ? 'none' : 'transform 0.15s ease-out',
-                  cursor: zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in',
-                }}
-                className={
-                  hasKnownDims
-                    ? 'relative rounded-2xl shadow-2xl overflow-hidden select-none'
-                    : 'relative w-full h-full max-w-full max-h-full flex items-center justify-center select-none'
-                }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (hasDragged.current) return;
-                  const now = Date.now();
-                  if (now - lastTapTimeRef.current < 300) {
-                    handleImageDoubleTap(e);
-                    lastTapTimeRef.current = 0;
-                    return;
-                  }
-                  lastTapTimeRef.current = now;
-                  setShowUi((s) => !s);
-                }}
+                className="relative flex items-center justify-center w-full h-full pointer-events-none"
               >
-                <Image
-                  src={current.src}
-                  alt={current.alt || current.caption}
-                  fill
-                  sizes="(min-width: 1280px) 90vw, (min-width: 768px) 94vw, 98vw"
-                  priority
-                  unoptimized={current.src.startsWith('http')}
-                  onLoad={(e) => {
-                    const img = e.target;
-                    if (img && img.naturalWidth && img.naturalHeight) {
-                      setLoadedDim({ width: img.naturalWidth, height: img.naturalHeight });
-                    }
+                <div
+                  data-lightbox-picture="true"
+                  style={{
+                    ...(wrapperStyle || { width: '100%', height: '100%' }),
+                    transform: `translate3d(${pan.x}px, ${pan.y}px, 0px) scale(${zoom})`,
+                    transformOrigin: 'center center',
+                    transition: isPanning ? 'none' : 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                    cursor: zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in',
                   }}
-                  className={hasKnownDims ? 'object-cover select-none' : 'object-contain select-none'}
-                />
+                  className="relative flex items-center justify-center select-none shadow-2xl rounded-2xl touch-none pointer-events-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (hasDragged.current) return;
+                    const now = Date.now();
+                    if (now - lastTapTimeRef.current < 300) {
+                      handleImageDoubleTap(e);
+                      lastTapTimeRef.current = 0;
+                      return;
+                    }
+                    lastTapTimeRef.current = now;
+                    setShowUi((s) => !s);
+                  }}
+                >
+                  <Image
+                    src={current.src}
+                    alt={current.alt || current.caption}
+                    fill
+                    sizes="(min-width: 1280px) 90vw, (min-width: 768px) 94vw, 98vw"
+                    priority
+                    unoptimized={current.src.startsWith('http')}
+                    onLoad={(e) => {
+                      const img = e.target;
+                      if (img && img.naturalWidth && img.naturalHeight) {
+                        setLoadedDim({ width: img.naturalWidth, height: img.naturalHeight });
+                      }
+                    }}
+                    className="object-contain select-none"
+                  />
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
