@@ -53,5 +53,36 @@ test.describe('Our Journey So Far - 3D Flip & Enlarged Year Retrospective', () =
     const doneBtn = dialog.locator('button:has-text("Done Reading")');
     await doneBtn.click();
     await expect(dialog).not.toBeVisible({ timeout: 3000 });
+
+    // 5. Test 2025 card: Clicking the card flips AND enlarges directly to detailed view
+    const card2025 = page.locator('.perspective-1000', { hasText: '2025' });
+    await expect(card2025).toBeVisible();
+
+    // Flip to back first to capture aligned back face
+    const flip2025Btn = card2025.locator('button:has-text("Flip stats")');
+    await flip2025Btn.click();
+    await page.waitForTimeout(300);
+    await card2025.screenshot({
+      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/journey-2025-card-aligned.png',
+    });
+
+    // Clicking anywhere on the card enlarges directly to detailed view
+    await card2025.click();
+
+    // Verify modal opens with 2025 retrospective and aligned stats
+    await expect(dialog).toBeVisible({ timeout: 5000 });
+    await expect(dialog).toContainText('2025');
+    await expect(dialog).toContainText('Mathspire Expilog');
+    await expect(dialog).toContainText('500+');
+    await expect(dialog).toContainText('Expilog Contenders');
+    await expect(dialog).toContainText('State & College Award');
+
+    await page.waitForTimeout(300);
+    await page.screenshot({
+      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/journey-2025-modal-enlarged.png',
+    });
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible({ timeout: 3000 });
   });
 });

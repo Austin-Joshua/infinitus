@@ -89,10 +89,11 @@ function YearDetailModal({ step, open, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          initial={{ opacity: 0, y: 12, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 8, scale: 0.98 }}
-          transition={{ duration: 0.16, ease: 'easeOut' }}
+          initial={{ opacity: 0, rotateY: -35, scale: 0.88, y: 16 }}
+          animate={{ opacity: 1, rotateY: 0, scale: 1, y: 0 }}
+          exit={{ opacity: 0, rotateY: 35, scale: 0.9, y: 12 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          style={{ transformStyle: 'preserve-3d' }}
           className="relative z-10 w-full max-w-2xl max-h-[88vh] overflow-y-auto no-scrollbar rounded-2xl border border-sunset-orange/40 bg-card p-6 sm:p-8 shadow-2xl shadow-sunset-orange/15"
         >
           {/* Close Button */}
@@ -140,16 +141,16 @@ function YearDetailModal({ step, open, onClose }) {
 
           {/* Key Stats Grid */}
           {step.stats && step.stats.length > 0 && (
-            <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3.5">
+            <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3.5 items-stretch">
               {step.stats.map((stat, sIdx) => (
                 <div
                   key={sIdx}
-                  className="rounded-xl border border-fg/10 bg-bg/60 p-3 sm:p-4 text-center"
+                  className="flex flex-col justify-between rounded-xl border border-fg/10 bg-bg/60 p-3 sm:p-4 text-center min-h-[84px]"
                 >
-                  <p className="font-heading text-lg sm:text-2xl font-extrabold text-sunset-orange">
+                  <p className="font-heading text-xl sm:text-3xl font-extrabold text-sunset-orange">
                     {stat.value}
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted font-medium">
+                  <p className="mt-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-muted font-medium leading-snug">
                     {stat.label}
                   </p>
                 </div>
@@ -226,10 +227,11 @@ function JourneyCard({ step, onEnlarge }) {
   const prefersReducedMotion = useReducedMotion();
 
   const handleCardClick = (e) => {
-    // If click originated from a button, don't trigger flip
-    if (e.target.closest('button')) return;
+    // If click originated from the flip-only toggle button, only flip in-place
+    if (e.target.closest('button[data-action="flip"]')) return;
     playClick();
     setIsFlipped((prev) => !prev);
+    onEnlarge(step);
   };
 
   const handleFlipToggle = (e) => {
@@ -241,6 +243,7 @@ function JourneyCard({ step, onEnlarge }) {
   const handleEnlargeClick = (e) => {
     e.stopPropagation();
     playClick();
+    setIsFlipped(true);
     onEnlarge(step);
   };
 
@@ -325,6 +328,7 @@ function JourneyCard({ step, onEnlarge }) {
             <div className="mt-4 flex items-center justify-between border-t border-fg/10 pt-2.5 text-[10px] sm:text-[11px] font-mono">
               <button
                 type="button"
+                data-action="flip"
                 onClick={handleFlipToggle}
                 className="text-muted hover:text-fg transition-colors flex items-center gap-1 cursor-pointer py-1"
               >
@@ -332,6 +336,7 @@ function JourneyCard({ step, onEnlarge }) {
               </button>
               <button
                 type="button"
+                data-action="enlarge"
                 onClick={handleEnlargeClick}
                 className="font-semibold text-sunset-orange hover:text-accent transition-colors flex items-center gap-1 cursor-pointer py-1"
               >
@@ -360,24 +365,27 @@ function JourneyCard({ step, onEnlarge }) {
           }}
         >
           <div>
-            <div className="flex items-center justify-between border-b border-fg/10 pb-2">
-              <span className="font-heading text-xl font-bold text-sunset-orange">
+            <div className="flex items-center justify-between gap-2 border-b border-fg/10 pb-2">
+              <span className="font-heading text-lg sm:text-xl font-bold text-sunset-orange shrink-0">
                 {step.year} Archive
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
-                {step.theme || 'Milestone Focus'}
+              <span className="chip border-sunset/30 bg-sunset/10 font-mono text-[9px] sm:text-[10px] text-sunset font-semibold">
+                {step.tag || 'Archive'}
               </span>
             </div>
 
-            {/* Mini Stats Grid on Back Face */}
+            {/* Mini Stats Grid on Back Face - Perfect Equal Heights & Baseline Alignment */}
             {step.stats && step.stats.length > 0 && (
-              <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
+              <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2 text-center items-stretch">
                 {step.stats.map((stat, sIdx) => (
-                  <div key={sIdx} className="rounded-lg border border-fg/10 bg-bg/60 p-2">
-                    <p className="font-heading text-sm sm:text-base font-extrabold text-sunset-orange">
+                  <div
+                    key={sIdx}
+                    className="flex flex-col justify-between rounded-lg border border-fg/10 bg-bg-2/60 p-1.5 sm:p-2 min-h-[68px] sm:min-h-[72px]"
+                  >
+                    <p className="font-heading text-sm sm:text-base font-extrabold text-sunset-orange leading-none pt-0.5">
                       {stat.value}
                     </p>
-                    <p className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-muted truncate">
+                    <p className="mt-1 font-mono text-[8px] sm:text-[9px] uppercase tracking-tight text-muted leading-tight">
                       {stat.label}
                     </p>
                   </div>
@@ -386,15 +394,16 @@ function JourneyCard({ step, onEnlarge }) {
             )}
 
             {/* Legacy Excerpt */}
-            <p className="mt-3 text-[11px] leading-relaxed text-fg/80 line-clamp-3">
+            <p className="mt-3 text-[11px] leading-relaxed text-muted line-clamp-3">
               {step.legacy || step.body}
             </p>
           </div>
 
           {/* Bottom Actions Bar on Back */}
-          <div className="mt-3 flex items-center justify-between border-t border-fg/10 pt-2 text-[10px] sm:text-[11px] font-mono">
+          <div className="mt-auto flex items-center justify-between border-t border-fg/10 pt-2.5 text-[10px] sm:text-[11px] font-mono">
             <button
               type="button"
+              data-action="flip"
               onClick={handleFlipToggle}
               className="text-muted hover:text-fg transition-colors flex items-center gap-1 cursor-pointer py-1"
             >
@@ -402,6 +411,7 @@ function JourneyCard({ step, onEnlarge }) {
             </button>
             <button
               type="button"
+              data-action="enlarge"
               onClick={handleEnlargeClick}
               className="font-semibold text-sunset-orange hover:text-accent transition-colors flex items-center gap-1 cursor-pointer py-1"
             >
