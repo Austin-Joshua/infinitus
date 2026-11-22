@@ -17,39 +17,53 @@ export default function FeaturedEventsSlider({
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
+  const pauseTimerRef = useRef(null);
   const reduce = useReducedMotion();
-
-  // Pointer & touch swipe tracking for all display sizes (desktop mouse, tablet, mobile)
-  const pointerStartX = useRef(null);
-  const pointerStartY = useRef(null);
 
   const count = events.length;
 
+  // Temporarily pause auto-advance when user actively navigates so it doesn't fight them
+  const suspendAutoplay = useCallback(() => {
+    setIsPaused(true);
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, 10000); // 10s of peaceful reading before resuming
+  }, []);
+
   const goTo = useCallback(
-    (index, newDirection = 1) => {
+    (index, newDirection = 1, userInitiated = false) => {
       if (count === 0) return;
+      if (userInitiated) suspendAutoplay();
       setDirection(newDirection);
       setCurrent((index + count) % count);
     },
-    [count]
+    [count, suspendAutoplay]
   );
 
   const prev = useCallback(() => {
-    goTo(current - 1, -1);
+    goTo(current - 1, -1, true);
   }, [current, goTo]);
 
   const next = useCallback(() => {
-    goTo(current + 1, 1);
+    goTo(current + 1, 1, true);
   }, [current, goTo]);
 
-  // Slideshow auto-advance timer with brisk speed
+  // Slideshow auto-advance timer with user-friendly pause
   useEffect(() => {
     if (count <= 1 || isPaused || reduce) return undefined;
     const timer = setInterval(() => {
-      goTo(current + 1, 1);
+      goTo(current + 1, 1, false);
     }, autoplayInterval);
     return () => clearInterval(timer);
   }, [count, current, isPaused, reduce, autoplayInterval, goTo]);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    };
+  }, []);
 
   // Keyboard navigation
   const handleKeyDown = (e) => {
@@ -58,28 +72,6 @@ export default function FeaturedEventsSlider({
     } else if (e.key === 'ArrowRight') {
       next();
     }
-  };
-
-  // Universal pointer swipe support (desktop mouse drag, trackpad, tablet pen & mobile)
-  const handlePointerDown = (e) => {
-    pointerStartX.current = e.clientX;
-    pointerStartY.current = e.clientY;
-  };
-
-  const handlePointerUp = (e) => {
-    if (pointerStartX.current === null) return;
-    const diffX = pointerStartX.current - e.clientX;
-    const diffY = pointerStartY.current !== null ? Math.abs(pointerStartY.current - e.clientY) : 0;
-    // Horizontal swipe threshold: 40px and predominantly horizontal
-    if (Math.abs(diffX) > 40 && Math.abs(diffX) > diffY) {
-      if (diffX > 0) {
-        next();
-      } else {
-        prev();
-      }
-    }
-    pointerStartX.current = null;
-    pointerStartY.current = null;
   };
 
   if (!events || events.length === 0) return null;
@@ -94,8 +86,6 @@ export default function FeaturedEventsSlider({
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
       onKeyDown={handleKeyDown}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
       tabIndex={0}
       role="region"
       aria-roledescription="carousel"
@@ -127,21 +117,22 @@ export default function FeaturedEventsSlider({
 
       {/* Main Large Card Container */}
       <div className="card overflow-hidden rounded-2xl border border-sunset-orange/30 bg-card shadow-2xl">
-        <AnimatePresence mode="wait" initial={false} custom={direction}>
+        <AnimatePresence initial={false} custom={direction}>
           <motion.article
             key={activeEvent.id}
             custom={direction}
-            initial={{ opacity: 0, x: direction * 40, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, x: -direction * 40, filter: 'blur(4px)' }}
-            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: direction * 48 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -direction * 48 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.16}
+            dragElastic={0.18}
             dragMomentum={false}
+            onDragStart={suspendAutoplay}
             onDragEnd={(e, { offset, velocity }) => {
-              const swipeConfidenceThreshold = 35;
-              const swipeVelocityThreshold = 250;
+              const swipeConfidenceThreshold = 30;
+              const swipeVelocityThreshold = 200;
               if (offset.x < -swipeConfidenceThreshold || velocity.x < -swipeVelocityThreshold) {
                 next();
               } else if (offset.x > swipeConfidenceThreshold || velocity.x > swipeVelocityThreshold) {
@@ -249,7 +240,7 @@ export default function FeaturedEventsSlider({
                 <button
                   key={ev.id}
                   type="button"
-                  onClick={() => goTo(idx, idx > current ? 1 : -1)}
+                  onClick={() => goTo(idx, idx > current ? 1 : -1, true)}
                   aria-label={`Go to event ${idx + 1}: ${ev.title}`}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     active

@@ -23,6 +23,8 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
     graph: null,
     transform: { x: 0, y: 0, scale: 1 },
     dragNode: null,
+    activePointers: new Map(),
+    pinchDist: null,
     isPanning: false,
     panStart: { x: 0, y: 0 },
     mousePos: { x: 0, y: 0 },
@@ -113,9 +115,19 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
       const cx = width / 2;
       const cy = height / 2;
 
+      // Check if a node is actively being dragged by any pointer (single or multi-touch)
+      const isNodeDragged = (node) => {
+        if (!node) return false;
+        if (s.dragNode === node) return true;
+        for (const p of s.activePointers.values()) {
+          if (p.dragNode === node) return true;
+        }
+        return false;
+      };
+
       // 1. Center gravity force
       for (const node of nodes) {
-        if (node === s.dragNode) continue;
+        if (isNodeDragged(node)) continue;
         const kCenter = node.type === 'domain' ? 0.02 * alpha : 0.015 * alpha;
         node.vx += (cx - node.x) * kCenter;
         node.vy += (cy - node.y) * kCenter;
@@ -136,11 +148,11 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
           const fx = (dx / dist) * force;
           const fy = (dy / dist) * force;
 
-          if (u !== s.dragNode) {
+          if (!isNodeDragged(u)) {
             u.vx -= fx / u.mass;
             u.vy -= fy / u.mass;
           }
-          if (v !== s.dragNode) {
+          if (!isNodeDragged(v)) {
             v.vx += fx / v.mass;
             v.vy += fy / v.mass;
           }
@@ -151,11 +163,11 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
             const overlap = (minDist - dist) * 0.5 * alpha;
             const ox = (dx / dist) * overlap;
             const oy = (dy / dist) * overlap;
-            if (u !== s.dragNode) {
+            if (!isNodeDragged(u)) {
               u.vx -= ox;
               u.vy -= oy;
             }
-            if (v !== s.dragNode) {
+            if (!isNodeDragged(v)) {
               v.vx += ox;
               v.vy += oy;
             }
@@ -175,11 +187,11 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
         const fx = (dx / dist) * force;
         const fy = (dy / dist) * force;
 
-        if (u !== s.dragNode) {
+        if (!isNodeDragged(u)) {
           u.vx += fx / u.mass;
           u.vy += fy / u.mass;
         }
-        if (v !== s.dragNode) {
+        if (!isNodeDragged(v)) {
           v.vx -= fx / v.mass;
           v.vy -= fy / v.mass;
         }
@@ -188,7 +200,7 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
       // 4. Update positions & damping
       const damping = 0.86;
       for (const node of nodes) {
-        if (node === s.dragNode) continue;
+        if (isNodeDragged(node)) continue;
         node.vx *= damping;
         node.vy *= damping;
         node.x += node.vx;
@@ -422,17 +434,19 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
     };
   }, []);
 
-  // Find node under pointer
-  const getNodeAt = useCallback((worldX, worldY) => {
+  // Find node under pointer (supports generous touch target on mobile/tablet)
+  const getNodeAt = useCallback((worldX, worldY, isTouch = false) => {
     const s = stateRef.current;
     if (!s.graph) return null;
     const { nodes } = s.graph;
-    // Check domain hubs first (larger hit target), then events
+    // Check domain hubs first (generous touch hit target so fingers grab easily), then events
     for (let i = nodes.length - 1; i >= 0; i--) {
       const node = nodes[i];
       const dx = worldX - node.x;
       const dy = worldY - node.y;
-      const hitRadius = node.radius + 8;
+      const hitRadius = node.type === 'domain'
+        ? (isTouch ? Math.max(node.radius + 26, 42) : node.radius + 12)
+        : (isTouch ? Math.max(node.radius + 18, 30) : node.radius + 8);
       if (dx * dx + dy * dy <= hitRadius * hitRadius) {
         return node;
       }
@@ -440,22 +454,38 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
     return null;
   }, []);
 
-  // Pointer event handlers
+  // Pointer event handlers with multi-touch finger dragging & pinch-to-zoom
   const handlePointerDown = (e) => {
+    const s = stateRef.current;
+    const isTouch = e.pointerType === 'touch';
     const world = screenToWorld(e.clientX, e.clientY);
-    const hit = getNodeAt(world.x, world.y);
+    const hit = getNodeAt(world.x, world.y, isTouch);
+
+    s.activePointers.set(e.pointerId, {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      dragNode: hit,
+      startX: e.clientX,
+      startY: e.clientY,
+    });
 
     if (hit) {
-      stateRef.current.dragNode = hit;
-      stateRef.current.alpha = 0.5;
+      s.alpha = Math.max(s.alpha, 0.65);
     } else {
-      stateRef.current.isPanning = true;
-      stateRef.current.panStart = {
-        x: e.clientX - stateRef.current.transform.x,
-        y: e.clientY - stateRef.current.transform.y,
-      };
+      if (s.activePointers.size === 1) {
+        s.isPanning = true;
+        s.panStart = {
+          x: e.clientX - s.transform.x,
+          y: e.clientY - s.transform.y,
+        };
+      } else if (s.activePointers.size === 2) {
+        const [p1, p2] = Array.from(s.activePointers.values());
+        s.pinchDist = Math.hypot(p1.clientX - p2.clientX, p1.clientY - p2.clientY);
+      }
     }
-    e.currentTarget.setPointerCapture(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
   };
 
   const handlePointerMove = (e) => {
@@ -463,17 +493,40 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
     const world = screenToWorld(e.clientX, e.clientY);
     s.mousePos = { x: e.clientX, y: e.clientY };
 
-    if (s.dragNode) {
-      s.dragNode.x = world.x;
-      s.dragNode.y = world.y;
-      s.dragNode.vx = 0;
-      s.dragNode.vy = 0;
-      s.alpha = Math.max(s.alpha, 0.35);
-    } else if (s.isPanning) {
-      s.transform.x = e.clientX - s.panStart.x;
-      s.transform.y = e.clientY - s.panStart.y;
+    const ptr = s.activePointers.get(e.pointerId);
+    if (ptr) {
+      ptr.clientX = e.clientX;
+      ptr.clientY = e.clientY;
+
+      if (ptr.dragNode) {
+        // Dragging a node (supports multi-touch simultaneous dragging of multiple domain hubs!)
+        ptr.dragNode.x = world.x;
+        ptr.dragNode.y = world.y;
+        ptr.dragNode.vx = 0;
+        ptr.dragNode.vy = 0;
+        s.alpha = Math.max(s.alpha, 0.45);
+      } else if (s.activePointers.size === 2) {
+        // Two-finger pinch-to-zoom and two-finger pan
+        const [p1, p2] = Array.from(s.activePointers.values());
+        const currentDist = Math.hypot(p1.clientX - p2.clientX, p1.clientY - p2.clientY);
+        if (s.pinchDist && s.pinchDist > 10) {
+          const factor = currentDist / s.pinchDist;
+          if (Math.abs(factor - 1) > 0.008) {
+            const nextScale = Math.max(0.5, Math.min(2.5, s.transform.scale * factor));
+            s.transform.scale = nextScale;
+            setZoomLevel(nextScale);
+            s.pinchDist = currentDist;
+            s.alpha = Math.max(s.alpha, 0.25);
+          }
+        } else {
+          s.pinchDist = currentDist;
+        }
+      } else if (s.isPanning) {
+        s.transform.x = e.clientX - s.panStart.x;
+        s.transform.y = e.clientY - s.panStart.y;
+      }
     } else {
-      const hover = getNodeAt(world.x, world.y);
+      const hover = getNodeAt(world.x, world.y, false);
       if (hover !== hoveredNode) {
         setHoveredNode(hover);
       }
@@ -482,30 +535,33 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
 
   const handlePointerUp = (e) => {
     const s = stateRef.current;
-    if (s.dragNode) {
-      s.dragNode = null;
+    const ptr = s.activePointers.get(e.pointerId);
+
+    if (ptr) {
+      const distMoved = Math.hypot(e.clientX - ptr.startX, e.clientY - ptr.startY);
+      // Quick tap without dragging counts as selection click
+      if (distMoved < 8 && ptr.dragNode) {
+        const hit = ptr.dragNode;
+        if (hit.type === 'event') {
+          const fullEvent = events.find((ev) => ev.id === hit.eventId);
+          setActiveEvent(fullEvent || null);
+        } else if (hit.type === 'domain') {
+          setSelectedDomain((prev) => (prev === hit.domainId ? 'all' : hit.domainId));
+        }
+      } else if (distMoved < 8 && !ptr.dragNode && s.activePointers.size === 1) {
+        // Tap on empty space clears selection
+        setActiveEvent(null);
+      }
+      s.activePointers.delete(e.pointerId);
     }
-    s.isPanning = false;
+
+    if (s.activePointers.size === 0) {
+      s.isPanning = false;
+      s.pinchDist = null;
+    }
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {}
-  };
-
-  // Node click selection
-  const handleClick = (e) => {
-    const world = screenToWorld(e.clientX, e.clientY);
-    const hit = getNodeAt(world.x, world.y);
-
-    if (hit) {
-      if (hit.type === 'event') {
-        const fullEvent = events.find((ev) => ev.id === hit.eventId);
-        setActiveEvent(fullEvent || null);
-      } else if (hit.type === 'domain') {
-        setSelectedDomain((prev) => (prev === hit.domainId ? 'all' : hit.domainId));
-      }
-    } else {
-      setActiveEvent(null);
-    }
   };
 
   // Wheel zoom
@@ -624,7 +680,6 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          onClick={handleClick}
           onWheel={handleWheel}
           className="w-full h-full block touch-none cursor-grab active:cursor-grabbing"
           aria-hidden="true"

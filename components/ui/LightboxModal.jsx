@@ -28,10 +28,18 @@ export default function LightboxModal({
   const [direction, setDirection] = useState(1);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [loadedDim, setLoadedDim] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
 
   const dialogRef = useRef(null);
   const canvasRef = useRef(null);
   const lastExternalActiveEl = useRef(null);
+  const lastPanRef = useRef({ x: 0, y: 0 });
+  const panStart = useRef({ x: 0, y: 0 });
+  const activePointersRef = useRef(new Map());
+  const pinchDistRef = useRef(null);
+  const lastTapTimeRef = useRef(0);
 
   // Track the most recent element focused or clicked outside any modal dialog
   useEffect(() => {
@@ -69,20 +77,74 @@ export default function LightboxModal({
     }
   }, [index]);
 
-  // Reset loaded dimensions on slide change
+  // Reset zoom & pan on slide change or modal open/close
+  const resetZoom = useCallback(() => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+    lastPanRef.current = { x: 0, y: 0 };
+    setIsPanning(false);
+  }, []);
+
+  // Reset loaded dimensions and zoom on slide change
   useEffect(() => {
     setLoadedDim(null);
-  }, [current?.src]);
+    resetZoom();
+  }, [current?.src, open, resetZoom]);
+
+  const handleZoomIn = (e) => {
+    e?.stopPropagation();
+    setZoom((z) => Math.min(4, Math.round((z + 0.5) * 10) / 10));
+  };
+
+  const handleZoomOut = (e) => {
+    e?.stopPropagation();
+    setZoom((z) => {
+      const next = Math.max(1, Math.round((z - 0.5) * 10) / 10);
+      if (next === 1) {
+        setPan({ x: 0, y: 0 });
+        lastPanRef.current = { x: 0, y: 0 };
+      }
+      return next;
+    });
+  };
+
+  const handleZoomReset = (e) => {
+    e?.stopPropagation();
+    resetZoom();
+  };
+
+  const handleImageDoubleTap = (e) => {
+    e.stopPropagation();
+    if (zoom > 1) {
+      resetZoom();
+    } else {
+      setZoom(2.5);
+    }
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.25 : -0.25;
+    setZoom((z) => {
+      const next = Math.max(1, Math.min(4, Math.round((z + delta) * 10) / 10));
+      if (next === 1) {
+        setPan({ x: 0, y: 0 });
+        lastPanRef.current = { x: 0, y: 0 };
+      }
+      return next;
+    });
+  };
 
   const step = useCallback(
     (delta) => {
       if (photos.length <= 1) return;
+      resetZoom();
       setDirection(delta);
       const next = (currentIndex + delta + photos.length) % photos.length;
       setInternalIndex(next);
       onIndexChange?.(next);
     },
-    [currentIndex, photos.length, onIndexChange]
+    [currentIndex, photos.length, onIndexChange, resetZoom]
   );
 
   const stepRef = useRef(step);
@@ -208,36 +270,84 @@ export default function LightboxModal({
     };
   }, [open, showUi]);
 
-  // Pointer drag & swipe tracking
+  // Pointer drag, pan, pinch & swipe tracking
   const handlePointerDown = (e) => {
+    activePointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     pointerStart.current = { x: e.clientX, y: e.clientY };
     hasDragged.current = false;
+
+    if (activePointersRef.current.size === 1) {
+      if (zoom > 1) {
+        setIsPanning(true);
+        panStart.current = {
+          x: e.clientX - lastPanRef.current.x,
+          y: e.clientY - lastPanRef.current.y,
+        };
+      }
+    } else if (activePointersRef.current.size === 2) {
+      const [p1, p2] = Array.from(activePointersRef.current.values());
+      pinchDistRef.current = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+    }
   };
 
   const handlePointerMove = (e) => {
-    if (hasDragged.current) return;
+    const ptr = activePointersRef.current.get(e.pointerId);
+    if (ptr) {
+      ptr.x = e.clientX;
+      ptr.y = e.clientY;
+    }
+
     const dx = e.clientX - pointerStart.current.x;
     const dy = e.clientY - pointerStart.current.y;
     if (Math.hypot(dx, dy) > 8) {
       hasDragged.current = true;
     }
+
+    if (activePointersRef.current.size === 2) {
+      // Pinch to zoom
+      const [p1, p2] = Array.from(activePointersRef.current.values());
+      const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+      if (pinchDistRef.current && pinchDistRef.current > 10) {
+        const factor = dist / pinchDistRef.current;
+        if (Math.abs(factor - 1) > 0.01) {
+          setZoom((z) => Math.max(1, Math.min(4, Math.round(z * factor * 100) / 100)));
+          pinchDistRef.current = dist;
+        }
+      }
+    } else if (zoom > 1 && isPanning) {
+      // Pan the zoomed image
+      const nextX = e.clientX - panStart.current.x;
+      const nextY = e.clientY - panStart.current.y;
+      setPan({ x: nextX, y: nextY });
+      lastPanRef.current = { x: nextX, y: nextY };
+    }
   };
 
   const handlePointerUp = (e) => {
-    const diffX = pointerStart.current.x - e.clientX;
-    const diffY = Math.abs(pointerStart.current.y - e.clientY);
-    // Register swipe if predominantly horizontal and movement > 35px
-    if (Math.abs(diffX) > 35 && Math.abs(diffX) > diffY) {
-      if (diffX > 0) {
-        step(1);
-      } else {
-        step(-1);
+    activePointersRef.current.delete(e.pointerId);
+
+    if (zoom === 1) {
+      const diffX = pointerStart.current.x - e.clientX;
+      const diffY = Math.abs(pointerStart.current.y - e.clientY);
+      // Register swipe if predominantly horizontal and movement > 35px
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > diffY) {
+        if (diffX > 0) {
+          step(1);
+        } else {
+          step(-1);
+        }
       }
     }
+
+    if (activePointersRef.current.size === 0) {
+      setIsPanning(false);
+      pinchDistRef.current = null;
+    }
+
     // Release drag flag after any immediate click event suppresses
     setTimeout(() => {
       hasDragged.current = false;
-    }, 50);
+    }, 60);
   };
 
   if (!mounted || typeof document === 'undefined') {
@@ -381,6 +491,7 @@ export default function LightboxModal({
           {/* Main Photo Canvas: Option (b) reserves top padding when UI is shown so caption never covers poster */}
           <div
             ref={canvasRef}
+            onWheel={handleWheel}
             className="w-full h-full flex items-center justify-center overflow-hidden transition-all duration-200"
             style={{
               paddingTop: showUi
@@ -402,15 +513,28 @@ export default function LightboxModal({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                style={wrapperStyle}
+                style={{
+                  ...wrapperStyle,
+                  transform: `translate3d(${pan.x}px, ${pan.y}px, 0px) scale(${zoom})`,
+                  transformOrigin: 'center center',
+                  transition: isPanning ? 'none' : 'transform 0.15s ease-out',
+                  cursor: zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in',
+                }}
                 className={
                   hasKnownDims
-                    ? 'relative rounded-2xl shadow-2xl overflow-hidden cursor-pointer select-none'
-                    : 'relative w-full h-full max-w-full max-h-full flex items-center justify-center cursor-pointer select-none'
+                    ? 'relative rounded-2xl shadow-2xl overflow-hidden select-none'
+                    : 'relative w-full h-full max-w-full max-h-full flex items-center justify-center select-none'
                 }
                 onClick={(e) => {
                   e.stopPropagation();
                   if (hasDragged.current) return;
+                  const now = Date.now();
+                  if (now - lastTapTimeRef.current < 300) {
+                    handleImageDoubleTap(e);
+                    lastTapTimeRef.current = 0;
+                    return;
+                  }
+                  lastTapTimeRef.current = now;
                   setShowUi((s) => !s);
                 }}
               >
@@ -431,6 +555,62 @@ export default function LightboxModal({
                 />
               </motion.div>
             </AnimatePresence>
+          </div>
+
+          {/* Floating Zoom Controls Toolbar */}
+          <div
+            className={`absolute bottom-5 inset-x-0 z-40 flex items-center justify-center pointer-events-none transition-all duration-300 ${
+              showUi ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-3 invisible'
+            }`}
+            style={{
+              paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0.5rem))',
+            }}
+          >
+            <div
+              className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-white/20 bg-black/85 px-3 py-1.5 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={handleZoomOut}
+                disabled={zoom <= 1}
+                aria-label="Zoom out"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/90 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+              >
+                <svg className="h-4 w-4" fill="none" strokeWidth="2.5" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={handleZoomReset}
+                title="Reset zoom to 100%"
+                className="font-mono text-xs font-semibold text-white/90 px-2 min-w-[3.75rem] text-center hover:text-sunset-orange select-none transition-colors"
+              >
+                {Math.round(zoom * 100)}%
+              </button>
+              <button
+                type="button"
+                onClick={handleZoomIn}
+                disabled={zoom >= 4}
+                aria-label="Zoom in"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/90 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+              >
+                <svg className="h-4 w-4" fill="none" strokeWidth="2.5" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+              {zoom > 1 && (
+                <button
+                  type="button"
+                  onClick={handleZoomReset}
+                  aria-label="Reset zoom"
+                  className="ml-1 flex h-7 px-2.5 items-center justify-center rounded-full bg-white/15 text-[11px] font-mono font-medium text-white hover:bg-white/25 active:scale-95 transition-all"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
           </div>
         </motion.div>
       )}

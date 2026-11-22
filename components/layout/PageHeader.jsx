@@ -32,9 +32,9 @@ export default function PageHeader({ label, title, intro, children }) {
           />
           {(intro || children) && (
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: start + 0.25, ease: EASE.out }}
+              transition={{ duration: 0.28, ease: EASE.out }}
               className="max-w-xl"
             >
               {intro && <p className="lede !text-sm sm:!text-base">{intro}</p>}

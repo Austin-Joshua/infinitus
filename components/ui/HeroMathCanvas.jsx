@@ -519,13 +519,62 @@ export default function HeroMathCanvas({ className = '' }) {
     };
   }, [mode, initSimulation, prefersReducedMotion]);
 
+  // 3D Gyroscope orientation tracking for mobile/tablet wallpaper tilting
+  useEffect(() => {
+    if (prefersReducedMotion || typeof window === 'undefined') return;
+
+    const handleOrientation = (e) => {
+      if (e.beta === null || e.gamma === null) return;
+      const s = stateRef.current;
+      if (s.isDragging) return;
+
+      // Subtle device tilt influence on angular velocity
+      const targetVelY = (e.gamma || 0) * 0.00035;
+      const targetVelX = ((e.beta || 45) - 45) * 0.0003;
+      s.velY = s.velY * 0.9 + targetVelY * 0.1;
+      s.velX = s.velX * 0.9 + targetVelX * 0.1;
+    };
+
+    if (window.DeviceOrientationEvent) {
+      if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
+        window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+        return () => window.removeEventListener('deviceorientation', handleOrientation);
+      }
+    }
+  }, [prefersReducedMotion]);
+
   // Pointer drag controls for 3D navigation
-  const onPointerDown = (e) => {
+  const onPointerDown = async (e) => {
     stateRef.current.isDragging = true;
     stateRef.current.dragX = e.clientX;
     stateRef.current.dragY = e.clientY;
     setIsInteracting(true);
-    e.currentTarget.setPointerCapture(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
+
+    // Unlock iOS Safari gyroscope on first touch interaction
+    if (
+      typeof window !== 'undefined' &&
+      window.DeviceOrientationEvent &&
+      typeof DeviceOrientationEvent.requestPermission === 'function'
+    ) {
+      try {
+        const state = await DeviceOrientationEvent.requestPermission();
+        if (state === 'granted') {
+          const handleOrientation = (ev) => {
+            if (ev.beta === null || ev.gamma === null) return;
+            const s = stateRef.current;
+            if (s.isDragging) return;
+            const targetVelY = (ev.gamma || 0) * 0.00035;
+            const targetVelX = ((ev.beta || 45) - 45) * 0.0003;
+            s.velY = s.velY * 0.9 + targetVelY * 0.1;
+            s.velX = s.velX * 0.9 + targetVelX * 0.1;
+          };
+          window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+        }
+      } catch {}
+    }
   };
 
   const onPointerMove = (e) => {

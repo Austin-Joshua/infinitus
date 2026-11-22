@@ -16,9 +16,9 @@ export default function Hero({ stats = [] }) {
   const figureY = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
 
   const rise = (delay) => ({
-    initial: { opacity: 0, y: 12 },
+    initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.4, delay: Math.min(start + delay, 0.35), ease: EASE.out },
+    transition: { duration: 0.28, delay: Math.min(delay * 0.3, 0.12), ease: EASE.out },
   });
 
   return (
@@ -68,9 +68,9 @@ export default function Hero({ stats = [] }) {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: start + 0.35, ease: EASE.out }}
+            transition={{ duration: 0.35, ease: EASE.out }}
             style={{ y: figureY }}
             className="flex items-center justify-center max-w-xl mx-auto lg:max-w-none w-full"
           >

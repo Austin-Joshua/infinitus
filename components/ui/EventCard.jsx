@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { COPY } from '@/lib/site';
 import { eventHref, formatEventDate } from '@/lib/format';
 import InfinitusLogo from '@/components/brand/InfinitusLogo';
 
@@ -84,17 +83,13 @@ export default function EventCard({ event }) {
           <span className="font-mono text-[11px] font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
             {isUpcoming ? 'Register now' : 'Details'} <span aria-hidden="true" className="nudge">→</span>
           </span>
-          {isUpcoming && event.registrationFormUrl ? (
-            <a href={event.registrationFormUrl} target="_blank" rel="noreferrer noopener" className="btn-primary py-1 px-3 text-[11px]">
-              {COPY.events.registerCta} <ExternalArrow />
-            </a>
-          ) : event.externalLink ? (
+          {event.externalLink ? (
             <a
               href={event.externalLink}
               target="_blank"
               rel="noreferrer noopener"
               className="inline-flex items-center gap-1 text-[11px] font-medium text-fg/70 transition-colors hover:text-accent"
-              aria-label={`View Instagram post for ${event.title}`}
+              aria-label={`View external link for ${event.title}`}
             >
               Post <ExternalArrow />
             </a>

@@ -76,22 +76,22 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
   };
 
   // Device Gyroscope listener for mobile / tablet motion
+  const handleOrientation = useCallback((e) => {
+    if (e.beta === null || e.gamma === null) return;
+    setGyroAvailable(true);
+
+    // beta: front-to-back tilt in [-180, 180] (typical portrait phone holds around 30 to 60 deg)
+    // gamma: left-to-right tilt in [-90, 90]
+    const rawX = Math.max(-28, Math.min(28, e.gamma || 0));
+    const rawY = Math.max(-28, Math.min(28, (e.beta || 45) - 45));
+
+    mouseX.set(rawX / 56); // maps ±28 deg to ±0.5
+    mouseY.set(rawY / 56);
+    setGyroActive(true);
+  }, [mouseX, mouseY]);
+
   useEffect(() => {
     if (prefersReducedMotion || typeof window === 'undefined') return;
-
-    const handleOrientation = (e) => {
-      if (e.beta === null || e.gamma === null) return;
-      setGyroAvailable(true);
-
-      // beta: front-to-back tilt in [-180, 180] (typical portrait phone holds around 30 to 60 deg)
-      // gamma: left-to-right tilt in [-90, 90]
-      const rawX = Math.max(-25, Math.min(25, e.gamma || 0));
-      const rawY = Math.max(-25, Math.min(25, (e.beta || 45) - 45));
-
-      mouseX.set(rawX / 50); // maps ±25 deg to ±0.5
-      mouseY.set(rawY / 50);
-      setGyroActive(true);
-    };
 
     if (window.DeviceOrientationEvent) {
       // Check if permission required (iOS 13+)
@@ -100,11 +100,10 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
         return () => window.removeEventListener('deviceorientation', handleOrientation);
       }
     }
-  }, [mouseX, mouseY, prefersReducedMotion]);
+  }, [handleOrientation, prefersReducedMotion]);
 
-  // Request iOS Gyroscope permission if requested by user
-  const enableIosGyro = async (e) => {
-    e.stopPropagation();
+  // Request iOS Gyroscope permission seamlessly on user touch / click
+  const enableIosGyro = useCallback(async () => {
     if (
       typeof window !== 'undefined' &&
       window.DeviceOrientationEvent &&
@@ -113,13 +112,14 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
       try {
         const state = await DeviceOrientationEvent.requestPermission();
         if (state === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation, { passive: true });
           setGyroActive(true);
         }
       } catch (err) {
-        console.warn('Gyro permission rejected:', err);
+        // Gyro permission rejected or unavailable
       }
     }
-  };
+  }, [handleOrientation]);
 
   if (!event?.coverImageUrl) {
     return (
@@ -148,10 +148,11 @@ export default function EventHeroPoster({ event, allPhotos = [] }) {
       <div
         ref={containerRef}
         data-testid="gyro-parallax-container"
+        onPointerDown={enableIosGyro}
         onPointerMove={handlePointerMove}
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
-        className="relative flex h-full w-full items-center justify-center [perspective:1200px]"
+        className="relative flex h-full w-full items-center justify-center [perspective:1200px] touch-pan-y"
       >
         <motion.div
           data-testid="gyro-parallax-card"
