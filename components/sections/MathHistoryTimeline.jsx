@@ -182,7 +182,7 @@ export default function MathHistoryTimeline() {
           </div>
         </div>
 
-        {/* Featured Milestone Card: Clean Single-Element Layout */}
+        {/* Featured Milestone Card: Ultra-compact, Refined Single-Element Layout */}
         <AnimatePresence mode="wait">
           <motion.article
             key={activeItem.id}
@@ -191,55 +191,55 @@ export default function MathHistoryTimeline() {
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.08, ease: 'easeOut' }}
             data-testid="math-history-active-card"
-            className="rounded-2xl border border-sunset-orange/30 bg-card p-6 sm:p-8 shadow-xl shadow-black/5"
+            className="rounded-xl sm:rounded-2xl border border-sunset-orange/30 bg-card p-3.5 sm:p-5 lg:p-6 shadow-md shadow-black/5"
           >
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] items-start">
+            <div className="grid gap-3.5 sm:gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] items-start">
               {/* Left Column: Historical Context */}
               <div>
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="rounded-full border border-sunset-orange/40 bg-sunset-orange/10 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-sunset-orange">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                  <span className="rounded-full border border-sunset-orange/40 bg-sunset-orange/10 px-2 py-0.5 font-mono text-[9px] sm:text-[10px] font-semibold text-sunset-orange">
                     {activeItem.year}
                   </span>
-                  <span className="font-mono text-xs text-muted">
+                  <span className="font-mono text-[10px] sm:text-xs text-muted">
                     {activeItem.century}
                   </span>
-                  <span className="rounded-full border border-border/80 bg-bg/80 px-2.5 py-0.5 font-mono text-[10px] text-muted">
+                  <span className="rounded-full border border-border/80 bg-bg/80 px-2 py-0.5 font-mono text-[9px] sm:text-[10px] text-muted">
                     {activeItem.branch}
                   </span>
                 </div>
 
-                <h3 className="font-heading text-xl sm:text-2xl lg:text-3xl font-bold text-fg tracking-tight">
+                <h3 className="font-heading text-base sm:text-xl lg:text-2xl font-bold text-fg tracking-tight">
                   {activeItem.title}
                 </h3>
-                <p className="font-sans text-sm font-semibold text-sunset-orange mt-1">
+                <p className="font-sans text-[11px] sm:text-xs font-semibold text-sunset-orange mt-0.5">
                   {activeItem.subtitle}
                 </p>
 
-                <p className="mt-4 font-sans text-xs sm:text-sm leading-relaxed text-muted">
+                <p className="mt-2 font-sans text-[11px] sm:text-xs leading-relaxed text-muted">
                   {activeItem.description}
                 </p>
 
-                <div className="mt-6 border-t border-border/50 pt-4">
-                  <p className="font-mono text-[11px] uppercase tracking-wider text-muted font-semibold">
+                <div className="mt-3 border-t border-border/40 pt-2 sm:pt-2.5">
+                  <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-muted font-semibold">
                     Key Historical Impact
                   </p>
-                  <p className="mt-1 text-xs text-fg/90">
+                  <p className="mt-0.5 text-[11px] sm:text-xs text-fg/90 leading-relaxed">
                     {activeItem.keyContribution}
                   </p>
                 </div>
               </div>
 
               {/* Right Column: Mathematical Formula & Identity */}
-              <div className="flex flex-col justify-center rounded-xl border border-border/60 bg-bg/60 p-5 sm:p-6">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-sunset-orange font-semibold">
+              <div className="flex flex-col justify-center rounded-lg sm:rounded-xl border border-border/60 bg-bg/60 p-3 sm:p-4">
+                <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-sunset-orange font-semibold">
                   Foundational Mathematical Equation
                 </span>
 
-                <div className="mt-3 overflow-x-auto no-scrollbar rounded-lg bg-card/90 border border-sunset-orange/20 p-4 font-mono text-sm sm:text-base font-bold text-fg">
+                <div className="mt-1.5 sm:mt-2 overflow-x-auto no-scrollbar rounded-lg bg-card/90 border border-sunset-orange/20 p-2 sm:p-2.5 font-mono text-[11px] sm:text-xs font-bold text-fg">
                   <code>{activeItem.formula}</code>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-muted">
+                <div className="mt-2 flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-muted">
                   <span>Domain: {activeItem.branch}</span>
                   <span className="text-sunset-orange font-semibold">#{activeItem.tag}</span>
                 </div>

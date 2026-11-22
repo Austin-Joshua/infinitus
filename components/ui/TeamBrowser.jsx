@@ -2,9 +2,8 @@
 
 import { useId, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import MemberCard, { MemberDetailModal, InstagramIcon } from '@/components/ui/MemberCard';
+import MemberCard, { MemberDetailModal } from '@/components/ui/MemberCard';
 import { playClick } from '@/lib/soundEffects';
-import { SOCIAL } from '@/lib/site';
 
 export default function TeamBrowser({ members }) {
   const [selectedTeam, setSelectedTeam] = useState('All');
@@ -49,26 +48,11 @@ export default function TeamBrowser({ members }) {
     <div className="space-y-8 sm:space-y-10">
       <h2 className="sr-only">Members Directory by Department & Domain</h2>
 
-      {/* Team Filter Pills & Dedicated Instagram Channel Button */}
+      {/* Team Filter Pills */}
       <div className="flex flex-col gap-3 pb-3 sm:pb-6 border-b border-fg/15">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <p className="font-mono text-xs uppercase tracking-wider text-muted">
-            Filter by Committee Domain ({filteredMembers.length} {filteredMembers.length === 1 ? 'member' : 'members'})
-          </p>
-
-          {/* Dedicated Section-Level Official Instagram Link (Requirement 1) */}
-          <a
-            href={SOCIAL.instagram}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 rounded-full border border-sunset-orange/35 bg-card px-3.5 py-1 text-xs font-semibold text-sunset-orange hover:bg-sunset-orange hover:text-white hover:border-sunset-orange transition-all shadow-sm active:scale-95"
-            aria-label="Follow official INFINITUS on Instagram"
-          >
-            <InstagramIcon className="h-3.5 w-3.5" />
-            <span>@infinitus_club.rit</span>
-            <span aria-hidden="true" className="text-[10px] opacity-75">↗</span>
-          </a>
-        </div>
+        <p className="font-mono text-xs uppercase tracking-wider text-muted">
+          Filter by Committee Domain ({filteredMembers.length} {filteredMembers.length === 1 ? 'member' : 'members'})
+        </p>
 
         <div
           role="group"
