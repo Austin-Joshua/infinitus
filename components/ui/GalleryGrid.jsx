@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import LightboxModal from '@/components/ui/LightboxModal';
 
 /**
@@ -32,18 +31,14 @@ export default function GalleryGrid({ photos = [] }) {
 
   return (
     <>
-      {/* Spacious, unclustered responsive photo grid */}
+      {/* Spacious, unclustered responsive photo grid - instantly visible without delay */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 lg:gap-7">
         {photos.map((photo, i) => (
-          <motion.button
+          <button
             key={photo.src}
             type="button"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '180px 0px 50px 0px' }}
-            transition={{ duration: 0.16, delay: (i % 3) * 0.01, ease: [0.16, 1, 0.3, 1] }}
             onClick={() => openLightbox(i)}
-            className="card card-hover group relative flex aspect-[4/3] w-full cursor-pointer flex-col overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="card card-hover group relative flex aspect-[4/3] w-full cursor-pointer flex-col overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-transform duration-200 active:scale-[0.98]"
             aria-label={`View photo: ${photo.caption}`}
             aria-haspopup="dialog"
           >
@@ -52,8 +47,10 @@ export default function GalleryGrid({ photos = [] }) {
               alt={photo.alt || photo.caption}
               fill
               sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+              priority={i < 6}
+              loading={i < 6 ? 'eager' : 'lazy'}
               unoptimized={photo.src.startsWith('http')}
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             />
 
             {/* Subtle frosted glass caption overlay on hover/mobile */}
@@ -67,7 +64,7 @@ export default function GalleryGrid({ photos = [] }) {
                 </span>
               )}
             </span>
-          </motion.button>
+          </button>
         ))}
       </div>
 

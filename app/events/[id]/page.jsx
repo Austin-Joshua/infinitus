@@ -3,8 +3,6 @@ import { notFound } from 'next/navigation';
 import { ExternalArrow, eventHref } from '@/components/ui/EventCard';
 import EventHeroPoster from '@/components/ui/EventHeroPoster';
 import GalleryGrid from '@/components/ui/GalleryGrid';
-import Reveal, { ClipReveal } from '@/components/ui/Reveal';
-import SplitText from '@/components/ui/SplitText';
 import JsonLd from '@/components/seo/JsonLd';
 import AddToCalendarMenu from '@/components/ui/AddToCalendarMenu';
 import { EVENTS } from '@/lib/data';
@@ -146,14 +144,14 @@ export default async function EventPage({ params }) {
 
           <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
             <div className="lg:sticky lg:top-24 lg:self-start">
-              <ClipReveal delay={0.2} className="relative aspect-[1/1.414] w-full max-w-md mx-auto">
+              <div className="relative aspect-[1/1.414] w-full max-w-md mx-auto">
                 <EventHeroPoster event={event} allPhotos={allPhotos} />
-              </ClipReveal>
+              </div>
             </div>
 
             <div className="lg:pt-4">
               {/* Badges: Clear distinction between Online and Offline Registration (Requirement 4) */}
-              <Reveal className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {isUpcoming ? (
                   hasOnlineForm ? (
                     <span className="chip border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold">
@@ -173,16 +171,13 @@ export default async function EventPage({ params }) {
                   <span className="chip border-fg/15 text-fg/80 font-medium">In-Person Campus</span>
                 )}
                 {event.eventType && <span className="chip">{event.eventType}</span>}
-              </Reveal>
+              </div>
 
-              <SplitText
-                as="h1"
-                text={event.title}
-                delay={0.1}
-                className="mt-4 block font-heading text-3xl font-bold leading-tight tracking-tight text-fg sm:text-4xl lg:text-5xl"
-              />
+              <h1 className="mt-4 block font-heading text-3xl font-bold leading-tight tracking-tight text-fg sm:text-4xl lg:text-5xl">
+                {event.title}
+              </h1>
 
-              <Reveal delay={0.3}>
+              <div>
                 <dl className="card mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl p-4 sm:p-5">
                   <div>
                     <dt className="font-mono text-xs uppercase tracking-widest text-muted">Date & Time</dt>
@@ -273,11 +268,11 @@ export default async function EventPage({ params }) {
                       {COPY.events.viewPost} <ExternalArrow />
                     </a>
                   )}
-                  <Link href="/events" className="btn-ghost">
+                  <Link href="/events" prefetch={true} className="btn-ghost">
                     <span aria-hidden="true">←</span> {COPY.events.backToEvents}
                   </Link>
                 </div>
-              </Reveal>
+              </div>
             </div>
           </div>
 

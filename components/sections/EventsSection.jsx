@@ -13,6 +13,7 @@ export function FeaturedEvent({ event }) {
       {/* Framed Poster with proper space, border, and aspect ratio */}
       <Link
         href={eventHref(event)}
+        prefetch={true}
         tabIndex={-1}
         aria-hidden="true"
         className="relative shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:w-[280px] lg:w-[320px] aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 shadow-md bg-bg transition-transform duration-500 ease-out group-hover:scale-[1.02] group-hover:border-accent/40"
@@ -34,7 +35,7 @@ export function FeaturedEvent({ event }) {
           {event.eventType && <span className="chip font-medium">{event.eventType}</span>}
         </div>
         <h2 className="mt-3 sm:mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
-          <Link href={eventHref(event)} className="transition-colors hover:text-accent">
+          <Link href={eventHref(event)} prefetch={true} className="transition-colors hover:text-accent">
             {event.title}
           </Link>
         </h2>
@@ -57,7 +58,7 @@ export function FeaturedEvent({ event }) {
           </ul>
         )}
         <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3">
-          <Link href={eventHref(event)} className="btn-primary text-xs sm:text-sm">
+          <Link href={eventHref(event)} prefetch={true} className="btn-primary text-xs sm:text-sm">
             {COPY.events.details} <span aria-hidden="true" className="nudge">→</span>
           </Link>
           {event.externalLink && (

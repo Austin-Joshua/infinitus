@@ -383,6 +383,7 @@ export default function FeaturedEventsSlider({
                 {/* Poster Frame */}
                 <Link
                   href={eventHref(ev)}
+                  prefetch={true}
                   tabIndex={-1}
                   aria-hidden="true"
                   className="relative shrink-0 w-full max-w-[280px] sm:max-w-[320px] md:w-[280px] lg:w-[320px] aspect-[4/5] overflow-hidden rounded-xl border border-fg/15 shadow-md bg-bg transition-transform duration-500 ease-out hover:scale-[1.02] hover:border-accent/40"

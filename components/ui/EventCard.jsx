@@ -38,9 +38,19 @@ export function EventPoster({ event, sizes, priority = false, className = '', fi
 /** Poster card. The title links to the event page and stretches over the whole card. */
 export default function EventCard({ event }) {
   const isUpcoming = event.status === 'upcoming';
+  const href = eventHref(event);
 
   return (
     <article className="card card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl">
+      {/* Full-card overlay link for instantaneous 1-click navigation anywhere on card */}
+      <Link
+        href={href}
+        prefetch={true}
+        className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        aria-label={`View details for ${event.title}`}
+        tabIndex={-1}
+      />
+
       <div className="relative aspect-[4/5] w-full overflow-hidden border-b border-fg/15 bg-bg-2/40">
         <EventPoster
           event={event}
@@ -74,9 +84,9 @@ export default function EventCard({ event }) {
         </div>
         <h3 className="font-heading text-xs sm:text-base font-bold leading-snug text-fg line-clamp-2">
           <Link
-            href={eventHref(event)}
+            href={href}
             prefetch={true}
-            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-md focus-visible:after:ring-2 focus-visible:after:ring-accent hover:text-accent transition-colors"
+            className="relative z-20 hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-sm"
           >
             {event.title}
           </Link>
@@ -86,10 +96,14 @@ export default function EventCard({ event }) {
           <p className="mt-1.5 sm:mt-2 line-clamp-2 text-[11px] sm:text-xs leading-relaxed text-muted hidden xs:block">{event.description}</p>
         )}
 
-        <div className="relative z-10 mt-auto pt-2 sm:pt-3 border-t border-fg/10 flex items-center justify-between text-xs">
-          <span className="font-mono text-[10px] sm:text-[11px] font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange transition-colors">
+        <div className="relative z-20 mt-auto pt-2 sm:pt-3 border-t border-fg/10 flex items-center justify-between text-xs">
+          <Link
+            href={href}
+            prefetch={true}
+            className="font-mono text-[10px] sm:text-[11px] font-medium text-accent flex items-center gap-1 group-hover:text-sunset-orange hover:text-sunset-orange transition-colors"
+          >
             {isUpcoming ? (event.registrationFormUrl ? 'Register online' : 'Offline details') : 'Details'} <span aria-hidden="true" className="nudge">→</span>
-          </span>
+          </Link>
           {event.externalLink ? (
             <a
               href={event.externalLink}

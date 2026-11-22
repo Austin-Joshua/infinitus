@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   AnimatePresence,
   motion,
@@ -135,6 +135,7 @@ const MOBILE_BOTTOM_NAV = [
 
 export default function Nav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const { isDark, toggleTheme } = useTheme();
 
@@ -188,6 +189,7 @@ export default function Nav() {
                   key={item.id}
                   href={item.href}
                   prefetch={true}
+                  onPointerEnter={() => router.prefetch(item.href)}
                   aria-current={active ? 'page' : undefined}
                   className={`relative rounded-xl px-3.5 py-2 text-sm font-medium transition-colors ${
                     active ? 'text-sunset-orange font-semibold' : 'text-muted hover:text-fg'
@@ -300,6 +302,8 @@ export default function Nav() {
                 key={item.id}
                 href={item.href}
                 prefetch={true}
+                onTouchStart={() => router.prefetch(item.href)}
+                onPointerEnter={() => router.prefetch(item.href)}
                 aria-current={active ? 'page' : undefined}
                 className={`relative flex flex-1 flex-col items-center justify-center py-1 px-0.5 transition-all duration-200 active:scale-95 ${
                   active ? 'text-sunset-orange' : 'text-muted hover:text-fg'
