@@ -618,7 +618,7 @@ export default function HeroMathCanvas({ className = '' }) {
     >
       {/* Blueprint Header: Mode Switcher Pills & Controls */}
       <div className="flex items-center justify-between gap-2 pb-3 border-b border-fg/10">
-        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto" role="tablist">
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar" role="tablist">
           {MODES.map((m) => {
             const isActive = m.id === mode;
             return (

@@ -44,7 +44,7 @@ export default function MathHistoryTimeline() {
           </div>
 
           {/* Era Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1" role="tablist" aria-label="Filter eras">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" role="tablist" aria-label="Filter eras">
             {MATH_ERAS.map((era) => {
               const active = activeEra === era.id;
               return (
@@ -71,7 +71,7 @@ export default function MathHistoryTimeline() {
         </div>
 
         {/* Timeline Horizontal / Desktop Stepper */}
-        <div className="relative mt-2 mb-8 overflow-x-auto pb-3">
+        <div className="relative mt-2 mb-8 overflow-x-auto no-scrollbar pb-3">
           <div className="flex items-center min-w-[680px] justify-between relative px-4">
             {/* Background Track Line */}
             <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 h-0.5 bg-gradient-to-r from-sunset-orange/20 via-sunset-orange/50 to-sunset-orange/20 -z-0" />
@@ -164,7 +164,7 @@ export default function MathHistoryTimeline() {
                   Foundational Mathematical Equation
                 </span>
 
-                <div className="mt-3 overflow-x-auto rounded-lg bg-card/90 border border-sunset-orange/20 p-4 font-mono text-sm sm:text-base font-bold text-fg">
+                <div className="mt-3 overflow-x-auto no-scrollbar rounded-lg bg-card/90 border border-sunset-orange/20 p-4 font-mono text-sm sm:text-base font-bold text-fg">
                   <code>{activeItem.formula}</code>
                 </div>
 

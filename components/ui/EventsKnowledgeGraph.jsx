@@ -631,7 +631,7 @@ export default function EventsKnowledgeGraph({ events, className = '' }) {
       </div>
 
       {/* Domain Filter Pills */}
-      <div className="mt-3.5 flex items-center gap-1.5 overflow-x-auto pb-1" role="tablist">
+      <div className="mt-3.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" role="tablist">
         <button
           role="tab"
           aria-selected={selectedDomain === 'all'}
