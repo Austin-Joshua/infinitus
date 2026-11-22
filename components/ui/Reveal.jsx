@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { EASE } from '@/lib/motion';
 
-export default function Reveal({ children, className, delay = 0, y = 12, as = 'div' }) {
+export default function Reveal({ children, className, delay = 0, y = 6, as = 'div' }) {
   const Component = motion[as] ?? motion.div;
 
   return (
@@ -11,9 +11,9 @@ export default function Reveal({ children, className, delay = 0, y = 12, as = 'd
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      // Pre-triggers 180px before entering viewport so fast scroll never encounters blank content
-      viewport={{ once: true, margin: '180px 0px 50px 0px' }}
-      transition={{ duration: 0.32, delay: Math.min(delay, 0.12), ease: EASE.out }}
+      // Pre-triggers 250px before entering viewport so fast scroll never encounters blank content
+      viewport={{ once: true, margin: '250px 0px 50px 0px' }}
+      transition={{ duration: 0.16, delay: Math.min(delay, 0.03), ease: EASE.out }}
     >
       {children}
     </Component>
@@ -21,7 +21,7 @@ export default function Reveal({ children, className, delay = 0, y = 12, as = 'd
 }
 
 /** A list whose items rise in swiftly once the list approaches viewport. */
-export function Stagger({ children, className, as = 'div', stagger = 0.035 }) {
+export function Stagger({ children, className, as = 'div', stagger = 0.015 }) {
   const Component = motion[as] ?? motion.div;
 
   return (
@@ -29,7 +29,7 @@ export function Stagger({ children, className, as = 'div', stagger = 0.035 }) {
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: '180px 0px 50px 0px' }}
+      viewport={{ once: true, margin: '250px 0px 50px 0px' }}
       variants={{ hidden: {}, show: { transition: { staggerChildren: stagger } } }}
     >
       {children}
@@ -37,7 +37,7 @@ export function Stagger({ children, className, as = 'div', stagger = 0.035 }) {
   );
 }
 
-export function StaggerItem({ children, className, as = 'div', y = 12 }) {
+export function StaggerItem({ children, className, as = 'div', y = 6 }) {
   const Component = motion[as] ?? motion.div;
 
   return (
@@ -45,7 +45,7 @@ export function StaggerItem({ children, className, as = 'div', y = 12 }) {
       className={className}
       variants={{
         hidden: { opacity: 0, y },
-        show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: EASE.out } },
+        show: { opacity: 1, y: 0, transition: { duration: 0.15, ease: EASE.out } },
       }}
     >
       {children}
@@ -60,7 +60,7 @@ export function ClipReveal({ children, className, delay = 0 }) {
       className={className}
       initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
       animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-      transition={{ duration: 0.45, delay: Math.min(delay, 0.15), ease: EASE.out }}
+      transition={{ duration: 0.18, delay: Math.min(delay, 0.03), ease: EASE.out }}
     >
       {children}
     </motion.div>

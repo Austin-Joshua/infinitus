@@ -36,7 +36,7 @@ function SectionHead({ eyebrow, heading, href, cta }) {
             {cta} {!cta.toLowerCase().includes('instagram') && <span aria-hidden="true" className="nudge-ne">↗</span>}
           </a>
         ) : (
-          <Link href={href} className="btn-ghost self-start sm:self-auto text-xs sm:text-sm">
+          <Link href={href} prefetch={true} className="btn-ghost self-start sm:self-auto text-xs sm:text-sm">
             {cta} <span aria-hidden="true" className="nudge">→</span>
           </Link>
         )
@@ -76,9 +76,9 @@ export function HomeAbout() {
             <SplitText text={home.aboutStatement} onView stagger={0.03} />{' '}
             <SplitText text={home.aboutStatementAccent} onView delay={0.3} className="italic text-accent" />
           </h2>
-          <Reveal delay={0.2} className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <Reveal delay={0.1} className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
             <p className="lede max-w-2xl !text-sm sm:!text-base">{about.body}</p>
-            <Link href="/about" className="group inline-flex items-center gap-2 text-sm font-semibold text-accent">
+            <Link href="/about" prefetch={true} className="group inline-flex items-center gap-2 text-sm font-semibold text-accent">
               <span className="border-b border-accent/40 pb-0.5 transition-colors group-hover:border-accent">Read our story</span>
               <span aria-hidden="true" className="nudge">→</span>
             </Link>
@@ -152,6 +152,7 @@ export function HomeExplore() {
               <StaggerItem key={page.id}>
                 <Link
                   href={page.href}
+                  prefetch={true}
                   className="card card-hover group relative flex h-full min-h-[9.5rem] sm:min-h-[12rem] lg:min-h-[14rem] flex-col justify-between p-3.5 sm:p-5 lg:p-7 rounded-xl sm:rounded-2xl"
                 >
                   <div className="flex items-center justify-between gap-1">
@@ -240,6 +241,7 @@ export function HomeEvents({ events }) {
                   )}
                   <Link
                     href={`/events/${encodeURIComponent(nextUp.id)}`}
+                    prefetch={true}
                     className="btn-ghost text-xs sm:text-sm"
                   >
                     View Details <span aria-hidden="true" className="nudge">→</span>
@@ -306,6 +308,7 @@ export function HomeEvents({ events }) {
                 {/* Direct Link Overlay to /events */}
                 <Link
                   href="/events"
+                  prefetch={true}
                   className="absolute inset-0 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-2xl"
                   aria-label="View all INFINITUS events on the events page"
                 />
@@ -500,9 +503,10 @@ export function CtaBand() {
         <h2 className="mt-4 max-w-4xl font-heading text-2xl font-bold tracking-tight text-fg sm:text-4xl lg:text-5xl">
           <SplitText text={COPY.home.ctaHeading} onView stagger={0.03} />
         </h2>
-        <Reveal delay={0.25} className="mt-8">
+        <Reveal delay={0.1} className="mt-8">
           <Link
             href="/contact"
+            prefetch={true}
             className="btn-primary text-sm sm:text-base !px-7 !py-3.5 shadow-md"
           >
             {COPY.home.ctaButton} <span aria-hidden="true" className="nudge">→</span>

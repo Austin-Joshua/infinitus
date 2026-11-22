@@ -43,6 +43,7 @@ function NeighbourLink({ event, label, align }) {
   return (
     <Link
       href={eventHref(event)}
+      prefetch={true}
       className={`group relative flex flex-col gap-2 overflow-hidden py-8 sm:py-12 ${
         align === 'right' ? 'items-end pl-6 text-right sm:pl-10' : 'pr-6 sm:pr-10'
       }`}
@@ -137,6 +138,7 @@ export default async function EventPage({ params }) {
         <div className="container-x">
           <Link
             href="/events"
+            prefetch={true}
             className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-accent hover:underline"
           >
             ← Back to events

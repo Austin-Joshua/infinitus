@@ -113,7 +113,7 @@ export default function MathHistoryTimeline() {
               initial={{ scaleX: prefersReducedMotion ? 1 : 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true, margin: '-20px' }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               style={{ originX: 0 }}
               className="absolute left-10 right-10 top-4 -translate-y-1/2 h-0.5 bg-gradient-to-r from-sunset-orange via-gold to-sunset-orange shadow-[0_0_8px_rgba(255,107,0,0.4)] z-0"
             />
@@ -127,8 +127,8 @@ export default function MathHistoryTimeline() {
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{
-                    duration: 0.35,
-                    delay: prefersReducedMotion ? 0 : idx * 0.06,
+                    duration: 0.16,
+                    delay: prefersReducedMotion ? 0 : idx * 0.02,
                     ease: 'easeOut',
                   }}
                   className="relative z-10 flex flex-col items-center"
@@ -175,10 +175,10 @@ export default function MathHistoryTimeline() {
         <AnimatePresence mode="wait">
           <motion.article
             key={activeItem.id}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.24, ease: 'easeOut' }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.08, ease: 'easeOut' }}
             data-testid="math-history-active-card"
             className="rounded-2xl border border-sunset-orange/30 bg-card p-6 sm:p-8 shadow-xl shadow-black/5"
           >

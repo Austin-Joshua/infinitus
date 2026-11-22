@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { metaOf } from '@/lib/format';
 import { SOCIAL } from '@/lib/site';
@@ -271,10 +272,15 @@ export function Avatar({ name, photoUrl, role, className = '' }) {
 }
 
 export function MemberDetailModal({ member, open, onClose, titleId }) {
+  const [mounted, setMounted] = useState(false);
   const meta = member ? metaOf(member) : '';
   const dialogRef = useRef(null);
   const closeBtnRef = useRef(null);
   const lastFocusedRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -325,7 +331,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
     };
   }, [open, onClose]);
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {open && member && (
         <motion.div
@@ -349,10 +355,10 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            initial={{ opacity: 0, y: 16, scale: 0.96 }}
+            initial={{ opacity: 0, y: 12, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 12, scale: 0.97 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
             className={`relative z-10 w-full ${
               member.posterUrl ? 'max-w-2xl' : 'max-w-lg'
             } max-h-[90vh] overflow-y-auto rounded-2xl border border-sunset-orange/40 bg-card p-6 shadow-2xl shadow-sunset-orange/15 sm:p-8`}
@@ -529,6 +535,9 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
       )}
     </AnimatePresence>
   );
+
+  if (!mounted) return null;
+  return createPortal(modalContent, document.body);
 }
 
 /** 3D Flip Card displaying personalized Role Icon on front and revealed member poster & details on back */
@@ -563,7 +572,7 @@ export default function MemberCard({ member, onOpen }) {
       >
         <motion.div
           animate={{ rotateY: isFlipped ? 180 : 0 }}
-          transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
           style={{ transformStyle: 'preserve-3d' }}
           className="relative h-full w-full"
         >

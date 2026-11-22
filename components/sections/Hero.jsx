@@ -16,9 +16,9 @@ export default function Hero({ stats = [] }) {
   const figureY = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
 
   const rise = (delay) => ({
-    initial: { opacity: 0, y: 10 },
+    initial: { opacity: 0, y: 8 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.28, delay: Math.min(delay * 0.3, 0.12), ease: EASE.out },
+    transition: { duration: 0.18, delay: Math.min(delay * 0.1, 0.04), ease: EASE.out },
   });
 
   return (
@@ -35,7 +35,7 @@ export default function Hero({ stats = [] }) {
               <span className="sr-only">
                 INFINITUS, the Mathematics Club of Rajalakshmi Institute of Technology, Chennai:{' '}
               </span>
-              <SplitText text={COPY.hero.tagline} by="word" stagger={0.04} />
+              <SplitText text={COPY.hero.tagline} by="word" stagger={0.012} />
             </motion.h1>
             <motion.p {...rise(0.5)} className="lede mt-4 sm:mt-5 max-w-lg mx-auto lg:mx-0 text-sm sm:text-base leading-relaxed">
               {COPY.hero.support}
@@ -62,6 +62,7 @@ export default function Hero({ stats = [] }) {
               {/* Tertiary CTA: Text Link */}
               <Link
                 href="/events"
+                prefetch={true}
                 className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted hover:text-fg transition-colors ml-0 sm:ml-1"
               >
                 Explore events <span aria-hidden="true" className="nudge">→</span>

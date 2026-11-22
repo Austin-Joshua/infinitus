@@ -75,6 +75,7 @@ export default function EventCard({ event }) {
         <h3 className="font-heading text-xs sm:text-base font-bold leading-snug text-fg line-clamp-2">
           <Link
             href={eventHref(event)}
+            prefetch={true}
             className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-md focus-visible:after:ring-2 focus-visible:after:ring-accent hover:text-accent transition-colors"
           >
             {event.title}

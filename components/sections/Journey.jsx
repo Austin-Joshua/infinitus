@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useId, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { EASE } from '@/lib/motion';
 import { playClick } from '@/lib/soundEffects';
 
-const DRAW = 1.4;
+const DRAW = 0.45;
 const inView = { once: true, margin: '0px 0px -10% 0px' };
 
 const AMBIENT_SYMBOLS = [
@@ -26,9 +27,14 @@ function CloseIcon(props) {
 
 /** Detailed Modal showing the full retrospective and enlarged view for that academic year */
 function YearDetailModal({ step, open, onClose }) {
+  const [mounted, setMounted] = useState(false);
   const dialogRef = useRef(null);
   const closeBtnRef = useRef(null);
   const titleId = useId();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -55,9 +61,9 @@ function YearDetailModal({ step, open, onClose }) {
     };
   }, [open, onClose]);
 
-  if (!open || !step) return null;
+  if (!open || !step || !mounted) return null;
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
@@ -83,10 +89,10 @@ function YearDetailModal({ step, open, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          initial={{ opacity: 0, y: 12, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 14, scale: 0.96 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
+          exit={{ opacity: 0, y: 8, scale: 0.98 }}
+          transition={{ duration: 0.16, ease: 'easeOut' }}
           className="relative z-10 w-full max-w-2xl max-h-[88vh] overflow-y-auto no-scrollbar rounded-2xl border border-sunset-orange/40 bg-card p-6 sm:p-8 shadow-2xl shadow-sunset-orange/15"
         >
           {/* Close Button */}
@@ -210,6 +216,8 @@ function YearDetailModal({ step, open, onClose }) {
       </motion.div>
     </AnimatePresence>
   );
+
+  return createPortal(modalContent, document.body);
 }
 
 /** Individual 3D Flip Card for each academic year */
@@ -244,8 +252,8 @@ function JourneyCard({ step, onEnlarge }) {
       <motion.div
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{
-          duration: prefersReducedMotion ? 0.01 : 0.55,
-          ease: [0.23, 1, 0.32, 1],
+          duration: prefersReducedMotion ? 0.01 : 0.22,
+          ease: [0.16, 1, 0.3, 1],
         }}
         style={{ transformStyle: 'preserve-3d' }}
         className="relative h-full w-full cursor-pointer"
@@ -415,7 +423,7 @@ function JourneyCard({ step, onEnlarge }) {
  */
 export default function Journey({ heading, steps }) {
   const [activeStep, setActiveStep] = useState(null);
-  const at = (i) => 0.2 + (DRAW * i) / steps.length;
+  const at = (i) => 0.05 + (DRAW * i) / steps.length;
 
   return (
     <section className="section relative overflow-hidden !py-8 sm:!py-14">
@@ -449,7 +457,7 @@ export default function Journey({ heading, steps }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE.out }}
+          transition={{ duration: 0.22, ease: EASE.out }}
           className="max-w-2xl"
         >
           <div className="flex items-center gap-2">
@@ -495,10 +503,10 @@ export default function Journey({ heading, steps }) {
             {steps.map((step, i) => (
               <motion.li
                 key={step.year}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={inView}
-                transition={{ duration: 0.7, delay: at(i), ease: EASE.out }}
+                transition={{ duration: 0.25, delay: at(i), ease: EASE.out }}
                 className="group relative pl-10 lg:pl-0 lg:pt-10"
               >
                 {/* Node with Pulsing Halo Ring */}

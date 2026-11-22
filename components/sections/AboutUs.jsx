@@ -14,10 +14,10 @@ export default function AboutUs() {
         <div aria-hidden="true" className="graph-paper pointer-events-none absolute inset-0" />
         <div className="container-x relative grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
           <h1 className="font-heading text-3xl font-bold leading-[1.15] text-fg sm:text-4xl lg:text-5xl tracking-tight">
-            <SplitText text={about.statement} onView stagger={0.03} />{' '}
-            <SplitText text={about.statementAccent} onView delay={0.3} className="italic text-accent" />
+            <SplitText text={about.statement} onView stagger={0.012} />{' '}
+            <SplitText text={about.statementAccent} onView delay={0.04} className="italic text-accent" />
           </h1>
-          <Reveal delay={0.2} className="space-y-4 self-end text-sm sm:text-base leading-relaxed text-muted">
+          <Reveal delay={0.04} className="space-y-4 self-end text-sm sm:text-base leading-relaxed text-muted">
             <p className="text-fg/90 font-medium">{about.body}</p>
             <p>{about.bodySecondary}</p>
           </Reveal>

@@ -41,7 +41,7 @@ export default function GalleryGrid({ photos = [] }) {
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '180px 0px 50px 0px' }}
-            transition={{ duration: 0.32, delay: (i % 3) * 0.03, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.16, delay: (i % 3) * 0.01, ease: [0.16, 1, 0.3, 1] }}
             onClick={() => openLightbox(i)}
             className="card card-hover group relative flex aspect-[4/3] w-full cursor-pointer flex-col overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label={`View photo: ${photo.caption}`}

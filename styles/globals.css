@@ -98,7 +98,7 @@ html.dark.intro-pending::before {
 }
 
 .page-in {
-  animation: pageIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: pageIn 0.08s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 body {

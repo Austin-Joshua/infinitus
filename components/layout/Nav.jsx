@@ -169,7 +169,7 @@ export default function Nav() {
       >
         <div className="container-x flex h-14 sm:h-16 items-center justify-between gap-2.5 sm:gap-4">
           {/* Dual Branding: Infinitus Logo + College Logo */}
-          <Link href="/" className="group flex items-center gap-2 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
+          <Link href="/" prefetch={true} className="group flex items-center gap-2 sm:gap-3" aria-label={COPY.brand.homeAriaLabel}>
             <span className="transition-transform duration-700 ease-out group-hover:rotate-[360deg] shrink-0">
               <InfinitusLogo size="nav" priority className="h-8 w-8 sm:h-9 sm:w-9" />
             </span>
@@ -187,6 +187,7 @@ export default function Nav() {
                 <Link
                   key={item.id}
                   href={item.href}
+                  prefetch={true}
                   aria-current={active ? 'page' : undefined}
                   className={`relative rounded-xl px-3.5 py-2 text-sm font-medium transition-colors ${
                     active ? 'text-sunset-orange font-semibold' : 'text-muted hover:text-fg'
@@ -272,6 +273,7 @@ export default function Nav() {
             {CONTACT_LINK && (
               <Link
                 href={CONTACT_LINK.href}
+                prefetch={true}
                 aria-current={isActive(pathname, CONTACT_LINK.href) ? 'page' : undefined}
                 className="btn-primary hidden !rounded-full !px-4 !py-2 text-xs font-semibold sm:inline-flex"
               >
@@ -297,6 +299,7 @@ export default function Nav() {
               <Link
                 key={item.id}
                 href={item.href}
+                prefetch={true}
                 aria-current={active ? 'page' : undefined}
                 className={`relative flex flex-1 flex-col items-center justify-center py-1 px-0.5 transition-all duration-200 active:scale-95 ${
                   active ? 'text-sunset-orange' : 'text-muted hover:text-fg'

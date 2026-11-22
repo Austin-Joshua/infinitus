@@ -117,10 +117,10 @@ export default function TeamBrowser({ members }) {
       <AnimatePresence mode="wait">
         <motion.div
           key={selectedTeam}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.08, ease: [0.16, 1, 0.3, 1] }}
           className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-5 lg:gap-6"
         >
           {filteredMembers.map((member) => (

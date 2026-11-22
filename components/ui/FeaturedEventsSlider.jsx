@@ -369,7 +369,7 @@ export default function FeaturedEventsSlider({
             transform: `translate3d(calc(-${activeSlideIndex * 100}% + ${dragOffset}px), 0, 0)`,
             transition: !withTransition || isDragging
               ? 'none'
-              : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+              : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
           onTransitionEnd={handleTransitionEnd}
         >
@@ -430,7 +430,7 @@ export default function FeaturedEventsSlider({
 
                   {/* Title */}
                   <h2 className="mt-3 sm:mt-4 font-heading text-2xl font-bold leading-tight tracking-tight text-fg sm:text-3xl lg:text-4xl">
-                    <Link href={eventHref(ev)} className="transition-colors hover:text-accent">
+                    <Link href={eventHref(ev)} prefetch={true} className="transition-colors hover:text-accent">
                       {ev.title}
                     </Link>
                   </h2>
@@ -464,7 +464,7 @@ export default function FeaturedEventsSlider({
 
                   {/* Action Buttons */}
                   <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3">
-                    <Link href={eventHref(ev)} className="btn-primary text-xs sm:text-sm">
+                    <Link href={eventHref(ev)} prefetch={true} className="btn-primary text-xs sm:text-sm">
                       {ev.status === 'upcoming' && ev.registrationFormUrl ? 'Register online' : COPY.events.details}{' '}
                       <span aria-hidden="true" className="nudge">→</span>
                     </Link>

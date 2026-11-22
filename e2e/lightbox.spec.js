@@ -205,11 +205,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
 
         // Close modal
         await page.keyboard.press('Escape');
-        if (await dialog.isVisible()) {
-          const closeBtn = dialog.locator('button[aria-label="Close image viewer"]');
-          if (await closeBtn.isVisible()) await closeBtn.click();
-        }
-        await expect(dialog).not.toBeVisible();
+        await expect(dialog).not.toBeVisible({ timeout: 3000 });
       }
     }
   });

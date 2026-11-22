@@ -11,7 +11,7 @@ const container = (stagger, delay) => ({
 
 const piece = {
   hidden: { y: '110%' },
-  show: { y: '0%', transition: { duration: 0.35, ease: EASE.out } },
+  show: { y: '0%', transition: { duration: 0.16, ease: EASE.out } },
 };
 
 /**
@@ -33,13 +33,13 @@ export default function SplitText({
   const Component = motion[as] ?? motion.span;
   const pieces = by === 'char' ? [...text] : text.split(' ');
   const trigger = onView
-    ? { whileInView: 'show', viewport: { once: true, margin: '180px 0px 50px 0px' } }
+    ? { whileInView: 'show', viewport: { once: true, margin: '250px 0px 50px 0px' } }
     : { animate: 'show' };
 
   return (
     <Component
       className={className}
-      variants={container(stagger ?? (by === 'char' ? 0.02 : 0.025), start)}
+      variants={container(stagger ?? (by === 'char' ? 0.008 : 0.01), start)}
       initial="hidden"
       {...trigger}
     >
