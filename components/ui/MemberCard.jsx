@@ -335,7 +335,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
     <AnimatePresence>
       {open && member && (
         <motion.div
-          className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -361,7 +361,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
             transition={{ duration: 0.16, ease: 'easeOut' }}
             className={`relative z-10 w-full ${
               member.posterUrl ? 'max-w-2xl' : 'max-w-lg'
-            } max-h-[90vh] overflow-y-auto rounded-2xl border border-sunset-orange/40 bg-card p-6 shadow-2xl shadow-sunset-orange/15 sm:p-8`}
+            } max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] overflow-y-auto rounded-2xl border border-sunset-orange/40 bg-card p-4 sm:p-6 md:p-8 shadow-2xl shadow-sunset-orange/15 overscroll-contain`}
           >
             {/* Close Button */}
             <button
@@ -369,15 +369,15 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/70 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="absolute right-3.5 top-3.5 sm:right-4 sm:top-4 z-20 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/70 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
-              <CloseIcon className="h-5 w-5" />
+              <CloseIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
             {member.posterUrl ? (
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-7">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-7">
                 {/* Official Member Poster */}
-                <div className="mx-auto w-full max-w-[220px] shrink-0 sm:max-w-[240px]">
+                <div className="mx-auto w-full max-w-[150px] sm:max-w-[210px] md:max-w-[240px] shrink-0">
                   <div className="relative aspect-[240/309] w-full overflow-hidden rounded-xl border border-sunset-orange/30 bg-bg/60 shadow-lg shadow-sunset-orange/10">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -392,37 +392,37 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                 </div>
 
                 {/* Details Column */}
-                <div className="flex-1 min-w-0">
-                  <div className="pr-8 sm:pr-0">
-                    <h3 id={titleId} className="font-heading text-xl font-bold text-fg sm:text-2xl">
+                <div className="flex-1 min-w-0 text-center sm:text-left">
+                  <div>
+                    <h3 id={titleId} className="font-heading text-lg font-bold text-fg sm:text-2xl">
                       {member.name}
                     </h3>
-                    <p className="mt-1 text-sm font-semibold text-gold">
+                    <p className="mt-0.5 text-xs sm:text-sm font-semibold text-gold">
                       {member.role}
                     </p>
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <div className="mt-1.5 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
                       {member.team && (
-                        <span className="inline-block rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-medium text-accent">
+                        <span className="inline-block rounded-full bg-accent/10 px-2 sm:px-2.5 py-0.5 font-mono text-[10px] sm:text-[11px] font-medium text-accent">
                           {member.team}
                         </span>
                       )}
-                      {meta && <span className="text-xs font-mono text-muted">{meta}</span>}
+                      {meta && <span className="text-[11px] sm:text-xs font-mono text-muted">{meta}</span>}
                     </div>
                   </div>
 
                   {/* Role Responsibilities */}
-                  <div className="mt-5 border-t border-fg/10 pt-4">
-                    <p className="font-mono text-xs uppercase tracking-wider text-muted">
+                  <div className="mt-3.5 sm:mt-5 border-t border-fg/10 pt-2.5 sm:pt-4 text-left">
+                    <p className="font-mono text-[10px] sm:text-xs uppercase tracking-wider text-muted">
                       Role Responsibilities
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-fg/80">
+                    <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-fg/80">
                       {member.responsibilities ||
                         'Active coordinator contributing to INFINITUS club initiatives, event execution, and mathematical community engagement.'}
                     </p>
                   </div>
 
                   {/* Social & Connect Links */}
-                  <div className="mt-6 flex items-center justify-between border-t border-fg/10 pt-4">
+                  <div className="mt-3.5 sm:mt-6 flex items-center justify-between border-t border-fg/10 pt-3 sm:pt-4">
                     <div className="flex items-center gap-2">
                       {member.linkedinUrl ? (
                         <a
@@ -430,7 +430,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                           target="_blank"
                           rel="noreferrer noopener"
                           aria-label={`${member.name} on LinkedIn`}
-                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                          className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                         >
                           <LinkedinIcon className="h-4 w-4" />
                         </a>
@@ -441,7 +441,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                           target="_blank"
                           rel="noreferrer noopener"
                           aria-label={`${member.name} on Instagram`}
-                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                          className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                         >
                           <InstagramIcon className="h-4 w-4" />
                         </a>
@@ -451,7 +451,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                     <button
                       type="button"
                       onClick={onClose}
-                      className="btn-ghost !px-4 !py-2 text-xs"
+                      className="btn-ghost !h-9 sm:!h-10 !px-4 text-xs font-semibold"
                     >
                       Close
                     </button>
@@ -462,39 +462,41 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
               <div>
                 {/* Member Header */}
                 <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left">
-                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full ring-2 ring-accent/30 sm:h-24 sm:w-24">
+                  <div className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 shrink-0 overflow-hidden rounded-full ring-2 ring-accent/30">
                     <Avatar name={member.name} photoUrl={member.photoUrl} role={member.role} />
                   </div>
 
-                  <div className="mt-4 sm:ml-5 sm:mt-0 sm:flex-1">
-                    <h3 id={titleId} className="font-heading text-xl font-bold text-fg sm:text-2xl">
+                  <div className="mt-3 sm:ml-5 sm:mt-0 sm:flex-1">
+                    <h3 id={titleId} className="font-heading text-lg sm:text-2xl font-bold text-fg">
                       {member.name}
                     </h3>
-                    <p className="mt-1 text-sm font-semibold text-gold">
+                    <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm font-semibold text-gold">
                       {member.role}
                     </p>
-                    {member.team && (
-                      <span className="mt-1.5 inline-block rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-medium text-accent">
-                        {member.team}
-                      </span>
-                    )}
-                    {meta && <p className="mt-1.5 text-xs font-mono text-muted">{meta}</p>}
+                    <div className="mt-1.5 sm:mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
+                      {member.team && (
+                        <span className="inline-block rounded-full bg-accent/10 px-2 sm:px-2.5 py-0.5 font-mono text-[10px] sm:text-[11px] font-medium text-accent">
+                          {member.team}
+                        </span>
+                      )}
+                      {meta && <span className="text-[11px] sm:text-xs font-mono text-muted">{meta}</span>}
+                    </div>
                   </div>
                 </div>
 
                 {/* Role Responsibilities */}
-                <div className="mt-6 border-t border-fg/10 pt-5">
-                  <p className="font-mono text-xs uppercase tracking-wider text-muted">
+                <div className="mt-4 sm:mt-6 border-t border-fg/10 pt-3 sm:pt-4 text-left">
+                  <p className="font-mono text-[10px] sm:text-xs uppercase tracking-wider text-muted">
                     Role Responsibilities
                   </p>
-                  <p className="mt-2.5 text-sm leading-relaxed text-fg/80">
+                  <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-relaxed text-fg/80">
                     {member.responsibilities ||
                       'Active coordinator contributing to INFINITUS club initiatives, event execution, and mathematical community engagement.'}
                   </p>
                 </div>
 
                 {/* Social & Connect Links */}
-                <div className="mt-6 flex items-center justify-between border-t border-fg/10 pt-4">
+                <div className="mt-4 sm:mt-6 flex items-center justify-between border-t border-fg/10 pt-3 sm:pt-4">
                   <div className="flex items-center gap-2">
                     {member.linkedinUrl ? (
                       <a
@@ -502,7 +504,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                         target="_blank"
                         rel="noreferrer noopener"
                         aria-label={`${member.name} on LinkedIn`}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                        className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                       >
                         <LinkedinIcon className="h-4 w-4" />
                       </a>
@@ -513,7 +515,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                         target="_blank"
                         rel="noreferrer noopener"
                         aria-label={`${member.name} on Instagram`}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
+                        className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-sunset-orange/30 bg-card text-fg/80 transition-all hover:border-sunset-orange hover:bg-card hover:text-sunset-orange hover:shadow-md hover:shadow-sunset-orange/20"
                       >
                         <InstagramIcon className="h-4 w-4" />
                       </a>
@@ -523,7 +525,7 @@ export function MemberDetailModal({ member, open, onClose, titleId }) {
                   <button
                     type="button"
                     onClick={onClose}
-                    className="btn-ghost !px-4 !py-2 text-xs"
+                    className="btn-ghost !h-9 sm:!h-10 !px-4 text-xs font-semibold"
                   >
                     Close
                   </button>

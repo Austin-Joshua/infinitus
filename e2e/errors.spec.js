@@ -157,6 +157,7 @@ test.describe('Error Handling & 404 Safeguards', () => {
   });
 
   test('/test-error returns 404 in standard production mode when E2E flag is unset', async () => {
+    test.setTimeout(60000);
     const { spawn } = await import('node:child_process');
     const port = 3012;
     const env = { ...process.env };
