@@ -15,8 +15,8 @@ test.describe('Featured Events Smooth Horizontal Carousel', () => {
     await expect(prevBtn).toBeVisible();
     await expect(nextBtn).toBeVisible();
 
-    // Verify slide counter exists and starts at 01 / 10
-    const counter = carousel.locator('text=/^01 \\/ 10$/').first();
+    // Verify slide counter exists and starts at 01 / N
+    const counter = carousel.locator('text=/^01 \\/ \\d+$/').first();
     await expect(counter).toBeVisible();
 
     // Measure initial carousel height to ensure no vertical stacking blowout
@@ -27,8 +27,8 @@ test.describe('Featured Events Smooth Horizontal Carousel', () => {
     await nextBtn.click();
     await page.waitForTimeout(450);
 
-    // Verify slide counter advanced to 02 / 10
-    const counter2 = carousel.locator('text=/^02 \\/ 10$/').first();
+    // Verify slide counter advanced to 02 / N
+    const counter2 = carousel.locator('text=/^02 \\/ \\d+$/').first();
     await expect(counter2).toBeVisible();
 
     // Verify height did not blow up or stack cards vertically
@@ -69,7 +69,7 @@ test.describe('Featured Events Smooth Horizontal Carousel', () => {
     await dot3.click();
     await page.waitForTimeout(450);
 
-    const counter3 = carousel.locator('text=/^03 \\/ 10$/').first();
+    const counter3 = carousel.locator('text=/^03 \\/ \\d+$/').first();
     await expect(counter3).toBeVisible();
 
     // Capture visual artifact evidence

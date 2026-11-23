@@ -10,9 +10,9 @@ describe('Command Palette Search Index & Algorithm (Feature 3A)', () => {
     assert.ok(Array.isArray(index), 'Index must be an array');
     assert.ok(index.length >= 65, `Expected at least 65 indexed items, got ${index.length}`);
 
-    // Verify all 42 events are indexed
+    // Verify all 43 events are indexed
     const eventItems = index.filter((item) => item.group === 'Events');
-    assert.equal(eventItems.length, 42, 'All 42 events must be indexed');
+    assert.equal(eventItems.length, 43, 'All 43 events must be indexed');
 
     // Verify all members are indexed
     const memberItems = index.filter((item) => item.group === 'Team Members');
@@ -61,6 +61,11 @@ describe('Command Palette Search Index & Algorithm (Feature 3A)', () => {
     const birthdayResults = searchIndex('birthday', index);
     assert.ok(birthdayResults.length > 0, 'Should find Birthday Lineup');
     assert.equal(birthdayResults[0].id, 'event-birthday-lineup');
+
+    // Search for "Escape the Math Room"
+    const escapeResults = searchIndex('escape', index);
+    assert.ok(escapeResults.length > 0, 'Should find Escape the Math Room');
+    assert.equal(escapeResults[0].id, 'event-escape-the-math-room');
 
     // Search for "Matrix"
     const matrixResults = searchIndex('matrix', index);

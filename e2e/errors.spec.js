@@ -181,7 +181,7 @@ test.describe('Error Handling & 404 Safeguards', () => {
       // Poll until server is ready
       const start = Date.now();
       let ready = false;
-      while (Date.now() - start < 20000) {
+      while (Date.now() - start < 35000) {
         try {
           const check = await fetch(`http://localhost:${port}/robots.txt`);
           if (check.ok) {

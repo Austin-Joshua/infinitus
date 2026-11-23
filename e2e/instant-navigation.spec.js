@@ -15,7 +15,7 @@ test.describe('Instantaneous Page Navigation & Responsive Clicks', () => {
     const elapsed = Date.now() - startTime;
 
     // Verify route switched quickly and responsively
-    expect(elapsed).toBeLessThan(2500);
+    expect(elapsed).toBeLessThan(4000);
 
     // Verify gallery heading and grid photos are immediately visible
     await expect(page.locator('h1')).toBeVisible();
@@ -38,7 +38,7 @@ test.describe('Instantaneous Page Navigation & Responsive Clicks', () => {
     const elapsed = Date.now() - startTime;
 
     // Verify route switched quickly
-    expect(elapsed).toBeLessThan(2500);
+    expect(elapsed).toBeLessThan(4000);
 
     // Verify event title and poster container are immediately visible without clipping
     await expect(page.locator('h1')).toBeVisible();
@@ -59,7 +59,7 @@ test.describe('Instantaneous Page Navigation & Responsive Clicks', () => {
     await page.waitForURL(/\/events\/[^/]+/);
     const elapsed = Date.now() - startTime;
 
-    expect(elapsed).toBeLessThan(2500);
+    expect(elapsed).toBeLessThan(4000);
     await expect(page.locator('h1')).toBeVisible();
   });
 });

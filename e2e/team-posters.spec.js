@@ -25,7 +25,8 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
     // Find and click "Full view ↗" button on the flipped card
     const fullViewBtn = austinContainer.locator('button[data-action="details"]');
     await expect(fullViewBtn).toBeVisible();
-    await fullViewBtn.click({ force: true });
+    await fullViewBtn.scrollIntoViewIfNeeded();
+    await fullViewBtn.click();
 
     // Verify detail modal opens
     const dialog = page.locator('div[role="dialog"]');
@@ -70,7 +71,8 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // Open detail modal
     const fullViewBtn = sabariContainer.locator('button[data-action="details"]');
-    await fullViewBtn.click({ force: true });
+    await fullViewBtn.scrollIntoViewIfNeeded();
+    await fullViewBtn.click();
 
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
@@ -103,6 +105,7 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // Open detail modal
     const fullViewBtn = vijayContainer.locator('button[data-action="details"]');
+    await fullViewBtn.scrollIntoViewIfNeeded();
     await fullViewBtn.click();
 
     const dialog = page.locator('div[role="dialog"]');
@@ -134,7 +137,8 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // Open full detail modal
     const fullViewBtn = chrisContainer.locator('button[data-action="details"]');
-    await fullViewBtn.click({ force: true });
+    await fullViewBtn.scrollIntoViewIfNeeded();
+    await fullViewBtn.click();
 
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
@@ -165,7 +169,8 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // Open full detail modal
     const fullViewBtn = facultyContainer.locator('button[data-action="details"]');
-    await fullViewBtn.click({ force: true });
+    await fullViewBtn.scrollIntoViewIfNeeded();
+    await fullViewBtn.click();
 
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
