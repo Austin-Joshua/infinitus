@@ -75,7 +75,7 @@ export default function LightboxModal({
   }, []);
 
   const open = index !== null && photos.length > 0;
-  const currentIndex = internalIndex;
+  const currentIndex = index !== null ? index : internalIndex;
   const current = open ? photos[currentIndex] || photos[0] : null;
 
   // Sync internal index when parent index prop changes

@@ -10,9 +10,9 @@ describe('Command Palette Search Index & Algorithm (Feature 3A)', () => {
     assert.ok(Array.isArray(index), 'Index must be an array');
     assert.ok(index.length >= 65, `Expected at least 65 indexed items, got ${index.length}`);
 
-    // Verify all 44 events are indexed
+    // Verify all 42 events are indexed
     const eventItems = index.filter((item) => item.group === 'Events');
-    assert.equal(eventItems.length, 44, 'All 44 events must be indexed');
+    assert.equal(eventItems.length, 42, 'All 42 events must be indexed');
 
     // Verify all members are indexed
     const memberItems = index.filter((item) => item.group === 'Team Members');
@@ -52,15 +52,15 @@ describe('Command Palette Search Index & Algorithm (Feature 3A)', () => {
   test('searches and ranks events by title and keywords', () => {
     const index = buildSearchIndex(EVENTS, MEMBERS);
 
-    // Search for "Ramanujan"
-    const ramanujanResults = searchIndex('Ramanujan', index);
-    assert.ok(ramanujanResults.length > 0, 'Should find Ramanujan Reimagined');
-    assert.equal(ramanujanResults[0].id, 'event-ramanujan-reimagined');
+    // Search for "Scilab"
+    const scilabResults = searchIndex('Scilab', index);
+    assert.ok(scilabResults.length > 0, 'Should find Scilab Workshop');
+    assert.equal(scilabResults[0].id, 'event-scilab-workshop');
 
-    // Search for "Number Hunt"
-    const numberHuntResults = searchIndex('number hunt', index);
-    assert.ok(numberHuntResults.length > 0, 'Should find Number Hunt');
-    assert.equal(numberHuntResults[0].id, 'event-number-hunt');
+    // Search for "Birthday Lineup"
+    const birthdayResults = searchIndex('birthday', index);
+    assert.ok(birthdayResults.length > 0, 'Should find Birthday Lineup');
+    assert.equal(birthdayResults[0].id, 'event-birthday-lineup');
 
     // Search for "Matrix"
     const matrixResults = searchIndex('matrix', index);

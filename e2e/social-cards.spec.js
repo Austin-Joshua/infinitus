@@ -16,26 +16,26 @@ test.describe('Dynamic Edge Social Cards (Feature 3B)', () => {
       homeBody
     );
 
-    // 2. Ramanujan Reimagined event-specific OpenGraph image
-    const ramanujanRes = await request.get('/events/ramanujan-reimagined/opengraph-image');
-    expect(ramanujanRes.status()).toBe(200);
-    expect(ramanujanRes.headers()['content-type']).toContain('image/png');
-    const ramanujanBody = await ramanujanRes.body();
-    expect(ramanujanBody.length).toBeGreaterThan(1000);
+    // 2. Scilab Workshop event-specific OpenGraph image
+    const scilabRes = await request.get('/events/scilab-workshop/opengraph-image');
+    expect(scilabRes.status()).toBe(200);
+    expect(scilabRes.headers()['content-type']).toContain('image/png');
+    const scilabBody = await scilabRes.body();
+    expect(scilabBody.length).toBeGreaterThan(1000);
     await writeFile(
-      'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/og-social-card-ramanujan.png',
-      ramanujanBody
+      'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/og-social-card-scilab.png',
+      scilabBody
     );
 
-    // 3. Number Hunt event-specific OpenGraph image
-    const huntRes = await request.get('/events/number-hunt/opengraph-image');
-    expect(huntRes.status()).toBe(200);
-    expect(huntRes.headers()['content-type']).toContain('image/png');
-    const huntBody = await huntRes.body();
-    expect(huntBody.length).toBeGreaterThan(1000);
+    // 3. Reverse Logic event-specific OpenGraph image
+    const logicRes = await request.get('/events/reverse-logic/opengraph-image');
+    expect(logicRes.status()).toBe(200);
+    expect(logicRes.headers()['content-type']).toContain('image/png');
+    const logicBody = await logicRes.body();
+    expect(logicBody.length).toBeGreaterThan(1000);
     await writeFile(
-      'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/og-social-card-number-hunt.png',
-      huntBody
+      'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/og-social-card-reverse-logic.png',
+      logicBody
     );
 
     // 4. Edge API dynamic OG route with query parameters

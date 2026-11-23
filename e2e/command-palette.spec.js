@@ -30,12 +30,12 @@ test.describe('Global Command Palette (Feature 3A)', () => {
       path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/command-palette-dark.png',
     });
 
-    // 6. Search for "Ramanujan"
-    await input.fill('Ramanujan');
+    // 6. Search for "Scilab"
+    await input.fill('Scilab');
 
     // Wait for filtered option to be visible
-    const ramanujanOption = page.locator('[role="option"]', { hasText: 'Ramanujan Reimagined' }).first();
-    await expect(ramanujanOption).toBeVisible();
+    const scilabOption = page.locator('[role="option"]', { hasText: 'Numerical Aspects of Scilab' }).first();
+    await expect(scilabOption).toBeVisible();
 
     // Take screenshot of search results state
     await page.screenshot({

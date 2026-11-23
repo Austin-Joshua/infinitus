@@ -17,17 +17,17 @@ describe('Mathematical Knowledge Graph (Feature 1C)', () => {
     }
   });
 
-  it('builds a connected graph topology for all 44 bundled events', () => {
+  it('builds a connected graph topology for all 42 bundled events', () => {
     const { nodes, links, nodeIndex } = buildKnowledgeGraph(EVENTS, 1000, 700);
 
-    // 6 domain hubs + 44 events = 50 total nodes
-    assert.equal(nodes.length, 50, 'Graph must contain exactly 50 nodes (6 domains + 44 events)');
+    // 6 domain hubs + 42 events = 48 total nodes
+    assert.equal(nodes.length, 48, 'Graph must contain exactly 48 nodes (6 domains + 42 events)');
 
     const domainNodes = nodes.filter((n) => n.type === 'domain');
     const eventNodes = nodes.filter((n) => n.type === 'event');
 
     assert.equal(domainNodes.length, 6, 'Must have 6 domain hub nodes');
-    assert.equal(eventNodes.length, 44, 'Must have 44 event nodes');
+    assert.equal(eventNodes.length, 42, 'Must have 42 event nodes');
 
     // Verify all nodes exist in index
     for (const node of nodes) {
@@ -37,7 +37,7 @@ describe('Mathematical Knowledge Graph (Feature 1C)', () => {
     }
 
     // Verify links: every event is connected to at least one domain
-    assert.ok(links.length >= 44 + 6, 'Links must connect all events plus domain symmetry ring');
+    assert.ok(links.length >= 42 + 6, 'Links must connect all events plus domain symmetry ring');
     for (const link of links) {
       assert.ok(link.source && link.target, 'Link must have source and target');
       assert.ok(typeof link.distance === 'number', 'Link must have distance');

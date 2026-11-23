@@ -96,15 +96,15 @@ describe('time-aware event status transitions', () => {
 });
 
 describe('bundled static events & gallery data integrity', () => {
-  it('ensures all 44 bundled events exist and have valid assets', async () => {
+  it('ensures all 42 bundled events exist and have valid assets', async () => {
     const fs = await import('node:fs');
     const path = await import('node:path');
     const { EVENTS } = await import('../lib/data.js');
 
-    assert.equal(EVENTS.length, 44, 'Exactly 44 events must be bundled (42 conducted + 2 upcoming)');
+    assert.equal(EVENTS.length, 42, 'Exactly 42 events must be bundled (all conducted)');
     const upcoming = EVENTS.filter((e) => e.status === 'upcoming');
     const conducted = EVENTS.filter((e) => e.status === 'conducted');
-    assert.equal(upcoming.length, 2, 'Exactly 2 upcoming events scheduled');
+    assert.equal(upcoming.length, 0, 'Zero upcoming events scheduled');
     assert.equal(conducted.length, 42, 'Exactly 42 conducted events archived');
 
     for (const ev of EVENTS) {

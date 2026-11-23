@@ -582,7 +582,9 @@ export default function MemberCard({ member, onOpen }) {
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
             }}
-            className="card card-hover flex h-full w-full cursor-pointer flex-col items-center p-4 sm:p-5 lg:p-6 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className={`card card-hover flex h-full w-full cursor-pointer flex-col items-center p-4 sm:p-5 lg:p-6 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+              isFlipped ? 'pointer-events-none select-none' : 'pointer-events-auto'
+            }`}
             role="button"
             tabIndex={0}
             aria-label={`${member.name}, ${member.role}. Click to flip card.`}
@@ -627,7 +629,9 @@ export default function MemberCard({ member, onOpen }) {
               WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
             }}
-            className="absolute inset-0 card flex h-full w-full cursor-pointer flex-col items-center justify-between p-3.5 sm:p-4 text-center border-sunset-orange/40 bg-card shadow-lg"
+            className={`absolute inset-0 card flex h-full w-full cursor-pointer flex-col items-center justify-between p-3.5 sm:p-4 text-center border-sunset-orange/40 bg-card shadow-lg ${
+              isFlipped ? 'pointer-events-auto' : 'pointer-events-none select-none'
+            }`}
             role="button"
             tabIndex={isFlipped ? 0 : -1}
             aria-label={`${member.name} details. Click to flip back.`}

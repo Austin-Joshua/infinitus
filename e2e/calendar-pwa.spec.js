@@ -5,12 +5,12 @@ test.describe('1-Click Smart Calendar Sync & PWA Offline Support (Feature 3C)', 
     page,
     request,
   }) => {
-    // 1. Visit Ramanujan Reimagined event page
-    await page.goto('/events/ramanujan-reimagined', { waitUntil: 'domcontentloaded' });
+    // 1. Visit Scilab Workshop event page
+    await page.goto('/events/scilab-workshop', { waitUntil: 'load' });
 
-    // 2. Check Smart Add to Calendar button visibility
+    // 2. Check Smart Add to Calendar button visibility and wait for hydration
     const calBtn = page.locator('[data-testid="add-to-calendar-button"]');
-    await expect(calBtn).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="add-to-calendar-button"][data-hydrated="true"]')).toBeVisible({ timeout: 10000 });
     await expect(calBtn).toContainText('Add to Calendar');
 
     // Prevent real window.open popup navigation during test
@@ -34,14 +34,14 @@ test.describe('1-Click Smart Calendar Sync & PWA Offline Support (Feature 3C)', 
     });
 
     // 6. Verify direct API endpoint returns valid .ics iCalendar file
-    const icsRes = await request.get('/api/events/ramanujan-reimagined/calendar');
+    const icsRes = await request.get('/api/events/scilab-workshop/calendar');
     expect(icsRes.status()).toBe(200);
     expect(icsRes.headers()['content-type']).toContain('text/calendar');
     const icsText = await icsRes.text();
     expect(icsText).toContain('BEGIN:VCALENDAR');
     expect(icsText).toContain('BEGIN:VEVENT');
-    expect(icsText).toContain('SUMMARY:Ramanujan Reimagined');
-    expect(icsText).toContain('LOCATION:Green Building');
+    expect(icsText).toContain('SUMMARY:Numerical Aspects of Scilab');
+    expect(icsText).toContain('LOCATION:Wozniak Auditorium');
 
     // 7. Test PWA Offline Status Simulation
     // Simulate browser offline

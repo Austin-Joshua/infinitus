@@ -162,7 +162,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
         // Wait for image to fully load and return verified layout metrics atomically
         const metrics = await img.evaluate(
           (node) =>
-            new Promise((resolve) => {
+            new Promise((resolve, reject) => {
               let attempts = 0;
               const check = () => {
                 const rect = node.getBoundingClientRect();
@@ -173,19 +173,24 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
                     boxWidth: rect.width,
                     boxHeight: rect.height,
                   });
-                } else if (attempts > 60) {
-                  resolve({
-                    naturalWidth: node.naturalWidth || 1080,
-                    naturalHeight: node.naturalHeight || 1350,
-                    boxWidth: rect.width || 360,
-                    boxHeight: rect.height || 450,
-                  });
+                } else if (attempts > 400) {
+                  reject(
+                    new Error(
+                      `Image failed to load in time: complete=${node.complete}, naturalWidth=${node.naturalWidth}, src=${node.currentSrc || node.src}`
+                    )
+                  );
                 } else {
                   attempts++;
                   setTimeout(check, 50);
                 }
               };
-              check();
+              if (node.complete && node.naturalWidth > 0) {
+                check();
+              } else {
+                node.addEventListener('load', check, { once: true });
+                node.addEventListener('error', check, { once: true });
+                check();
+              }
             })
         );
 
@@ -422,7 +427,7 @@ test.describe('Fullscreen Gallery Lightbox Experience', () => {
   });
 
   test('interactive zoom toolbar scales the image visually, updates percentage, and resets', async ({ page }) => {
-    await page.goto('/events/number-hunt', { waitUntil: 'load' });
+    await page.goto('/events/scilab-workshop', { waitUntil: 'load' });
     await page.waitForTimeout(200);
 
     const posterBtn = page.getByRole('button', { name: /3D Gyro-Parallax official poster/i }).first();

@@ -1,14 +1,19 @@
 'use client';
 
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import MemberCard, { MemberDetailModal } from '@/components/ui/MemberCard';
 import { playClick } from '@/lib/soundEffects';
 
 export default function TeamBrowser({ members }) {
+  const [mounted, setMounted] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState('All');
   const [activeMember, setActiveMember] = useState(null);
   const modalTitleId = useId();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Extract unique teams in preferred club order
   const teamCategories = useMemo(() => {
@@ -45,7 +50,7 @@ export default function TeamBrowser({ members }) {
   };
 
   return (
-    <div className="space-y-8 sm:space-y-10">
+    <div data-hydrated={mounted ? "true" : undefined} className="space-y-8 sm:space-y-10">
       <h2 className="sr-only">Members Directory by Department & Domain</h2>
 
       {/* Team Filter Pills */}

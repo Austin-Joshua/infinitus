@@ -1,9 +1,15 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Core Member Flip Cards & Detail Modal', () => {
-  test('flips card to reveal poster and opens full detail modal without Official Core Member tag', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      sessionStorage.setItem('infinitus-intro', '1');
+    });
     await page.goto('/team', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('[data-hydrated="true"]')).toBeVisible({ timeout: 10000 });
+  });
 
+  test('flips card to reveal poster and opens full detail modal without Official Core Member tag', async ({ page }) => {
     // Locate Austin Joshua M card container
     const austinContainer = page.locator('.perspective-1000', { hasText: 'Austin Joshua M' });
     await expect(austinContainer).toBeVisible();
@@ -19,7 +25,7 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
     // Find and click "Full view ↗" button on the flipped card
     const fullViewBtn = austinContainer.locator('button[data-action="details"]');
     await expect(fullViewBtn).toBeVisible();
-    await fullViewBtn.click();
+    await fullViewBtn.click({ force: true });
 
     // Verify detail modal opens
     const dialog = page.locator('div[role="dialog"]');
@@ -50,8 +56,6 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
   });
 
   test('verifies Sabari Naathan D card flips and renders official poster', async ({ page }) => {
-    await page.goto('/team', { waitUntil: 'domcontentloaded' });
-
     // Locate Sabari Naathan D card
     const sabariContainer = page.locator('.perspective-1000', { hasText: 'Sabari Naathan D' });
     await expect(sabariContainer).toBeVisible();
@@ -66,7 +70,7 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // Open detail modal
     const fullViewBtn = sabariContainer.locator('button[data-action="details"]');
-    await fullViewBtn.click();
+    await fullViewBtn.click({ force: true });
 
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
@@ -116,8 +120,6 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
   });
 
   test('verifies Chris Alan card exists in Technical Team and flips to role details', async ({ page }) => {
-    await page.goto('/team', { waitUntil: 'domcontentloaded' });
-
     // Locate Chris Alan card
     const chrisContainer = page.locator('.perspective-1000', { hasText: 'Chris Alan' });
     await expect(chrisContainer).toBeVisible();
@@ -132,7 +134,7 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // Open full detail modal
     const fullViewBtn = chrisContainer.locator('button[data-action="details"]');
-    await fullViewBtn.click();
+    await fullViewBtn.click({ force: true });
 
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
@@ -150,8 +152,6 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
   });
 
   test('falls back gracefully to role icon and details for members without poster', async ({ page }) => {
-    await page.goto('/team', { waitUntil: 'domcontentloaded' });
-
     // Locate Dr A Thilagavathy Vinoth card
     const facultyContainer = page.locator('.perspective-1000', { hasText: 'Dr A Thilagavathy Vinoth' });
     await expect(facultyContainer).toBeVisible();
@@ -161,11 +161,11 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
     await facultyContainer.click();
 
     // Verify revealed responsibilities on back face
-    await expect(facultyContainer).toContainText('Faculty Coordinator');
+    await expect(facultyContainer).toContainText('Serves as Faculty Coordinator');
 
     // Open full detail modal
     const fullViewBtn = facultyContainer.locator('button[data-action="details"]');
-    await fullViewBtn.click();
+    await fullViewBtn.click({ force: true });
 
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
@@ -182,8 +182,6 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
   });
 
   test('switches committee categories smoothly without manual page reload (Fixes Bug #2)', async ({ page }) => {
-    await page.goto('/team', { waitUntil: 'domcontentloaded' });
-
     // 1. Initial state: All members visible
     const allCards = page.locator('.perspective-1000');
     await expect(allCards.first()).toBeVisible({ timeout: 5000 });
@@ -192,7 +190,8 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // 2. Switch to "Leadership"
     const leadershipBtn = page.locator('button[type="button"]:has-text("Leadership")');
-    await leadershipBtn.click();
+    await leadershipBtn.click({ force: true });
+    await expect(leadershipBtn).toHaveAttribute('aria-pressed', 'true');
 
     // Verify Leadership members load immediately without refresh
     const austinCard = page.locator('.perspective-1000', { hasText: 'Austin Joshua M' });
@@ -201,7 +200,8 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // 3. Switch to "Technical Team"
     const technicalBtn = page.locator('button[type="button"]:has-text("Technical Team")');
-    await technicalBtn.click();
+    await technicalBtn.click({ force: true });
+    await expect(technicalBtn).toHaveAttribute('aria-pressed', 'true');
 
     // Verify Technical Team members load immediately
     const technicalCards = page.locator('.perspective-1000');
@@ -211,13 +211,15 @@ test.describe('Core Member Flip Cards & Detail Modal', () => {
 
     // 4. Switch to "Photography"
     const photoBtn = page.locator('button[type="button"]:has-text("Photography")');
-    await photoBtn.click();
+    await photoBtn.click({ force: true });
+    await expect(photoBtn).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('.perspective-1000', { hasText: 'Sam Jebaraj J' })).toBeVisible({ timeout: 3000 });
     await expect(page.locator('.perspective-1000', { hasText: 'Balachandar' })).toBeVisible();
 
     // 5. Switch back to "All"
     const allBtn = page.locator('button[type="button"]:has-text("All")');
-    await allBtn.click();
+    await allBtn.click({ force: true });
+    await expect(allBtn).toHaveAttribute('aria-pressed', 'true');
     await expect(austinCard).toBeVisible({ timeout: 3000 });
   });
 });

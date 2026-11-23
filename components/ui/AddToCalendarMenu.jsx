@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { generateGoogleCalendarUrl, downloadIcsFile } from '@/lib/calendar';
 import { playSuccess } from '@/lib/soundEffects';
@@ -30,8 +30,13 @@ function CheckIcon(props) {
  *  - Offline sessions -> Automatically saves native offline .ics iCalendar file
  */
 export default function AddToCalendarMenu({ event, className = '' }) {
+  const [mounted, setMounted] = useState(false);
   const [synced, setSynced] = useState(false);
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!event) return null;
 
@@ -74,6 +79,7 @@ export default function AddToCalendarMenu({ event, className = '' }) {
         type="button"
         onClick={handleSmartSync}
         data-testid="add-to-calendar-button"
+        data-hydrated={mounted ? "true" : undefined}
         aria-label={`Add ${event.title} to calendar`}
         className="btn-ghost inline-flex items-center gap-2 !px-4 !py-2.5 text-xs sm:text-sm font-semibold rounded-full border border-sunset-orange/40 bg-card hover:bg-sunset-orange/15 hover:border-sunset-orange/70 text-fg transition-all shadow-sm active:scale-95"
       >

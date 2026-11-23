@@ -4,8 +4,8 @@ test.describe('3D Gyro-Parallax Poster Viewer (Feature 4B)', () => {
   test('interactively tilts poster on pointer move, shows holographic glare, and opens lightbox on click', async ({
     page,
   }) => {
-    // 1. Visit Ramanujan Reimagined event page
-    await page.goto('/events/ramanujan-reimagined', { waitUntil: 'domcontentloaded' });
+    // 1. Visit Scilab Workshop event page
+    await page.goto('/events/scilab-workshop', { waitUntil: 'domcontentloaded' });
 
     // 2. Verify 3D Gyro-Parallax Poster elements are visible
     const container = page.locator('[data-testid="gyro-parallax-container"]');
@@ -51,12 +51,12 @@ test.describe('3D Gyro-Parallax Poster Viewer (Feature 4B)', () => {
     await page.keyboard.press('Escape');
     await expect(lightbox).not.toBeVisible({ timeout: 4000 });
 
-    // 7. Visit Number Hunt event page and capture screenshot of clean single-element poster
-    await page.goto('/events/number-hunt', { waitUntil: 'domcontentloaded' });
+    // 7. Visit Reverse Logic event page and capture screenshot of clean single-element poster
+    await page.goto('/events/reverse-logic', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('[data-testid="gyro-parallax-container"]', { timeout: 10000 });
     await page.waitForTimeout(400);
     await page.screenshot({
-      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/gyro-parallax-number-hunt.png',
+      path: 'C:/Users/austi/.gemini/antigravity/brain/74b30428-1f11-4b32-8bcd-1a9155f5bff2/gyro-parallax-reverse-logic.png',
     });
   });
 });
